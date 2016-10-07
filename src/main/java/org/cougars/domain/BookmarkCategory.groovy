@@ -22,11 +22,34 @@
  SOFTWARE.
  */
 
-package org.cougars.repository
+package org.cougars.domain
+
+import javax.persistence.Embedded
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
 
 /**
  * Created by Dennis Rausch on 10/3/16.
  */
-interface CategoryRepository {
 
+@Entity
+class BookmarkCategory {
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    Long id
+
+    String name
+
+    @ManyToOne
+    BookmarkCategory parent
+
+    @OneToMany(mappedBy="parent")
+    List<BookmarkCategory> children
+
+    @Embedded
+    RecordDetails recordDetails
 }

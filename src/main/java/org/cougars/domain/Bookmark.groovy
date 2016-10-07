@@ -26,6 +26,7 @@ package org.cougars.domain
 
 import javax.persistence.Embedded
 import javax.persistence.Entity
+import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -45,16 +46,16 @@ class Bookmark {
     String url
     // (if not specified, it defaults to “None”), also supports single level of subcategory
     @ManyToOne
-    Category category
+    BookmarkCategory category
 
     @ManyToOne
-    Category subcategory
+    BookmarkCategory subcategory
     //optional
     String name
     //optional
     String description
     //(default is “active”, but it can be set to “obsolete” or “in review”)
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     Status status
 
     @Embedded

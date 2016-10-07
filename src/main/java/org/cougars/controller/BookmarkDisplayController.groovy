@@ -26,6 +26,7 @@ package org.cougars.controller
 
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 
 /**
@@ -35,17 +36,17 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 @RequestMapping("/bookmarks")
 class BookmarkDisplayController {
-    @RequestMapping("/table")
+    @GetMapping("/table")
     String tableView(Model model) {
         return "tableView"
     }
 
-    @RequestMapping("/category")
+    @GetMapping("/category")
     String categoryView(Model model) {
         return "categoryView"
     }
 
-    @RequestMapping("/splay-tree")
+    @GetMapping("/splay-tree")
     String splayTreeView(Model model) {
         return "splayTreeView"
     }

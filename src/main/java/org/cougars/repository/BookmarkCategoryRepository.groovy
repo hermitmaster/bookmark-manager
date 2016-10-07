@@ -22,34 +22,14 @@
  SOFTWARE.
  */
 
-package org.cougars.domain
+package org.cougars.repository
 
-import javax.persistence.Embedded
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.ManyToOne
-import javax.persistence.OneToMany
+import org.cougars.domain.BookmarkCategory
+import org.springframework.data.jpa.repository.JpaRepository
 
 /**
  * Created by Dennis Rausch on 10/3/16.
  */
+interface BookmarkCategoryRepository extends JpaRepository<BookmarkCategory, Long> {
 
-@Entity
-class Category {
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    Long id
-
-    String name
-
-    @ManyToOne
-    Category parent
-
-    @OneToMany(mappedBy="parent")
-    List<Category> children
-
-    @Embedded
-    RecordDetails recordDetails
 }

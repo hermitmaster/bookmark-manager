@@ -24,8 +24,12 @@
 
 package org.cougars.controller
 
+import org.cougars.domain.Bookmark
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 
 /**
@@ -35,18 +39,25 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 @RequestMapping("/")
 class HomeController {
-    @RequestMapping("")
+    @GetMapping("")
     String index() {
         return "index"
     }
 
-    @RequestMapping("index.html")
+    @GetMapping("index.html")
     String indexRedirect() {
         return "index"
     }
 
-    @RequestMapping("/add-bookmark")
+    @GetMapping("/add-bookmark")
     String addBookmark(Model model) {
+        model.addAttribute("bookmark", new Bookmark())
+
+        return "addBookmark"
+    }
+
+    @PostMapping("/add-bookmark")
+    String addBookmarkSubmission(@ModelAttribute Bookmark bookmark) {
         return "addBookmark"
     }
 }
