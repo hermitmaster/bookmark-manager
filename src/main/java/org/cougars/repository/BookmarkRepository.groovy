@@ -25,11 +25,16 @@
 package org.cougars.repository
 
 import org.cougars.domain.Bookmark
+import org.cougars.domain.BookmarkCategory
 import org.springframework.data.jpa.repository.JpaRepository
 
 /**
  * Created by Dennis Rausch on 10/3/16.
  */
 interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
+    Bookmark findBookmarkById(Long id)
 
+    Set<Bookmark> findBookmarksByBookmarkCategory(BookmarkCategory bookmarkCategory)
+
+//    Set<Bookmark> findAllBookmarks()
 }

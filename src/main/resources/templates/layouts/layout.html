@@ -4,12 +4,13 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <title layout:title-pattern="$DECORATOR_TITLE - $CONTENT_TITLE">Bookmark Manager</title>
         <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/simplex/bootstrap.min.css" rel="stylesheet" integrity="sha384-C0X5qw1DlkeV0RDunhmi4cUBUkPDTvUqzElcNWm1NI2T4k8tKMZ+wRPQOhZfSJ9N" crossorigin="anonymous"/>
+        <link th:href="@{/css/global.css}" rel="stylesheet" />
         <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     </head>
     <body>
     <header>
-        <nav class="navbar navbar-inverse">
+        <nav class="navbar-inverse">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -33,13 +34,22 @@
                                 <li><a th:href="@{/bookmarks/splay-tree}">Splay Tree View</a></li>
                             </ul>
                         </li>
+                        <li>
+                            <form class="navbar-form">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search Bookmarks" />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button">
+                                            <i class="glyphicon glyphicon-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </form>
+                        </li>
                     </ul>
-                    <form class="navbar-form navbar-left">
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Search"/>
-                        </div>
-                        <button type="submit" class="btn btn-default">Submit</button>
-                    </form>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a th:href="@{/}">Admin Login</a></li>
+                    </ul>
                 </div>
             </div>
         </nav>
@@ -48,7 +58,11 @@
         <p>Page content is injected here!</p>
     </div>
     <footer>
-
+        <div class="row">
+            <div class="col-md-12 text-center">
+                &copy; 2016 Metro State Cougars
+            </div>
+        </div>
     </footer>
     </body>
 </html>

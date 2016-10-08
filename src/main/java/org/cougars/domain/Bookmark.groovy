@@ -32,6 +32,7 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.ManyToOne
+import javax.validation.constraints.NotNull
 
 /**
  * Created by Dennis Rausch on 10/3/16.
@@ -43,20 +44,26 @@ class Bookmark {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     Long id
 
+    @NotNull
     String url
-    // (if not specified, it defaults to “None”), also supports single level of subcategory
-    @ManyToOne
-    BookmarkCategory category
 
+    // Default value: None
+    @NotNull
+    @ManyToOne
+    BookmarkCategory bookmarkCategory
+
+    // Default value: None
+    @NotNull
     @ManyToOne
     BookmarkCategory subcategory
-    //optional
+
     String name
-    //optional
+
     String description
-    //(default is “active”, but it can be set to “obsolete” or “in review”)
+
+    // Default value: Active
     @Enumerated(EnumType.STRING)
-    Status status
+    Status status = Status.ACTIVE
 
     @Embedded
     RecordDetails recordDetails

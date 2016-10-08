@@ -25,6 +25,9 @@
 package org.cougars.controller
 
 import org.cougars.domain.Bookmark
+import org.cougars.repository.BookmarkRepository
+import org.cougars.service.BookmarkValidatorService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -39,29 +42,54 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 @RequestMapping("/admin")
 class AdminController {
-    @RequestMapping("/")
+    @Autowired
+    BookmarkRepository bookmarkRepository
+
+    /**
+     *
+     * @return
+     */
+    @GetMapping("/")
     String index() {
         return "index"
     }
 
-    @GetMapping("/index.html")
-    String indexRedirect() {
-        return "index"
-    }
-
+    /**
+     *
+     * @param model
+     * @return
+     */
     @GetMapping("/review-bookmark")
     String reviewBookmark(Model model) {
         model.addAttribute("bookmark", new Bookmark())
         return "reviewBookmark"
     }
 
+    /**
+     *
+     * @param bookmark
+     * @return
+     */
     @PostMapping("/review-bookmark")
     String reviewBookmarkSubmission(@ModelAttribute Bookmark bookmark) {
         return "reviewBookmark"
     }
 
+    /**
+     *
+     * @param model
+     * @return
+     */
     @GetMapping("/dead-link-report")
     String deadLinkReport(Model model) {
+        Set<Bookmark> invalidBookmarks
+
+        invalidBookmarks = bookmarkRepository.findAll().findAll() {
+            !BookmarkValidatorService.validateUrl(it.url)
+        }
+
+        model.addAttribute("bookmarks", invalidBookmarks)
+
         return "deadLinkReport"
     }
 }

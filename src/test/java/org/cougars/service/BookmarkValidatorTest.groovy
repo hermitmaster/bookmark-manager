@@ -13,7 +13,7 @@ class BookmarkValidatorTest extends Specification {
     def "ValidateUrl"() {
         def result
         when:
-        result = BookmarkValidator.validateUrl("http://www.google.com")
+        result = BookmarkValidatorService.validateUrl("http://www.google.com")
 
         then:
         assert result

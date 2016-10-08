@@ -25,6 +25,9 @@
 package org.cougars.controller
 
 import org.cougars.domain.Bookmark
+import org.cougars.repository.BookmarkCategoryRepository
+import org.cougars.repository.BookmarkRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -39,16 +42,35 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 @RequestMapping("/")
 class HomeController {
+    @Autowired
+    BookmarkRepository bookmarkRepository
+
+    @Autowired
+    BookmarkCategoryRepository bookmarkCategoryRepository
+
+    /**
+     *
+     * @return
+     */
     @GetMapping("")
     String index() {
         return "index"
     }
 
+    /**
+     *
+     * @return
+     */
     @GetMapping("index.html")
     String indexRedirect() {
         return "index"
     }
 
+    /**
+     *
+     * @param model
+     * @return
+     */
     @GetMapping("/add-bookmark")
     String addBookmark(Model model) {
         model.addAttribute("bookmark", new Bookmark())
@@ -56,8 +78,15 @@ class HomeController {
         return "addBookmark"
     }
 
+    /**
+     *
+     * @param bookmark
+     * @return
+     */
     @PostMapping("/add-bookmark")
     String addBookmarkSubmission(@ModelAttribute Bookmark bookmark) {
+        bookmarkRepository.save(bookmark)
+
         return "addBookmark"
     }
 }

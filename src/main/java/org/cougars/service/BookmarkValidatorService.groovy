@@ -12,7 +12,7 @@ import org.apache.http.impl.client.HttpClientBuilder
  */
 
 @Slf4j
-class BookmarkValidator {
+class BookmarkValidatorService {
     static Boolean validateUrl(String url) {
         Boolean valid = false
         HttpClient client = HttpClientBuilder.create().build()

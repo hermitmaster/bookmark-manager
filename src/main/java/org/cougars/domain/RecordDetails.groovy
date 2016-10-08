@@ -24,6 +24,7 @@
 
 package org.cougars.domain
 
+import javax.persistence.Column
 import javax.persistence.Embeddable
 
 /**
@@ -32,9 +33,11 @@ import javax.persistence.Embeddable
 
 @Embeddable
 class RecordDetails {
+    @Column(nullable = false, updatable = false)
     String createdBy
 
-    String dateCreated
+    @Column(nullable = false, updatable = false)
+    Date dateCreated = new Date()
 
-    String dateModified
+    Date dateModified
 }

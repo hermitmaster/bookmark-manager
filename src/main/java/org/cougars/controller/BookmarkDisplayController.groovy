@@ -24,6 +24,8 @@
 
 package org.cougars.controller
 
+import org.cougars.repository.BookmarkRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -36,16 +38,36 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 @RequestMapping("/bookmarks")
 class BookmarkDisplayController {
+    @Autowired
+    BookmarkRepository bookmarkRepository
+
+    /**
+     *
+     * @param model
+     * @return
+     */
     @GetMapping("/table")
     String tableView(Model model) {
+        model.addAttribute("bookmarks", bookmarkRepository.findAll())
+
         return "tableView"
     }
 
+    /**
+     *
+     * @param model
+     * @return
+     */
     @GetMapping("/category")
     String categoryView(Model model) {
         return "categoryView"
     }
 
+    /**
+     *
+     * @param model
+     * @return
+     */
     @GetMapping("/splay-tree")
     String splayTreeView(Model model) {
         return "splayTreeView"

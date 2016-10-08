@@ -24,6 +24,7 @@
 
 package org.cougars.domain
 
+import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -42,13 +43,17 @@ class BookmarkCategory {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     Long id
 
+    @Column(nullable = false)
     String name
 
     @ManyToOne
     BookmarkCategory parent
 
     @OneToMany(mappedBy="parent")
-    List<BookmarkCategory> children
+    Set<BookmarkCategory> children
+
+    @OneToMany
+    Set<Bookmark> bookmarks
 
     @Embedded
     RecordDetails recordDetails
