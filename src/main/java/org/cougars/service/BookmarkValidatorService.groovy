@@ -13,6 +13,11 @@ import org.apache.http.impl.client.HttpClientBuilder
 
 @Slf4j
 class BookmarkValidatorService {
+    /** Verifies that a url returns a valid status code (less than 400).
+     *
+     * @param url   url to be validated
+     * @return      true if status code < 400, else false
+     */
     static Boolean validateUrl(String url) {
         Boolean valid = false
         HttpClient client = HttpClientBuilder.create().build()

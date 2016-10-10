@@ -24,6 +24,8 @@
 
 package org.cougars.domain
 
+import groovy.transform.Canonical
+
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
@@ -38,6 +40,7 @@ import javax.persistence.OneToMany
  */
 
 @Entity
+@Canonical
 class BookmarkCategory {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

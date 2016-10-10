@@ -26,15 +26,31 @@ package org.cougars.repository
 
 import org.cougars.domain.Bookmark
 import org.cougars.domain.BookmarkCategory
+import org.cougars.domain.Status
 import org.springframework.data.jpa.repository.JpaRepository
 
 /**
  * Created by Dennis Rausch on 10/3/16.
  */
 interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
-    Bookmark findBookmarkById(Long id)
+    /** Find a bookmark by its id (primary key).
+     *
+     * @param id    Id of the bookmark being searched for.
+     * @return      Bookmark with the referenced id.
+     */
+    Bookmark findById(Long id)
 
-    Set<Bookmark> findBookmarksByBookmarkCategory(BookmarkCategory bookmarkCategory)
+    /** Find a bookmark based on its primary category.
+     *
+     * @param bookmarkCategory  The category of bookmarks being searched for.
+     * @return                  Collection of all books with the referenced category.
+     */
+    Set<Bookmark> findByBookmarkCategory(BookmarkCategory bookmarkCategory)
 
-//    Set<Bookmark> findAllBookmarks()
+    /** Find a bookmark based on its current status.
+     *
+     * @param status    Status of bookmarks being searched for.
+     * @return          Collection of all books with the referenced status.
+     */
+    Set<Bookmark> findByStatus(Status status);
 }

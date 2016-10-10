@@ -24,6 +24,8 @@
 
 package org.cougars.domain
 
+import groovy.transform.Canonical
+
 import javax.persistence.Embedded
 import javax.persistence.Entity
 import javax.persistence.EnumType
@@ -39,6 +41,7 @@ import javax.validation.constraints.NotNull
  */
 
 @Entity
+@Canonical
 class Bookmark {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

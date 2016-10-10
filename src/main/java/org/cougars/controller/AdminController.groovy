@@ -25,6 +25,7 @@
 package org.cougars.controller
 
 import org.cougars.domain.Bookmark
+import org.cougars.domain.Status
 import org.cougars.repository.BookmarkRepository
 import org.cougars.service.BookmarkValidatorService
 import org.springframework.beans.factory.annotation.Autowired
@@ -45,39 +46,30 @@ class AdminController {
     @Autowired
     BookmarkRepository bookmarkRepository
 
-    /**
+    /** RequestMapping for pending bookmark review page.
      *
+     * @param model Data model returned to view.
      * @return
      */
-    @GetMapping("/")
-    String index() {
-        return "index"
-    }
-
-    /**
-     *
-     * @param model
-     * @return
-     */
-    @GetMapping("/review-bookmark")
+    @GetMapping("/review-bookmarks")
     String reviewBookmark(Model model) {
-        model.addAttribute("bookmark", new Bookmark())
-        return "reviewBookmark"
+        model.addAttribute("bookmarks", bookmarkRepository.findByStatus(Status.IN_REVIEW))
+        return "reviewBookmarks"
     }
 
-    /**
+    /** RequestMapping for bookmark review submission.
      *
-     * @param bookmark
+     * @param bookmarks
      * @return
      */
-    @PostMapping("/review-bookmark")
-    String reviewBookmarkSubmission(@ModelAttribute Bookmark bookmark) {
-        return "reviewBookmark"
+    @PostMapping("/review-bookmarks")
+    String reviewBookmarkSubmission(@ModelAttribute Set<Bookmark> bookmarks) {
+        return "reviewBookmarks"
     }
 
-    /**
+    /** RequestMapping for dead link report.
      *
-     * @param model
+     * @param model Data model returned to view.
      * @return
      */
     @GetMapping("/dead-link-report")

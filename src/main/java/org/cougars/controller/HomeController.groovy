@@ -48,28 +48,19 @@ class HomeController {
     @Autowired
     BookmarkCategoryRepository bookmarkCategoryRepository
 
-    /**
+    /** RequestMapping for displaying the home page.
      *
-     * @return
+     * @return index
      */
     @GetMapping("")
     String index() {
         return "index"
     }
 
-    /**
+    /** RequestMapping for displaying the add bookmark page.
      *
-     * @return
-     */
-    @GetMapping("index.html")
-    String indexRedirect() {
-        return "index"
-    }
-
-    /**
-     *
-     * @param model
-     * @return
+     * @param model Data model returned to view.
+     * @return addBookmark
      */
     @GetMapping("/add-bookmark")
     String addBookmark(Model model) {
@@ -78,10 +69,10 @@ class HomeController {
         return "addBookmark"
     }
 
-    /**
+    /** RequestMapping for adding a new bookmark.
      *
      * @param bookmark
-     * @return
+     * @return addBookmark
      */
     @PostMapping("/add-bookmark")
     String addBookmarkSubmission(@ModelAttribute Bookmark bookmark) {

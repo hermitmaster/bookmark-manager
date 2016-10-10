@@ -24,6 +24,8 @@
 
 package org.cougars.domain
 
+import groovy.transform.Canonical
+
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
@@ -36,6 +38,7 @@ import javax.persistence.Id
  */
 
 @Entity
+@Canonical
 class User {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

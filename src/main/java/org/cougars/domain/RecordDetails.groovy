@@ -24,6 +24,8 @@
 
 package org.cougars.domain
 
+import groovy.transform.Canonical
+
 import javax.persistence.Column
 import javax.persistence.Embeddable
 
@@ -32,6 +34,7 @@ import javax.persistence.Embeddable
  */
 
 @Embeddable
+@Canonical
 class RecordDetails {
     @Column(nullable = false, updatable = false)
     String createdBy

@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 
 /**
@@ -41,35 +42,74 @@ class BookmarkDisplayController {
     @Autowired
     BookmarkRepository bookmarkRepository
 
-    /**
+    /** RequestMapping for bookmark table display.
      *
-     * @param model
-     * @return
+     * @param model Data model returned to view.
+     * @return      bookmark display page with table view
      */
-    @GetMapping("/table")
+    @PostMapping("/table")
     String tableView(Model model) {
         model.addAttribute("bookmarks", bookmarkRepository.findAll())
 
         return "tableView"
     }
 
-    /**
+    /** RequestMapping for bookmark table display search.
      *
-     * @param model
-     * @return
+     * @param model Data model returned to view.
+     * @return      bookmark display page with table view containing search results
+     */
+    @GetMapping("/table")
+    String searchBookmarksTableView(Model model) {
+        model.addAttribute("bookmarks", bookmarkRepository.findAll())
+
+        return "tableView"
+    }
+
+    /** RequestMapping for bookmark category display.
+     *
+     * @param model Data model returned to view.
+     * @return      bookmark display page with category view
      */
     @GetMapping("/category")
     String categoryView(Model model) {
+        model.addAttribute("bookmarks", bookmarkRepository.findAll())
+
+        return "categoryView"
+    }
+    /** RequestMapping for bookmark category display search.
+     *
+     * @param model Data model returned to view.
+     * @return      bookmark display page with category view containing search results
+     */
+    @PostMapping("/category")
+    String searchBookmarksCategoryView(Model model) {
+        model.addAttribute("bookmarks", bookmarkRepository.findAll())
+
         return "categoryView"
     }
 
-    /**
+    /** RequestMapping for bookmark splay tree display.
      *
-     * @param model
-     * @return
+     * @param model Data model returned to view.
+     * @return      bookmark display page with splay tree view
      */
     @GetMapping("/splay-tree")
     String splayTreeView(Model model) {
+        model.addAttribute("bookmarks", bookmarkRepository.findAll())
+
+        return "splayTreeView"
+    }
+
+    /** RequestMapping for bookmark splay tree display search.
+     *
+     * @param model Data model returned to view.
+     * @return      bookmark display page with splay tree view containing search results
+     */
+    @PostMapping("/splay-tree")
+    String searchBookmarksSplayTreeView(Model model) {
+        model.addAttribute("bookmarks", bookmarkRepository.findAll())
+
         return "splayTreeView"
     }
 }
