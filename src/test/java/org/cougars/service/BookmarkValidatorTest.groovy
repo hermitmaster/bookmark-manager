@@ -7,7 +7,7 @@ import spock.lang.Specification
  * Created by Dennis Rausch on 10/4/16.
  */
 
-@SpringBootTest
+//@SpringBootTest
 class BookmarkValidatorTest extends Specification {
 
     def "ValidateUrlSuccess"() {
