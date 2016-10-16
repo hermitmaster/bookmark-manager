@@ -41,12 +41,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
 @RequestMapping("/")
-class HomeController {
+public class HomeController {
     @Autowired
-    BookmarkRepository bookmarkRepository
+    private BookmarkRepository bookmarkRepository
 
     @Autowired
-    BookmarkCategoryRepository bookmarkCategoryRepository
+    private BookmarkCategoryRepository bookmarkCategoryRepository
 
     /** RequestMapping for displaying the home page.
      *

@@ -24,11 +24,11 @@
 
 package org.cougars.domain
 
-import groovy.transform.Canonical
-
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -40,7 +40,6 @@ import javax.persistence.OneToMany
  */
 
 @Entity
-@Canonical
 class BookmarkCategory {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -55,7 +54,7 @@ class BookmarkCategory {
     @OneToMany(mappedBy="parent")
     Set<BookmarkCategory> children
 
-    @OneToMany
+    @OneToMany(mappedBy = "bookmarkCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Set<Bookmark> bookmarks
 
     @Embedded

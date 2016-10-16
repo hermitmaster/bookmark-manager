@@ -24,6 +24,7 @@
 
 package org.cougars.controller
 
+import org.cougars.repository.BookmarkCategoryRepository
 import org.cougars.repository.BookmarkRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -40,7 +41,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 @RequestMapping("/bookmarks")
 class BookmarkDisplayController {
     @Autowired
-    BookmarkRepository bookmarkRepository
+    private BookmarkRepository bookmarkRepository
+
+    @Autowired
+    private BookmarkCategoryRepository bookmarkCategoryRepository
 
     /** RequestMapping for bookmark table display.
      *

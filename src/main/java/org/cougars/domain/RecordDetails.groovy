@@ -24,20 +24,18 @@
 
 package org.cougars.domain
 
-import groovy.transform.Canonical
-
 import javax.persistence.Column
 import javax.persistence.Embeddable
+import javax.persistence.ManyToOne
 
 /**
  * Created by Dennis Rausch on 10/3/16.
  */
 
 @Embeddable
-@Canonical
 class RecordDetails {
-    @Column(nullable = false, updatable = false)
-    String createdBy
+    @ManyToOne
+    User createdBy
 
     @Column(nullable = false, updatable = false)
     Date dateCreated = new Date()

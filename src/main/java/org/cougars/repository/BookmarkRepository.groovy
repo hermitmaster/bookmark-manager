@@ -52,5 +52,5 @@ interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
      * @param status    Status of bookmarks being searched for.
      * @return          Collection of all books with the referenced status.
      */
-    Set<Bookmark> findByStatus(Status status);
+    Set<Bookmark> findByStatus(Status status)
 }

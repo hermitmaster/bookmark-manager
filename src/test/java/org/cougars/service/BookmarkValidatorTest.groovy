@@ -10,12 +10,21 @@ import spock.lang.Specification
 @SpringBootTest
 class BookmarkValidatorTest extends Specification {
 
-    def "ValidateUrl"() {
+    def "ValidateUrlSuccess"() {
         def result
         when:
         result = BookmarkValidatorService.validateUrl("http://www.google.com")
 
         then:
         assert result
+    }
+
+    def "ValidateUrlFail"() {
+        def result
+        when:
+        result = BookmarkValidatorService.validateUrl("http://google.com/404url")
+
+        then:
+        assert !result
     }
 }

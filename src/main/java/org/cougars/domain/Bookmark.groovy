@@ -24,8 +24,7 @@
 
 package org.cougars.domain
 
-import groovy.transform.Canonical
-
+import javax.persistence.CascadeType
 import javax.persistence.Embedded
 import javax.persistence.Entity
 import javax.persistence.EnumType
@@ -41,7 +40,6 @@ import javax.validation.constraints.NotNull
  */
 
 @Entity
-@Canonical
 class Bookmark {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -51,13 +49,11 @@ class Bookmark {
     String url
 
     // Default value: None
-    @NotNull
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     BookmarkCategory bookmarkCategory
 
     // Default value: None
-    @NotNull
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, optional = true)
     BookmarkCategory subcategory
 
     String name

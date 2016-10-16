@@ -44,7 +44,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @RequestMapping("/admin")
 class AdminController {
     @Autowired
-    BookmarkRepository bookmarkRepository
+    private BookmarkRepository bookmarkRepository
 
     /** RequestMapping for pending bookmark review page.
      *
@@ -54,6 +54,7 @@ class AdminController {
     @GetMapping("/review-bookmarks")
     String reviewBookmark(Model model) {
         model.addAttribute("bookmarks", bookmarkRepository.findByStatus(Status.IN_REVIEW))
+
         return "reviewBookmarks"
     }
 

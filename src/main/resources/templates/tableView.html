@@ -19,12 +19,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                    <tr th:each="bookmark : ${bookmarks}">
+                        <td th:text="${bookmark.name}"></td>
+                        <td th:text="${bookmark.url}"></td>
+                        <td th:text="${bookmark.bookmarkCategory.name}"></td>
+                        <td th:text="${bookmark.subcategory}"></td>
+                        <td th:text="${bookmark.description}"></td>
                     </tr>
                 </tbody>
             </table>
