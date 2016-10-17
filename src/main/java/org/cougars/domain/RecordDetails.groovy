@@ -40,5 +40,6 @@ class RecordDetails {
     @Column(nullable = false, updatable = false)
     Date dateCreated = new Date()
 
-    Date dateModified
+    @Column(nullable = false)
+    Date dateModified = new Date()
 }

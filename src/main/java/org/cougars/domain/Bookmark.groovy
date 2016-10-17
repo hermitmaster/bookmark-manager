@@ -25,6 +25,7 @@
 package org.cougars.domain
 
 import javax.persistence.CascadeType
+import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
 import javax.persistence.EnumType
@@ -33,7 +34,6 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.ManyToOne
-import javax.validation.constraints.NotNull
 
 /**
  * Created by Dennis Rausch on 10/3/16.
@@ -45,7 +45,7 @@ class Bookmark {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     Long id
 
-    @NotNull
+    @Column(nullable = false)
     String url
 
     // Default value: None
@@ -65,5 +65,5 @@ class Bookmark {
     Status status = Status.ACTIVE
 
     @Embedded
-    RecordDetails recordDetails
+    RecordDetails recordDetails = new RecordDetails()
 }

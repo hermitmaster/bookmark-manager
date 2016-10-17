@@ -45,7 +45,7 @@ class BookmarkCategory {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     Long id
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     String name
 
     @ManyToOne
@@ -58,5 +58,5 @@ class BookmarkCategory {
     Set<Bookmark> bookmarks
 
     @Embedded
-    RecordDetails recordDetails
+    RecordDetails recordDetails = new RecordDetails()
 }

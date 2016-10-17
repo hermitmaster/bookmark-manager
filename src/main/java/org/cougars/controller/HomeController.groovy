@@ -24,7 +24,9 @@
 
 package org.cougars.controller
 
+import org.cougars.BookmarkBean
 import org.cougars.domain.Bookmark
+import org.cougars.domain.BookmarkCategory
 import org.cougars.repository.BookmarkCategoryRepository
 import org.cougars.repository.BookmarkRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -64,7 +66,7 @@ public class HomeController {
      */
     @GetMapping("/add-bookmark")
     String addBookmark(Model model) {
-        model.addAttribute("bookmark", new Bookmark())
+        model.addAttribute("bookmarkBean", new BookmarkBean())
 
         return "addBookmark"
     }
@@ -75,9 +77,35 @@ public class HomeController {
      * @return addBookmark
      */
     @PostMapping("/add-bookmark")
-    String addBookmarkSubmission(@ModelAttribute Bookmark bookmark) {
+    String addBookmarkSubmission(@ModelAttribute BookmarkBean bookmarkBean) {
+        BookmarkCategory bookmarkCategory = bookmarkCategoryRepository.findByName(bookmarkBean.bookmarkCategory)
+        if(!bookmarkCategory) {
+            bookmarkCategory = new BookmarkCategory()
+            bookmarkCategory.name = bookmarkBean.bookmarkCategory
+            bookmarkCategory.parent = bookmarkCategoryRepository.findById(1)
+            bookmarkCategoryRepository.save(bookmarkCategory)
+        }
+        BookmarkCategory subcategory
+        if(bookmarkBean.subcategory && !bookmarkBean.subcategory.equalsIgnoreCase("none")) {
+            subcategory = bookmarkCategoryRepository.findByName(bookmarkBean.subcategory)
+            if(!subcategory) {
+                subcategory = new BookmarkCategory()
+                subcategory.name = bookmarkBean.subcategory
+                subcategory.parent = bookmarkCategory
+                bookmarkCategoryRepository.save(subcategory)
+            }
+        } else {
+            subcategory = bookmarkCategoryRepository.findById(1)
+        }
+        Bookmark bookmark = new Bookmark()
+        bookmark.url = bookmarkBean.url
+        bookmark.name = bookmarkBean.name
+        bookmark.description = bookmarkBean.description
+        bookmark.bookmarkCategory = bookmarkCategory
+        bookmark.subcategory = subcategory
+
         bookmarkRepository.save(bookmark)
 
-        return "addBookmark"
+        return "addBookmarkSuccess"
     }
 }
