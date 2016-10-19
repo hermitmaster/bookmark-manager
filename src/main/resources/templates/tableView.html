@@ -1,28 +1,27 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
       layout:decorator="layouts/layout">
 <head>
-    <title>Bookmarks</title>
+    <title th:text="#{msg.page.tableView}"></title>
     <link href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" rel="stylesheet" />
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
 </head>
 <body>
 <div layout:fragment="content">
-    <div th:replace="fragments/searchForm :: search">&nbsp;</div>
     <div class="row">
         <div class="col-md-12">
             <table id="bookmark-table" class="table table-bordered table-striped dataTable">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>URL</th>
-                        <th>Category</th>
-                        <th>Subcategory</th>
-                        <th>Description</th>
+                        <th th:text="#{msg.name}"></th>
+                        <th th:text="#{msg.url}"></th>
+                        <th th:text="#{msg.category}"></th>
+                        <th th:text="#{msg.subcategory}"></th>
+                        <th th:text="#{msg.description}"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="bookmark : ${bookmarks}" role="row">
-                        <td th:text="${bookmark.name}"></td>
+                        <td><a th:href="${bookmark.url}" th:text="${bookmark.name}" target="_blank"></a></td>
                         <td><a th:href="${bookmark.url}" th:text="${bookmark.url}" target="_blank"></a></td>
                         <td th:text="${bookmark.bookmarkCategory.name}"></td>
                         <td th:text="${bookmark.subcategory.name}"></td>

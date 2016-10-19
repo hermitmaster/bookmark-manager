@@ -1,0 +1,21 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="layouts/layout">
+<head>
+    <title th:text="#{msg.page.advancedSearch}"></title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row search-form">
+        <div class="col-md-8 col-md-offset-2">
+            <input type="text" class="form-control" th:placeholder="#{msg.category}" /><br/>
+            <input type="text" class="form-control" th:placeholder="#{msg.subcategory}" /><br/>
+            <input type="text" class="form-control" th:placeholder="#{msg.name}" /><br/>
+            <input type="text" class="form-control" th:placeholder="#{msg.url}" /><br/>
+            <input type="text" class="form-control" th:placeholder="#{msg.description}" /><br/>
+            <input type="submit" class="btn btn-default" th:text="#{msg.form.button.submit}" />
+            <input type="reset" class="btn btn-default" th:text="#{msg.form.button.reset}" /><br/>
+        </div>
+    </div>
+</div>
+</body>
+</html>
