@@ -77,7 +77,7 @@ class BookmarkDisplayController {
      */
     @GetMapping("/category")
     String categoryView(Model model) {
-        model.addAttribute("bookmarks", bookmarkRepository.findAll())
+        model.addAttribute("categories", bookmarkCategoryRepository.findAll())
 
         return "categoryView"
     }
@@ -88,7 +88,7 @@ class BookmarkDisplayController {
      */
     @PostMapping("/category")
     String searchBookmarksCategoryView(Model model) {
-        model.addAttribute("bookmarks", bookmarkRepository.findAll())
+        model.addAttribute("categories", bookmarkCategoryRepository.findAll())
 
         return "categoryView"
     }

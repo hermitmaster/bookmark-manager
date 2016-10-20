@@ -6,7 +6,19 @@
 <body>
 <div layout:fragment="content">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-4">
+            <ul style="list-style: none">
+                <li th:each="category : ${categories}">
+                    <span th:text="${category.name}"></span>
+                    <ul style="list-style: none">
+                        <li th:each="bookmark : ${category.bookmarks}">
+                            <a th:href="${bookmark.url}" th:text="${bookmark.name}"></a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-8">
 
         </div>
     </div>

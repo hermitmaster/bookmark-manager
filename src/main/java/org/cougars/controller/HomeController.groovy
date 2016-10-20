@@ -59,6 +59,11 @@ public class HomeController {
         return "index"
     }
 
+    @GetMapping("/login")
+    String login() {
+        return "login"
+    }
+
     /** RequestMapping for displaying the add bookmark page.
      *
      * @param model Data model returned to view.
