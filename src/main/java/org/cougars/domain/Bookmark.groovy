@@ -49,11 +49,11 @@ class Bookmark {
     String url
 
     // Default value: None
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
     BookmarkCategory bookmarkCategory
 
     // Default value: None
-    @ManyToOne(cascade = CascadeType.ALL, optional = true)
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
     BookmarkCategory subcategory
 
     String name
