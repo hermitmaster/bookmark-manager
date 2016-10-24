@@ -24,9 +24,13 @@
 
 package org.cougars.controller
 
+import groovy.util.logging.Slf4j
+import groovyx.gpars.GParsPool
 import org.cougars.domain.Bookmark
 import org.cougars.domain.Status
+import org.cougars.domain.User
 import org.cougars.repository.BookmarkRepository
+import org.cougars.repository.UserRepository
 import org.cougars.service.BookmarkValidatorService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -40,11 +44,15 @@ import org.springframework.web.bind.annotation.RequestMapping
  * Created by Dennis Rausch on 10/3/16.
  */
 
+@Slf4j
 @Controller
 @RequestMapping("/admin")
 class AdminController {
     @Autowired
     private BookmarkRepository bookmarkRepository
+
+    @Autowired
+    private UserRepository userRepository
 
     /** RequestMapping for pending bookmark review page.
      *
@@ -53,9 +61,9 @@ class AdminController {
      */
     @GetMapping("/review-bookmarks")
     String reviewBookmark(Model model) {
-        model.addAttribute("bookmarks", bookmarkRepository.findByStatus(Status.IN_REVIEW))
+        model.addAttribute("bookmarks", bookmarkRepository.findAll())
 
-        return "reviewBookmarks"
+        return "admin/reviewBookmarks"
     }
 
     /** RequestMapping for bookmark review submission.
@@ -65,7 +73,7 @@ class AdminController {
      */
     @PostMapping("/review-bookmarks")
     String reviewBookmarkSubmission(@ModelAttribute Set<Bookmark> bookmarks) {
-        return "reviewBookmarks"
+        return "admin/reviewBookmarks"
     }
 
     /** RequestMapping for dead link report.
@@ -75,14 +83,46 @@ class AdminController {
      */
     @GetMapping("/dead-link-report")
     String deadLinkReport(Model model) {
-        Set<Bookmark> invalidBookmarks
+        Set<Bookmark> invalidBookmarks = new HashSet<>()
 
-        invalidBookmarks = bookmarkRepository.findAll().findAll() {
-            !BookmarkValidatorService.validateUrl(it.url)
+        GParsPool.withPool {
+            bookmarkRepository.findAll().eachParallel {
+                if(!BookmarkValidatorService.validateUrl(it.url)) {
+                    invalidBookmarks.add(it)
+                }
+            }
         }
 
         model.addAttribute("bookmarks", invalidBookmarks)
 
-        return "deadLinkReport"
+        return "admin/deadLinkReport"
+    }
+
+    @GetMapping("/users")
+    String users(Model model) {
+        model.addAttribute("users", userRepository.findAll())
+
+        return "admin/users"
+    }
+
+    @GetMapping("/add-user")
+    String addUser() {
+        return "admin/addUser"
+    }
+
+    @PostMapping("/add-user")
+    String addUserSubmit() {
+        return "admin/addUser"
+    }
+
+    @GetMapping("/manage-user")
+    String manageUser(Model model) {
+
+        return "admin/manageUser"
+    }
+
+    @PostMapping("/user-management")
+    String submitManageUser(@ModelAttribute Set<User> users) {
+        return "admin/manageUser"
     }
 }

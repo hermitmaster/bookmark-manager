@@ -24,6 +24,7 @@
 
 package org.cougars.controller
 
+import org.cougars.domain.Status
 import org.cougars.repository.BookmarkCategoryRepository
 import org.cougars.repository.BookmarkRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -53,9 +54,9 @@ class BookmarkDisplayController {
      */
     @PostMapping("/table")
     String tableView(Model model) {
-        model.addAttribute("bookmarks", bookmarkRepository.findAll())
+        model.addAttribute("bookmarks", bookmarkRepository.findByStatus(Status.ACTIVE))
 
-        return "tableView"
+        return "bookmarkView/tableView"
     }
 
     /** RequestMapping for bookmark table display search.
@@ -65,9 +66,9 @@ class BookmarkDisplayController {
      */
     @GetMapping("/table")
     String searchBookmarksTableView(Model model) {
-        model.addAttribute("bookmarks", bookmarkRepository.findAll())
+        model.addAttribute("bookmarks", bookmarkRepository.findByStatus(Status.ACTIVE))
 
-        return "tableView"
+        return "bookmarkView/tableView"
     }
 
     /** RequestMapping for bookmark category display.
@@ -79,7 +80,7 @@ class BookmarkDisplayController {
     String categoryView(Model model) {
         model.addAttribute("categories", bookmarkCategoryRepository.findAll())
 
-        return "categoryView"
+        return "bookmarkView/categoryView"
     }
     /** RequestMapping for bookmark category display search.
      *
@@ -90,7 +91,7 @@ class BookmarkDisplayController {
     String searchBookmarksCategoryView(Model model) {
         model.addAttribute("categories", bookmarkCategoryRepository.findAll())
 
-        return "categoryView"
+        return "bookmarkView/categoryView"
     }
 
     /** RequestMapping for bookmark splay tree display.
@@ -100,9 +101,9 @@ class BookmarkDisplayController {
      */
     @GetMapping("/splay-tree")
     String splayTreeView(Model model) {
-        model.addAttribute("bookmarks", bookmarkRepository.findAll())
+        model.addAttribute("bookmarks", bookmarkRepository.findByStatus(Status.ACTIVE))
 
-        return "splayTreeView"
+        return "bookmarkView/splayTreeView"
     }
 
     /** RequestMapping for bookmark splay tree display search.
@@ -112,8 +113,8 @@ class BookmarkDisplayController {
      */
     @PostMapping("/splay-tree")
     String searchBookmarksSplayTreeView(Model model) {
-        model.addAttribute("bookmarks", bookmarkRepository.findAll())
+        model.addAttribute("bookmarks", bookmarkRepository.findByStatus(Status.ACTIVE))
 
-        return "splayTreeView"
+        return "bookmarkView/splayTreeView"
     }
 }

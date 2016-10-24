@@ -2,7 +2,7 @@
       xmlns:th="http://www.thymeleaf.org"
       layout:decorator="layouts/layout">
 <head>
-    <title th:text="#{msg.page.deadLinks}"></title>
+    <title th:text="#{msg.page.reviewBookmarks}"></title>
 </head>
 <body>
 <div layout:fragment="content">
@@ -16,6 +16,7 @@
                     <th th:text="#{msg.category}"></th>
                     <th th:text="#{msg.subcategory}"></th>
                     <th th:text="#{msg.description}"></th>
+                    <th th:text="#{msg.status}"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -25,6 +26,7 @@
                     <td th:text="${bookmark.bookmarkCategory.name}"></td>
                     <td th:text="${bookmark.subcategory.name}"></td>
                     <td th:text="${bookmark.description}"></td>
+                    <td th:text="${bookmark.status.name()}"></td>
                 </tr>
                 </tbody>
             </table>

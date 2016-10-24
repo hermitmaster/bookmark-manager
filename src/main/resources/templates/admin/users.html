@@ -1,0 +1,43 @@
+<!--Duplicate this page for creating additional pages-->
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="layouts/layout">
+<head>
+    <title th:text="#{msg.page.users}"></title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row">
+        <div class="col-md-12">
+            <table id="bookmark-table" class="table table-bordered table-striped dataTable">
+                <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Registration Date</th>
+                    <th>Enabled</th>
+                    <th>Roles</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}" role="row">
+                    <td th:text="${user.username}"></td>
+                    <td th:text="${user.registrationDate}"></td>
+                    <td th:text="${user.enabled}"></td>
+                    <td th:text="${user.authorities}"></td>
+                    <td>
+                        <div></div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#bookmark-table').DataTable();
+        } );
+    </script>
+</div>
+</body>
+</html>
