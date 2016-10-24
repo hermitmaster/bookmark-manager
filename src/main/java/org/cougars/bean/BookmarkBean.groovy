@@ -1,4 +1,4 @@
-package org.cougars
+package org.cougars.bean
 
 import javax.validation.constraints.NotNull
 

@@ -24,7 +24,7 @@
 
 package org.cougars.controller
 
-import org.cougars.BookmarkBean
+import org.cougars.bean.BookmarkBean
 import org.cougars.domain.Bookmark
 import org.cougars.domain.BookmarkCategory
 import org.cougars.repository.BookmarkCategoryRepository

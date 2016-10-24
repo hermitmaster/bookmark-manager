@@ -26,25 +26,32 @@ package org.cougars.domain
 
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.OneToMany
+import javax.persistence.Table
 
 /**
  * Created by Dennis Rausch on 10/4/16.
  */
 
 @Entity
+@Table(name = "users")
 class User {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    Long id
-
     @Column(unique = true)
     String username
 
     @Column(nullable = false)
     String password
+
+    @Column(nullable = false)
+    Boolean enabled = true
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    Set<Authority> authorities
 
     @Column(nullable = false, updatable = false)
     Date registrationDate = new Date()

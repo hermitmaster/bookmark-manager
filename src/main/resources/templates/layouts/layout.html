@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <title layout:title-pattern="$DECORATOR_TITLE - $CONTENT_TITLE" th:text="#{msg.siteName}"></title>
@@ -48,7 +50,8 @@
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a th:href="@{/login}" th:text="#{msg.login}"></a></li>
+                        <li sec:authorize="isAnonymous()"><a th:href="@{/login}" th:text="#{msg.login}"></a></li>
+                        <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}" th:text="#{msg.logout}"></a></li>
                     </ul>
                 </div>
             </div>
