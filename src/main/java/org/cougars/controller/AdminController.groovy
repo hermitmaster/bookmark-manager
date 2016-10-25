@@ -25,13 +25,11 @@
 package org.cougars.controller
 
 import groovy.util.logging.Slf4j
-import groovyx.gpars.GParsPool
 import org.cougars.domain.Bookmark
 import org.cougars.domain.Status
 import org.cougars.domain.User
 import org.cougars.repository.BookmarkRepository
 import org.cougars.repository.UserRepository
-import org.cougars.service.BookmarkValidatorService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -83,17 +81,7 @@ class AdminController {
      */
     @GetMapping("/dead-link-report")
     String deadLinkReport(Model model) {
-        Set<Bookmark> invalidBookmarks = new HashSet<>()
-
-        GParsPool.withPool {
-            bookmarkRepository.findAll().eachParallel {
-                if(!BookmarkValidatorService.validateUrl(it.url)) {
-                    invalidBookmarks.add(it)
-                }
-            }
-        }
-
-        model.addAttribute("bookmarks", invalidBookmarks)
+        model.addAttribute("bookmarks", bookmarkRepository.findByStatus(Status.DEAD))
 
         return "admin/deadLinkReport"
     }

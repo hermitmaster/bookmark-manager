@@ -30,5 +30,6 @@ package org.cougars.domain
 enum Status {
     ACTIVE,
     OBSOLETE,
-    IN_REVIEW
+    IN_REVIEW,
+    DEAD
 }

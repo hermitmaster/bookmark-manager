@@ -48,6 +48,15 @@ class Bookmark {
     @Column(nullable = false, unique = true)
     String url
 
+    @Column
+    String name
+
+    @Column
+    String description
+
+    @Column(nullable = false)
+    Date lastValidated = new Date()
+
     // Default value: None
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     BookmarkCategory bookmarkCategory
@@ -55,10 +64,6 @@ class Bookmark {
     // Default value: None
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     BookmarkCategory subcategory
-
-    String name
-
-    String description
 
     // Default value: Active
     @Enumerated(EnumType.STRING)

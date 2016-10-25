@@ -54,6 +54,7 @@
                                 <li><a th:href="@{/admin/dead-link-report}" th:text="#{msg.page.deadLinks}"></a></li>
                                 <li><a th:href="@{/admin/users}" th:text="#{msg.page.users}"></a></li>
                                 <li><a th:href="@{/admin/add-user}" th:text="#{msg.page.addUser}"></a></li>
+                                <li><a th:href="@{/admin/add-user}">Data Management</a></li>
                             </ul>
                         </li>
                         <li sec:authorize="isAnonymous()"><a th:href="@{/login}" th:text="#{msg.login}"></a></li>

@@ -1,6 +1,6 @@
-package org.cougars.service
+package org.cougars.util
 
-import org.springframework.boot.test.context.SpringBootTest
+import org.cougars.service.BookmarkValidatorService
 import spock.lang.Specification
 
 /**
@@ -13,7 +13,7 @@ class BookmarkValidatorTest extends Specification {
     def "ValidateUrlSuccess"() {
         def result
         when:
-        result = BookmarkValidatorService.validateUrl("http://www.google.com")
+        result = BookmarkValidatorService.isValid("http://www.google.com")
 
         then:
         assert result
@@ -22,7 +22,7 @@ class BookmarkValidatorTest extends Specification {
     def "ValidateUrlFail"() {
         def result
         when:
-        result = BookmarkValidatorService.validateUrl("http://google.com/404url")
+        result = BookmarkValidatorService.isValid("http://google.com/404url")
 
         then:
         assert !result

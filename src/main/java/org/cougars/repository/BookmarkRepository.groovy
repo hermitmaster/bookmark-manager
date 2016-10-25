@@ -53,4 +53,11 @@ interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
      * @return          Collection of all books with the referenced status.
      */
     Set<Bookmark> findByStatus(Status status)
+
+    /**
+     *
+     * @param lastValidated
+     * @return
+     */
+    Set<Bookmark> findByLastValidatedBefore(Date lastValidated)
 }
