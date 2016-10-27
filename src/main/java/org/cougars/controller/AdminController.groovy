@@ -25,6 +25,7 @@
 package org.cougars.controller
 
 import groovy.util.logging.Slf4j
+import org.cougars.bean.UserBean
 import org.cougars.domain.Bookmark
 import org.cougars.domain.Status
 import org.cougars.domain.User
@@ -93,24 +94,19 @@ class AdminController {
         return "admin/users"
     }
 
-    @GetMapping("/add-user")
-    String addUser() {
-        return "admin/addUser"
-    }
-
     @PostMapping("/add-user")
-    String addUserSubmit() {
+    String addUser(@ModelAttribute UserBean userBean) {
+        User user = new User()
+        user.username = userBean.username
+        user.password = userBean.password
+
+        userRepository.save(user)
+
         return "admin/addUser"
-    }
-
-    @GetMapping("/manage-user")
-    String manageUser(Model model) {
-
-        return "admin/manageUser"
     }
 
     @PostMapping("/user-management")
-    String submitManageUser(@ModelAttribute Set<User> users) {
+    String manageUser(@ModelAttribute Set<User> users) {
         return "admin/manageUser"
     }
 }

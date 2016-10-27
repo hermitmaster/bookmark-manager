@@ -5,4 +5,6 @@ package org.cougars.bean
  */
 class UserBean {
     String username
+
+    String password
 }

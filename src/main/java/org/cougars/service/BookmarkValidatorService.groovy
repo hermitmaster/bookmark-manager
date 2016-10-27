@@ -23,7 +23,7 @@ class BookmarkValidatorService {
     @Autowired
     BookmarkRepository bookmarkRepository
 
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 0 0/12 * * *")
     void validateBookmarks() {
         Set<Bookmark> bookmarksToValidate = bookmarkRepository.findByLastValidatedBefore(new Date() - 7)
         log.info("Executing batch bookmark validation of ${bookmarksToValidate.size()} bookmarks on scheduled interval")
