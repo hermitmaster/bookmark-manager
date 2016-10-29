@@ -53,11 +53,6 @@ class AdminController {
     @Autowired
     private UserRepository userRepository
 
-    /** RequestMapping for pending bookmark review page.
-     *
-     * @param model Data model returned to view.
-     * @return
-     */
     @GetMapping("/review-bookmarks")
     String reviewBookmark(Model model) {
         model.addAttribute("bookmarks", bookmarkRepository.findAll())
@@ -65,21 +60,11 @@ class AdminController {
         return "admin/reviewBookmarks"
     }
 
-    /** RequestMapping for bookmark review submission.
-     *
-     * @param bookmarks
-     * @return
-     */
     @PostMapping("/review-bookmarks")
     String reviewBookmarkSubmission(@ModelAttribute Set<Bookmark> bookmarks) {
         return "admin/reviewBookmarks"
     }
 
-    /** RequestMapping for dead link report.
-     *
-     * @param model Data model returned to view.
-     * @return
-     */
     @GetMapping("/dead-link-report")
     String deadLinkReport(Model model) {
         model.addAttribute("bookmarks", bookmarkRepository.findByStatus(Status.DEAD))
@@ -89,6 +74,7 @@ class AdminController {
 
     @GetMapping("/users")
     String users(Model model) {
+        model.addAttribute("userBean", new UserBean())
         model.addAttribute("users", userRepository.findAll())
 
         return "admin/users"
@@ -102,7 +88,7 @@ class AdminController {
 
         userRepository.save(user)
 
-        return "admin/addUser"
+        return "admin/users"
     }
 
     @PostMapping("/user-management")

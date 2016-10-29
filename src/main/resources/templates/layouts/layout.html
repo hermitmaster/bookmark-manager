@@ -29,10 +29,30 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        <li><a th:href="@{/add-bookmark}" th:text="#{msg.submitBookmark}"></a></li>
-                        <li><a th:href="@{/bookmarks/table}" th:title="#{msg.page.tableView}"><i class="glyphicon glyphicon-list-alt"></i></a></li>
-                        <li><a th:href="@{/bookmarks/category}" th:title="#{msg.page.categoryView}"><i class="glyphicon glyphicon-th-list"></i></a></li>
-                        <li><a th:href="@{/bookmarks/splay-tree}" th:title="#{msg.page.splayTreeView}"><i class="glyphicon glyphicon-tree-conifer"></i></a></li>
+                        <li>
+                            <a th:href="@{/add-bookmark}" th:title="#{msg.submitBookmark}">
+                                <i class="glyphicon glyphicon-plus"></i>&nbsp;
+                                <span class="hidden-sm hidden-md hidden-lg hidden-xl" th:text="#{msg.submitBookmark}"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/(view=table)}" th:title="#{msg.page.tableView}">
+                                <i class="glyphicon glyphicon-list-alt"></i>&nbsp;
+                                <span class="hidden-sm hidden-md hidden-lg hidden-xl" th:text="#{msg.page.tableView}"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/(view=category)}" th:title="#{msg.page.categoryView}">
+                                <i class="glyphicon glyphicon-th-list"></i>&nbsp;
+                                <span class="hidden-sm hidden-md hidden-lg hidden-xl" th:text="#{msg.page.categoryView}"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/(view=tree)}" th:title="#{msg.page.splayTreeView}">
+                                <i class="glyphicon glyphicon-tree-conifer"></i>&nbsp;
+                                <span class="hidden-sm hidden-md hidden-lg hidden-xl" th:text="#{msg.page.splayTreeView}"></span>
+                            </a>
+                        </li>
                         <li>
                             <form class="navbar-form">
                                 <div class="input-group">

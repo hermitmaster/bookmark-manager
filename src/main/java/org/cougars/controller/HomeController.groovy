@@ -24,23 +24,31 @@
 
 package org.cougars.controller
 
+import groovy.util.logging.Slf4j
 import org.cougars.bean.BookmarkBean
 import org.cougars.domain.Bookmark
 import org.cougars.domain.BookmarkCategory
+import org.cougars.domain.Status
 import org.cougars.repository.BookmarkCategoryRepository
 import org.cougars.repository.BookmarkRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+
+import javax.servlet.http.Cookie
+import javax.servlet.http.HttpServletResponse
 
 /**
  * Created by Dennis Rausch on 8/26/16.
  */
 
+@Slf4j
 @Controller
 @RequestMapping("/")
 public class HomeController {
@@ -50,13 +58,21 @@ public class HomeController {
     @Autowired
     private BookmarkCategoryRepository bookmarkCategoryRepository
 
-    /** RequestMapping for displaying the home page.
-     *
-     * @return index
-     */
     @GetMapping("")
-    String index() {
-        return "index"
+    String index(@CookieValue(value = "view", defaultValue = "table") String cookie,
+                 @RequestParam(value ="view", required = false) String view,
+                 Model model, HttpServletResponse response) {
+        String returnPath = view ?: cookie
+
+        if(returnPath == "category") {
+            model.addAttribute("categories", bookmarkCategoryRepository.findAll())
+        } else {
+            model.addAttribute("bookmarks", bookmarkRepository.findByStatus(Status.ACTIVE))
+        }
+
+        response.addCookie(new Cookie("view", returnPath));
+
+        return returnPath
     }
 
     @GetMapping("/login")
@@ -64,11 +80,6 @@ public class HomeController {
         return "login"
     }
 
-    /** RequestMapping for displaying the add bookmark page.
-     *
-     * @param model Data model returned to view.
-     * @return addBookmark
-     */
     @GetMapping("/add-bookmark")
     String addBookmark(Model model) {
         model.addAttribute("bookmarkBean", new BookmarkBean())
@@ -76,11 +87,6 @@ public class HomeController {
         return "addBookmark"
     }
 
-    /** RequestMapping for adding a new bookmark.
-     *
-     * @param bookmark
-     * @return addBookmark
-     */
     @PostMapping("/add-bookmark")
     String addBookmarkSubmission(@ModelAttribute BookmarkBean bookmarkBean) {
         BookmarkCategory bookmarkCategory = bookmarkCategoryRepository.findByName(bookmarkBean.bookmarkCategory)
@@ -112,5 +118,10 @@ public class HomeController {
         bookmarkRepository.save(bookmark)
 
         return "addBookmarkSuccess"
+    }
+
+    @PostMapping("/search")
+    String search(Model model) {
+
     }
 }
