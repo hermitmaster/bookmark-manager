@@ -6,6 +6,7 @@ html {
 body {
     /* Margin bottom by footer height */
     margin-bottom: 25px;
+    padding-bottom: 15px;
 }
 footer {
     position: absolute;
@@ -18,6 +19,7 @@ footer {
 header {
     margin-bottom: 20px;
 }
+
 /* End Global defaults */
 
 /* Bootstrap overrides */

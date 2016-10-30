@@ -28,6 +28,8 @@ import org.cougars.domain.Status
 import org.cougars.repository.BookmarkCategoryRepository
 import org.cougars.repository.BookmarkRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.SortDefault
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -48,22 +50,22 @@ class BookmarkSearchController {
     private BookmarkCategoryRepository bookmarkCategoryRepository
 
     @PostMapping("/search-table")
-    String tableView(Model model) {
-        model.addAttribute("bookmarks", bookmarkRepository.findByStatus(Status.ACTIVE))
+    String tableView(@SortDefault("id") Pageable pageable, Model model) {
+        model.addAttribute("bookmarks", bookmarkRepository.findByStatus(Status.ACTIVE, pageable))
 
         return "table"
     }
 
     @PostMapping("/search-category")
-    String searchBookmarksCategoryView(Model model) {
-        model.addAttribute("categories", bookmarkCategoryRepository.findAll())
+    String searchBookmarksCategoryView(@SortDefault("id") Pageable pageable, Model model) {
+        model.addAttribute("categories", bookmarkCategoryRepository.findAll(pageable))
 
         return "category"
     }
 
     @PostMapping("/search-tree")
-    String searchBookmarksSplayTreeView(Model model) {
-        model.addAttribute("bookmarks", bookmarkRepository.findByStatus(Status.ACTIVE))
+    String searchBookmarksSplayTreeView(@SortDefault("id") Pageable pageable, Model model) {
+        model.addAttribute("bookmarks", bookmarkRepository.findByStatus(Status.ACTIVE, pageable))
 
         return "tree"
     }

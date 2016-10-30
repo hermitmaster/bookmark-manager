@@ -32,13 +32,14 @@ import org.cougars.domain.Status
 import org.cougars.repository.BookmarkCategoryRepository
 import org.cougars.repository.BookmarkRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.SortDefault
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 import javax.servlet.http.Cookie
@@ -50,7 +51,6 @@ import javax.servlet.http.HttpServletResponse
 
 @Slf4j
 @Controller
-@RequestMapping("/")
 public class HomeController {
     @Autowired
     private BookmarkRepository bookmarkRepository
@@ -59,15 +59,17 @@ public class HomeController {
     private BookmarkCategoryRepository bookmarkCategoryRepository
 
     @GetMapping("")
-    String index(@CookieValue(value = "view", defaultValue = "table") String cookie,
-                 @RequestParam(value ="view", required = false) String view,
+    String index(@RequestParam(value ="view", required = false) String view,
+                 @CookieValue(value = "view", defaultValue = "table") String cookie,
+                 @SortDefault("id") Pageable pageable,
                  Model model, HttpServletResponse response) {
         String returnPath = view ?: cookie
 
         if(returnPath == "category") {
-            model.addAttribute("categories", bookmarkCategoryRepository.findAll())
+            model.addAttribute("page", bookmarkCategoryRepository.findAll())
         } else {
-            model.addAttribute("bookmarks", bookmarkRepository.findByStatus(Status.ACTIVE))
+            model.addAttribute("statusList", Status.values() as List<String>)
+            model.addAttribute("page", bookmarkRepository.findByStatus(Status.ACTIVE, pageable))
         }
 
         response.addCookie(new Cookie("view", returnPath));

@@ -27,6 +27,8 @@ package org.cougars.repository
 import org.cougars.domain.Bookmark
 import org.cougars.domain.BookmarkCategory
 import org.cougars.domain.Status
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 
 /**
@@ -46,13 +48,14 @@ interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
      * @return                  Collection of all books with the referenced category.
      */
     Set<Bookmark> findByBookmarkCategory(BookmarkCategory bookmarkCategory)
+    Page<Bookmark> findByBookmarkCategory(BookmarkCategory bookmarkCategory, Pageable pageable)
 
     /** Find a bookmark based on its current status.
      *
      * @param status    Status of bookmarks being searched for.
      * @return          Collection of all books with the referenced status.
      */
-    Set<Bookmark> findByStatus(Status status)
+    Page<Bookmark> findByStatus(Status status, Pageable pageable)
 
     /**
      *

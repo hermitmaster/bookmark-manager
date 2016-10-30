@@ -1,33 +1,130 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org"
-      layout:decorator="layouts/layout">
+      xmlns:sd="http://www.thymeleaf.org/spring-data"
+      layout:decorator="layouts/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <title th:text="#{msg.page.tableView}"></title>
 </head>
 <body>
 <div layout:fragment="content">
+    <div class="row" th:fragment="pagination-head">
+        <div class="col-md-12">
+            <ul class="pagination" style="display: inline-block;">
+                <li>
+                    <label for="page-size">
+                        Show
+                        <select id="page-size" class="form-control input-sm pagination" style="width: 75px; display: inline-block;">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="250">250</option>
+                        </select>
+                        results per page
+                    </label>
+                </li>
+            </ul>
+        </div>
+        <script type="text/javascript">
+            /*<![CDATA[*/
+            $(function() {
+                var urlParams = {};
+                var match;
+                var pl = /\+/g;
+                var search = /([^&=]+)=?([^&]*)/g;
+                var decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); };
+                var query  = window.location.search.substring(1);
+
+                while (match = search.exec(query)) {
+                    urlParams[decode(match[1])] = decode(match[2]);
+                }
+
+                var pageSize = urlParams['size'] != null ? urlParams['size'] : 25;
+
+                $("#page-size").val(pageSize);
+            });
+
+            $(function(){
+                $('#page-size').bind('change', function () {
+                    var url = $(this).val();
+                    if (url) {
+                        window.location = window.location.href.split('?')[0] + '?page=0&size=' + $('#page-size').val();
+                    }
+                    return false;
+                });
+            });
+            /*]]>*/
+        </script>
+    </div>
     <div class="row">
         <div class="col-md-12">
-            <table id="bookmark-table" class="table table-bordered table-striped dataTable">
-                <thead>
+            <form method="post" th:action="@{/admin/edit-bookmarks}">
+                <table class="table table-bordered table-striped">
+                    <thead>
                     <tr>
-                        <th th:text="#{msg.name}"></th>
-                        <th th:text="#{msg.url}"></th>
-                        <th th:text="#{msg.category}"></th>
-                        <th th:text="#{msg.subcategory}"></th>
-                        <th th:text="#{msg.description}"></th>
+                        <th><a class="sorted" th:text="#{msg.name}" sd:pagination-sort="name"></a></th>
+                        <th><a class="sorted" th:text="#{msg.url}" sd:pagination-sort="url"></a></th>
+                        <th><a class="sorted" th:text="#{msg.category}" sd:pagination-sort="bookmarkCategory"></a></th>
+                        <th><a class="sorted" th:text="#{msg.subcategory}" sd:pagination-sort="subcategory"></a></th>
+                        <th><a th:text="#{msg.description}" sd:pagination-sort="description"></a></th>
+                        <th sec:authorize="isAuthenticated()"><a class="sorted" th:text="#{msg.status}"></a></th>
+                        <th sec:authorize="isAuthenticated()"><a class="sorted" th:text="#{msg.action}"></a></th>
                     </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="bookmark : ${bookmarks}" role="row">
-                        <td><a th:href="${bookmark.url}" th:text="${bookmark.name}" target="_blank"></a></td>
-                        <td><a th:href="${bookmark.url}" th:text="${bookmark.url}" target="_blank"></a></td>
-                        <td th:text="${bookmark.bookmarkCategory.name}"></td>
-                        <td th:text="${bookmark.subcategory.name}"></td>
-                        <td th:text="${bookmark.description}"></td>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th><a class="sorted" th:text="#{msg.name}" sd:pagination-sort="name"></a></th>
+                        <th><a class="sorted" th:text="#{msg.url}" sd:pagination-sort="url"></a></th>
+                        <th><a class="sorted" th:text="#{msg.category}" sd:pagination-sort="bookmarkCategory"></a></th>
+                        <th><a class="sorted" th:text="#{msg.subcategory}" sd:pagination-sort="subcategory"></a></th>
+                        <th><a th:text="#{msg.description}" sd:pagination-sort="description"></a></th>
+                        <th sec:authorize="isAuthenticated()"><a class="sorted" th:text="#{msg.status}"></a></th>
+                        <th sec:authorize="isAuthenticated()"><a class="sorted" th:text="#{msg.action}"></a></th>
                     </tr>
-                </tbody>
-            </table>
+                    </tfoot>
+                    <tbody>
+                    <tr th:each="bookmark : ${page}" role="row" th:id="${'bookmark-id-' + bookmark.id}">
+                        <td>
+                            <a sec:authorize="isAnonymous()" th:href="${bookmark.url}" th:text="${bookmark.name}" target="_blank"></a>
+                            <input sec:authorize="isAuthenticated()" type="text" th:value="${bookmark.name}" />
+                        </td>
+                        <td>
+                            <a sec:authorize="isAnonymous()" th:href="${bookmark.url}" th:text="${bookmark.url}" target="_blank"></a>
+                            <input sec:authorize="isAuthenticated()" type="text" th:value="${bookmark.url}" />
+                        </td>
+                        <td>
+                            <span sec:authorize="isAnonymous()" th:text="${bookmark.bookmarkCategory.name}"></span>
+                            <input sec:authorize="isAuthenticated()" type="text" th:value="${bookmark.bookmarkCategory.name}" />
+                        </td>
+                        <td>
+                            <span sec:authorize="isAnonymous()" th:text="${bookmark.subcategory.name}"></span>
+                            <input sec:authorize="isAuthenticated()" type="text" th:value="${bookmark.subcategory.name}" />
+                        </td>
+                        <td>
+                            <span sec:authorize="isAnonymous()" th:text="${bookmark.description}"></span>
+                            <textarea sec:authorize="isAuthenticated()" th:text="${bookmark.description}"></textarea>
+                        </td>
+                        <td sec:authorize="isAuthenticated()">
+                            <select th:value="${bookmark.status}">
+                                <option th:each="status : ${statusList}" th:value="${status}" th:text="${status}"></option>
+                            </select>
+                        </td>
+                        <td sec:authorize="isAuthenticated()"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div sd:pagination-summary="">info</div>
+        </div>
+        <div class="col-sm-6">
+            <nav class="pull-right">
+                <ul class="pagination" sd:pagination="full"></ul>
+            </nav>
         </div>
     </div>
 </div>

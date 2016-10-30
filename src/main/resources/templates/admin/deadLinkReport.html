@@ -19,7 +19,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="bookmark : ${bookmarks}" role="row">
+                <tr th:each="bookmark : ${page}" role="row">
                     <td><a th:href="${bookmark.url}" th:text="${bookmark.name}" target="_blank"></a></td>
                     <td><a th:href="${bookmark.url}" th:text="${bookmark.url}" target="_blank"></a></td>
                     <td th:text="${bookmark.bookmarkCategory.name}"></td>

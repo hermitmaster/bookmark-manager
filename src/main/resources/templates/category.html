@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-md-4">
             <ul style="list-style: none">
-                <li th:each="category : ${categories}">
+                <li th:each="category : ${page}">
                     <span th:text="${category.name}"></span>
                     <ul style="list-style: none">
                         <li th:each="bookmark : ${category.bookmarks}">

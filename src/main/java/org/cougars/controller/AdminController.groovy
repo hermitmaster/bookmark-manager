@@ -32,6 +32,8 @@ import org.cougars.domain.User
 import org.cougars.repository.BookmarkRepository
 import org.cougars.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.SortDefault
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -66,8 +68,8 @@ class AdminController {
     }
 
     @GetMapping("/dead-link-report")
-    String deadLinkReport(Model model) {
-        model.addAttribute("bookmarks", bookmarkRepository.findByStatus(Status.DEAD))
+    String deadLinkReport(@SortDefault("id") Pageable pageable, Model model) {
+        model.addAttribute("page", bookmarkRepository.findByStatus(Status.DEAD, pageable))
 
         return "admin/deadLinkReport"
     }
@@ -89,6 +91,13 @@ class AdminController {
         userRepository.save(user)
 
         return "admin/users"
+    }
+
+    @PostMapping("/edit-bookmark")
+    String editBookmarks(@ModelAttribute Set<Bookmark> bookmarks) {
+        bookmarkRepository.save(bookmarks)
+
+        return "table"
     }
 
     @PostMapping("/user-management")
