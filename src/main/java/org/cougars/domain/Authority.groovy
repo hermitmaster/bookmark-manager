@@ -21,10 +21,10 @@ public class Authority {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     Long id
 
-    @Column(nullable = false)
-    String authority
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "username", nullable = false)
     User user
+
+    @Column(nullable = false)
+    String authority = "user"
 }

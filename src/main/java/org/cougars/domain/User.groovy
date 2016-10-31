@@ -24,6 +24,7 @@
 
 package org.cougars.domain
 
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -48,8 +49,8 @@ class User {
     @Column(nullable = false)
     Boolean enabled = true
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    Set<Authority> authorities
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    Set<Authority> authorities = new HashSet<>()
 
     @Column(nullable = false, updatable = false)
     Date registrationDate = new Date()

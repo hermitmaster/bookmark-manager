@@ -57,6 +57,7 @@ class BookmarkValidatorService {
                 it.lastValidated = validationTimestamp
 
                 if(!isValid(it.url)) {
+                    it.lastModified = validationTimestamp
                     it.status = Status.DEAD
                 }
 

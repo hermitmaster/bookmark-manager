@@ -1,6 +1,6 @@
 -- Users
 INSERT INTO users (password, registration_date, username, enabled) VALUES
-  ('password', '2016-10-16 22:52:58', 'admin', true);
+  ('$2a$10$VUbNDU1YVuXPOlizhc8K6u0FZFDipJaIIGSSbpMNeGDyQ2IEcaily', '2016-10-16 22:52:58', 'admin', true);
 
 -- Roles
 INSERT INTO authorities (username, authority) VALUES
