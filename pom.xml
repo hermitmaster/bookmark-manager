@@ -20,26 +20,19 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<spock.version>1.0-groovy-2.4</spock.version>
+		<spock.version>1.1-groovy-2.4-rc-2</spock.version>
+		<apache.poi.version>3.15</apache.poi.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>2.4.7</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-rest</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.github.jpenren</groupId>
-			<artifactId>thymeleaf-spring-data-dialect</artifactId>
-			<version>2.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -52,11 +45,28 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.codehaus.groovy</groupId>
+					<artifactId>groovy</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-springsecurity4</artifactId>
 			<version>2.1.2.RELEASE</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>io.github.jpenren</groupId>
+			<artifactId>thymeleaf-spring-data-dialect</artifactId>
+			<version>2.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -67,6 +77,16 @@
 			<groupId>org.codehaus.gpars</groupId>
 			<artifactId>gpars</artifactId>
 			<version>1.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${apache.poi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${apache.poi.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -94,6 +114,12 @@
 			<artifactId>spock-spring</artifactId>
 			<version>${spock.version}</version>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.codehaus.groovy</groupId>
+					<artifactId>groovy-all</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 

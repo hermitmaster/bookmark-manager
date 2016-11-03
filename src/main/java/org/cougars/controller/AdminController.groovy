@@ -25,6 +25,7 @@
 package org.cougars.controller
 
 import groovy.util.logging.Slf4j
+import org.apache.poi.util.IOUtils
 import org.cougars.bean.UserBean
 import org.cougars.domain.Authority
 import org.cougars.domain.Bookmark
@@ -32,6 +33,7 @@ import org.cougars.domain.Status
 import org.cougars.domain.User
 import org.cougars.repository.BookmarkRepository
 import org.cougars.repository.UserRepository
+import org.cougars.service.BookmarkIOService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.SortDefault
@@ -41,6 +43,10 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.multipart.MultipartFile
+
+import javax.servlet.http.HttpServletResponse
 
 /**
  * Created by Dennis Rausch on 10/3/16.
@@ -55,6 +61,9 @@ class AdminController {
 
     @Autowired
     private UserRepository userRepository
+
+    @Autowired
+    BookmarkIOService bookmarkIOService
 
     @GetMapping("/review-bookmarks")
     String reviewBookmark(Model model) {
@@ -85,17 +94,14 @@ class AdminController {
 
     @PostMapping("/add-user")
     String addUser(@ModelAttribute UserBean userBean) {
-        Authority authority = new Authority()
-        User user = new User()
-        authority.user = user
-        authority.authority = "admin"
-        user.username = userBean.username
-        user.password = userBean.password
-        user.authorities.add(authority)
+        userRepository.save(new User(userBean.username, userBean.password))
 
-        userRepository.save(user)
+        return "redirect:/admin/users"
+    }
 
-        return "admin/users"
+    @PostMapping("/update-user")
+    String updateUser(@ModelAttribute Set<User> users) {
+        return "admin/manageUser"
     }
 
     @PostMapping("/edit-bookmark")
@@ -105,8 +111,23 @@ class AdminController {
         return "table"
     }
 
-    @PostMapping("/user-management")
-    String manageUser(@ModelAttribute Set<User> users) {
-        return "admin/manageUser"
+    @GetMapping("/data-management")
+    String dataManagement() {
+        return "admin/dataManagement"
+    }
+
+    @GetMapping("/bookmark-export")
+    void bookmarkExport(HttpServletResponse response) {
+        //TODO: Finish implementation
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        response.setHeader("content-disposition", "filename=bookmark_export_${new Date().format("MM_dd_yyyy")}.xlsx")
+        bookmarkIOService.exportBookmarks(response.outputStream)
+        response.flushBuffer()
+    }
+
+    @PostMapping("/bookmark-import")
+    void bookmarkImport(@RequestParam("file") MultipartFile file) {
+        //TODO: Finish implementation
+        bookmarkIOService.importBookmarks(file)
     }
 }

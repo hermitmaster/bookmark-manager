@@ -27,4 +27,13 @@ public class Authority {
 
     @Column(nullable = false)
     String authority = "user"
+
+    Authority() {
+        super()
+    }
+
+    Authority(User user, String authority) {
+        this.user = user
+        this.authority = authority
+    }
 }

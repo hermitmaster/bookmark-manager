@@ -3,11 +3,16 @@
       xmlns:th="http://www.thymeleaf.org"
       layout:decorator="layouts/layout">
 <head>
-    <title th:text="#{msg.page.manageUser}"></title>
+    <title th:text="#{msg.page.data}"></title>
 </head>
 <body>
 <div layout:fragment="content">
-    <h1>Welcome to the Quick Access Bookmark Manager!</h1>
+    <div class="row">
+        <div class="col-md-4 offset-md-4">
+            <a th:href="@{/admin/bookmark-export}" class="btn btn-default">Export Bookmarks</a>
+        </div>
+    </div>
+
 </div>
 </body>
 </html>

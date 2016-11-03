@@ -11,14 +11,14 @@ import org.cougars.domain.Status
 import org.cougars.repository.BookmarkRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
 /**
  * Created by Dennis Rausch on 10/25/16.
  */
 
 @Slf4j
-@Component
+@Service
 class BookmarkValidatorService {
     @Autowired
     BookmarkRepository bookmarkRepository
