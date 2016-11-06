@@ -10,6 +10,8 @@ import org.apache.poi.xssf.usermodel.XSSFRow
 import org.apache.poi.xssf.usermodel.XSSFSheet
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.cougars.domain.Bookmark
+import org.cougars.domain.BookmarkCategory
+import org.cougars.repository.BookmarkCategoryRepository
 import org.cougars.repository.BookmarkRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -25,10 +27,16 @@ class BookmarkIOService {
     @Autowired
     BookmarkRepository bookmarkRepository
 
+    @Autowired
+    BookmarkCategoryRepository bookmarkCategoryRepository
+
+    @Autowired
+    BookmarkValidatorService bookmarkValidatorService
+
     void importBookmarks(MultipartFile file) {
         log.info("Beginning bookmark import. This may take some time.")
         Set<Bookmark> bookmarks = new HashSet<>()
-        Workbook workbook = getWorkbook(file.inputStream, file.name)
+        Workbook workbook = getWorkbook(file.inputStream, file.originalFilename)
         Sheet sheet = workbook.getSheetAt(0)
         //TODO: Finish implementation
         Iterator<Row> iterator = sheet.iterator()
@@ -41,6 +49,7 @@ class BookmarkIOService {
             while (cellIterator.hasNext()) {
                 Cell nextCell = cellIterator.next()
                 int columnIndex = nextCell.getColumnIndex()
+                BookmarkCategory bookmarkCategory = null
 
                 switch (columnIndex) {
                     case 0:
@@ -52,20 +61,42 @@ class BookmarkIOService {
                     case 2:
                         bookmark.description = nextCell.stringCellValue
                         break
+                    case 3:
+                        String categoryName = nextCell.stringCellValue
+                        bookmarkCategory = bookmarkCategoryRepository.findByName(categoryName)
+                        if(!bookmarkCategory) {
+                            bookmarkCategory = new BookmarkCategory()
+                            bookmarkCategory.name = categoryName
+                            bookmarkCategory.parent = bookmarkCategoryRepository.findById(1)
+                            bookmarkCategoryRepository.save(bookmarkCategory)
+                        }
+                        bookmark.bookmarkCategory = bookmarkCategoryRepository.findByName(bookmarkCategory.name)
+                        break
+                    case 4:
+                        String categoryName = nextCell.stringCellValue
+                        BookmarkCategory subcategory = bookmarkCategoryRepository.findByName(categoryName)
+                        if(!subcategory) {
+                            subcategory = new BookmarkCategory()
+                            subcategory.name = categoryName
+                            subcategory.parent = bookmarkCategory
+                            bookmarkCategoryRepository.save(subcategory)
+                        }
+                        bookmark.subcategory = bookmarkCategoryRepository.findByName(subcategory.name)
+                        break
                 }
 
 
             }
             bookmarks.add(bookmark)
         }
-        //Iterate over rows
-        //Create new categories
         //Create collection of bookmarks
 
         if(bookmarks) {
             // Per specification, flush the DB and replace with imported data.
-            bookmarkRepository.deleteAll()
+            bookmarkRepository.deleteInBatch(bookmarkRepository.findAll())
+            bookmarkRepository.flush()
             bookmarkRepository.save(bookmarks)
+            bookmarkValidatorService.validateBookmarks(bookmarks)
         }
 
         log.info("Bookmark import completed.")

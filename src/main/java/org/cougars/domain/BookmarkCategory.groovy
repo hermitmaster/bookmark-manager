@@ -45,7 +45,7 @@ class BookmarkCategory {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     Long id
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     String name
 
     @ManyToOne

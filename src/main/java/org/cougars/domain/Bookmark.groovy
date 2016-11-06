@@ -55,7 +55,7 @@ class Bookmark {
     String description
 
     @Column(nullable = false)
-    Date lastValidated = new Date()
+    Date lastValidated = new Date() - 7
 
     // Default value: None
     @ManyToOne(cascade = CascadeType.ALL, optional = false)

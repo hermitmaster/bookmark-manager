@@ -31,6 +31,7 @@ import org.cougars.domain.BookmarkCategory
 import org.cougars.domain.Status
 import org.cougars.repository.BookmarkCategoryRepository
 import org.cougars.repository.BookmarkRepository
+import org.cougars.service.BookmarkValidatorService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.SortDefault
@@ -57,6 +58,9 @@ public class HomeController {
 
     @Autowired
     private BookmarkCategoryRepository bookmarkCategoryRepository
+
+    @Autowired
+    private BookmarkValidatorService bookmarkValidatorService
 
     @GetMapping("")
     String index(@RequestParam(value ="view", required = false) String view,
@@ -118,6 +122,7 @@ public class HomeController {
         bookmark.subcategory = subcategory
 
         bookmarkRepository.save(bookmark)
+        bookmarkValidatorService.validateUrl(bookmark)
 
         return "addBookmarkSuccess"
     }

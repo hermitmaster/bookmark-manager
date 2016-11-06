@@ -126,8 +126,10 @@ class AdminController {
     }
 
     @PostMapping("/bookmark-import")
-    void bookmarkImport(@RequestParam("file") MultipartFile file) {
+    String bookmarkImport(@RequestParam("file") MultipartFile file) {
         //TODO: Finish implementation
         bookmarkIOService.importBookmarks(file)
+
+        return "admin/dataManagement"
     }
 }
