@@ -67,4 +67,8 @@ class User {
         this.registrationDate = new Date()
         this.authorities.add(new Authority(this, "admin"))
     }
+
+    String getAuthoritiesList() {
+        return authorities*.authority.join(", ")
+    }
 }

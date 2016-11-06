@@ -61,7 +61,7 @@ public class HomeController {
     @GetMapping("")
     String index(@RequestParam(value ="view", required = false) String view,
                  @CookieValue(value = "view", defaultValue = "table") String cookie,
-                 @SortDefault("id") Pageable pageable,
+                 @SortDefault("dateCreated") Pageable pageable,
                  Model model, HttpServletResponse response) {
         String returnPath = view ?: cookie
 
@@ -72,7 +72,7 @@ public class HomeController {
             model.addAttribute("page", bookmarkRepository.findByStatus(Status.ACTIVE, pageable))
         }
 
-        response.addCookie(new Cookie("view", returnPath));
+        response.addCookie(new Cookie("view", returnPath))
 
         return returnPath
     }

@@ -8,19 +8,35 @@
 <div layout:fragment="content">
     <div class="row">
         <div class="col-md-4">
-            <ul style="list-style: none">
-                <li th:each="category : ${page}">
-                    <span th:text="${category.name}"></span>
-                    <ul style="list-style: none">
-                        <li th:each="bookmark : ${category.bookmarks}">
-                            <a th:href="${bookmark.url}" th:text="${bookmark.name}"></a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
+            <div class="panel-group" id="accordion">
+                <div th:each="category : ${page}" class="panel panel-default">
+                    <div class="panel-heading">
+                        <a data-toggle="collapse" data-parent="#accordion" th:href="${'#' + category.name}">
+                            <h4 th:text="${'Category: ' + category.name}" class="panel-title"></h4>
+                        </a>
+                    </div>
+                    <div th:id="${category.name}" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul style="list-style: none">
+                                <li th:each="bookmark : ${category.bookmarks}">
+                                    <a th:href="${bookmark.url}" th:text="${bookmark.name}"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-md-8">
-
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Bookmark Details</h4>
+                </div>
+                <div id="bookmark-details-panel" class="panel-body">
+                    <!--Update this panel via ajax to display a detail view of the selected bookmark-->
+                    <p>Select a bookmark from the menu to see details.</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

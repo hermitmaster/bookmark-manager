@@ -45,7 +45,7 @@ class BookmarkCategory {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     Long id
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     String name
 
     @ManyToOne
@@ -57,6 +57,12 @@ class BookmarkCategory {
     @OneToMany(mappedBy = "bookmarkCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Set<Bookmark> bookmarks
 
-    @Embedded
-    RecordDetails recordDetails = new RecordDetails()
+    @ManyToOne
+    User createdBy
+
+    @Column(nullable = false, updatable = false)
+    Date dateCreated = new Date()
+
+    @Column(nullable = false)
+    Date dateModified = new Date()
 }

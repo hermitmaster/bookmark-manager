@@ -1,11 +1,11 @@
 package org.cougars.service
 
 import groovy.util.logging.Slf4j
-import groovyx.gpars.GParsPool
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
+import org.apache.poi.ss.usermodel.Cell
+import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
-import org.apache.poi.xssf.usermodel.XSSFCell
 import org.apache.poi.xssf.usermodel.XSSFRow
 import org.apache.poi.xssf.usermodel.XSSFSheet
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
@@ -31,6 +31,33 @@ class BookmarkIOService {
         Workbook workbook = getWorkbook(file.inputStream, file.name)
         Sheet sheet = workbook.getSheetAt(0)
         //TODO: Finish implementation
+        Iterator<Row> iterator = sheet.iterator()
+
+        while (iterator.hasNext()) {
+            Row nextRow = iterator.next()
+            Iterator<Cell> cellIterator = nextRow.cellIterator()
+            Bookmark bookmark = new Bookmark()
+
+            while (cellIterator.hasNext()) {
+                Cell nextCell = cellIterator.next()
+                int columnIndex = nextCell.getColumnIndex()
+
+                switch (columnIndex) {
+                    case 0:
+                        bookmark.url = nextCell.stringCellValue
+                        break
+                    case 1:
+                        bookmark.name = nextCell.stringCellValue
+                        break
+                    case 2:
+                        bookmark.description = nextCell.stringCellValue
+                        break
+                }
+
+
+            }
+            bookmarks.add(bookmark)
+        }
         //Iterate over rows
         //Create new categories
         //Create collection of bookmarks

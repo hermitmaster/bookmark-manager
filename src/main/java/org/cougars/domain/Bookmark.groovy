@@ -65,10 +65,15 @@ class Bookmark {
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     BookmarkCategory subcategory
 
-    // Default value: Active
     @Enumerated(EnumType.STRING)
     Status status = Status.ACTIVE
 
-    @Embedded
-    RecordDetails recordDetails = new RecordDetails()
+    @ManyToOne
+    User createdBy
+
+    @Column(nullable = false, updatable = false)
+    Date dateCreated = new Date()
+
+    @Column(nullable = false)
+    Date dateModified = new Date()
 }

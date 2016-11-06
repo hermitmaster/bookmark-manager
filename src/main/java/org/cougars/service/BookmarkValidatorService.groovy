@@ -23,11 +23,15 @@ class BookmarkValidatorService {
     @Autowired
     BookmarkRepository bookmarkRepository
 
-    @Scheduled(cron = "0 0 0/12 * * *")
+    @Scheduled(cron = "0 0 */3 * * *")
     void validateBookmarks() {
-        Set<Bookmark> bookmarksToValidate = bookmarkRepository.findByLastValidatedBefore(new Date() - 7)
-        log.info("Executing batch bookmark validation of ${bookmarksToValidate.size()} bookmarks on scheduled interval")
-        validateUrls(bookmarksToValidate)
+        Set<Bookmark> bookmarks = bookmarkRepository.findByLastValidatedBefore(new Date() - 1)
+        log.info("Executing batch bookmark validation of ${bookmarks.size()} bookmarks on scheduled interval")
+        GParsPool.withPool {
+            bookmarks.eachParallel {
+                validateUrl(it)
+            }
+        }
     }
 
     /** Verifies that a url returns a valid status code (less than 400).
@@ -43,26 +47,22 @@ class BookmarkValidatorService {
         try {
             HttpResponse response = client.execute(request)
             valid = response.getStatusLine().statusCode < 400
-        } catch (IOException e) {
-            log.error("Error validating url: ${url}!", e)
+        } catch (IOException ignore) {
+            log.error("Error validating url: ${url}!")
         }
 
         return valid
     }
 
-    private void validateUrls(Set<Bookmark> bookmarks) {
+    void validateUrl(Bookmark bookmark) {
         Date validationTimestamp = new Date()
-        GParsPool.withPool {
-            bookmarks.eachParallel {
-                it.lastValidated = validationTimestamp
+        bookmark.lastValidated = validationTimestamp
 
-                if(!isValid(it.url)) {
-                    it.lastModified = validationTimestamp
-                    it.status = Status.DEAD
-                }
-
-                bookmarkRepository.save(it)
-            }
+        if(!isValid(bookmark.url)) {
+            bookmark.dateModified = validationTimestamp
+            bookmark.status = Status.DEAD
         }
+
+        bookmarkRepository.save(bookmark)
     }
 }
