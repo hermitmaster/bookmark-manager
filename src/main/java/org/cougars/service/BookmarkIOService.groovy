@@ -11,9 +11,13 @@ import org.apache.poi.xssf.usermodel.XSSFSheet
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.cougars.domain.Bookmark
 import org.cougars.domain.BookmarkCategory
+import org.cougars.domain.User
 import org.cougars.repository.BookmarkCategoryRepository
 import org.cougars.repository.BookmarkRepository
+import org.cougars.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 
@@ -31,52 +35,57 @@ class BookmarkIOService {
     BookmarkCategoryRepository bookmarkCategoryRepository
 
     @Autowired
+    UserRepository userRepository
+
+    @Autowired
     BookmarkValidatorService bookmarkValidatorService
 
     void importBookmarks(MultipartFile file) {
         log.info("Beginning bookmark import. This may take some time.")
-        Set<Bookmark> bookmarks = new HashSet<>()
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication()
+        User user = userRepository.findByUsername(authentication.getName())
         Workbook workbook = getWorkbook(file.inputStream, file.originalFilename)
-        Sheet sheet = workbook.getSheetAt(0)
-        //TODO: Finish implementation
-        Iterator<Row> iterator = sheet.iterator()
+        Sheet sheet = workbook.getSheet("bookmarks")
 
-        while (iterator.hasNext()) {
-            Row nextRow = iterator.next()
-            Iterator<Cell> cellIterator = nextRow.cellIterator()
+        bookmarkRepository.deleteInBatch(bookmarkRepository.findAll())
+        bookmarkRepository.flush()
+        Set<Bookmark> bookmarks = new HashSet<>()
+
+        sheet.each { Row row ->
             Bookmark bookmark = new Bookmark()
+            bookmark.createdBy = user
 
-            while (cellIterator.hasNext()) {
-                Cell nextCell = cellIterator.next()
-                int columnIndex = nextCell.getColumnIndex()
+            row.each { Cell cell ->
                 BookmarkCategory bookmarkCategory = null
 
-                switch (columnIndex) {
+                switch (cell.columnIndex) {
                     case 0:
-                        bookmark.url = nextCell.stringCellValue
+                        bookmark.url = cell.stringCellValue
                         break
                     case 1:
-                        bookmark.name = nextCell.stringCellValue
+                        bookmark.name = cell.stringCellValue
                         break
                     case 2:
-                        bookmark.description = nextCell.stringCellValue
+                        bookmark.description = cell.stringCellValue
                         break
                     case 3:
-                        String categoryName = nextCell.stringCellValue
+                        String categoryName = cell.stringCellValue
                         bookmarkCategory = bookmarkCategoryRepository.findByName(categoryName)
                         if(!bookmarkCategory) {
                             bookmarkCategory = new BookmarkCategory()
+                            bookmarkCategory.createdBy = user
                             bookmarkCategory.name = categoryName
-                            bookmarkCategory.parent = bookmarkCategoryRepository.findById(1)
+                            bookmarkCategory.parent = bookmarkCategoryRepository.findByName("None")
                             bookmarkCategoryRepository.save(bookmarkCategory)
                         }
-                        bookmark.bookmarkCategory = bookmarkCategoryRepository.findByName(bookmarkCategory.name)
+                        bookmark.bookmarkCategory = bookmarkCategory
                         break
                     case 4:
-                        String categoryName = nextCell.stringCellValue
+                        String categoryName = cell.stringCellValue
                         BookmarkCategory subcategory = bookmarkCategoryRepository.findByName(categoryName)
                         if(!subcategory) {
                             subcategory = new BookmarkCategory()
+                            subcategory.createdBy = user
                             subcategory.name = categoryName
                             subcategory.parent = bookmarkCategory
                             bookmarkCategoryRepository.save(subcategory)
@@ -84,19 +93,15 @@ class BookmarkIOService {
                         bookmark.subcategory = bookmarkCategoryRepository.findByName(subcategory.name)
                         break
                 }
-
-
             }
+
             bookmarks.add(bookmark)
         }
-        //Create collection of bookmarks
 
-        if(bookmarks) {
-            // Per specification, flush the DB and replace with imported data.
-            bookmarkRepository.deleteInBatch(bookmarkRepository.findAll())
-            bookmarkRepository.flush()
-            bookmarkRepository.save(bookmarks)
-            bookmarkValidatorService.validateBookmarks(bookmarks)
+        bookmarkRepository.save(bookmarks)
+
+        Thread.start {
+            bookmarkValidatorService.validateBookmarks()
         }
 
         log.info("Bookmark import completed.")
@@ -104,18 +109,19 @@ class BookmarkIOService {
 
     void exportBookmarks(OutputStream outputStream) {
         log.info("Beginning bookmark export. This may take some time.")
-        List<Bookmark> bookmarks = bookmarkRepository.findAll()
+        Set<Bookmark> bookmarks = bookmarkRepository.findAll()
         Workbook workbook = new XSSFWorkbook()
-        XSSFSheet sheet = workbook.createSheet("bookmarks")
+        XSSFSheet bookmarkSheet = workbook.createSheet("bookmarks")
 
         bookmarks.eachWithIndex { bookmark, idx ->
-            XSSFRow row = sheet.createRow(idx)
-            row.createCell(0).setCellValue(bookmark.url)
-            row.createCell(1).setCellValue(bookmark.name)
-            row.createCell(2).setCellValue(bookmark.description)
-            row.createCell(3).setCellValue(bookmark.bookmarkCategory.name)
-            row.createCell(4).setCellValue(bookmark.subcategory.name)
+            XSSFRow row = bookmarkSheet.createRow(idx)
+            row.createCell(0).setCellValue(bookmark?.url)
+            row.createCell(1).setCellValue(bookmark?.name)
+            row.createCell(2).setCellValue(bookmark?.description)
+            row.createCell(3).setCellValue(bookmark?.bookmarkCategory?.name)
+            row.createCell(4).setCellValue(bookmark?.subcategory?.name)
         }
+
         log.info("Bookmark export completed.")
 
         workbook.write(outputStream)

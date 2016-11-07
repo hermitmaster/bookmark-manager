@@ -45,13 +45,13 @@ class Bookmark {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     Long id
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 2000)
     String url
 
     @Column
     String name
 
-    @Column
+    @Column(length = 4000)
     String description
 
     @Column(nullable = false)

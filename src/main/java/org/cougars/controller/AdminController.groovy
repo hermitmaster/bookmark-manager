@@ -25,9 +25,7 @@
 package org.cougars.controller
 
 import groovy.util.logging.Slf4j
-import org.apache.poi.util.IOUtils
 import org.cougars.bean.UserBean
-import org.cougars.domain.Authority
 import org.cougars.domain.Bookmark
 import org.cougars.domain.Status
 import org.cougars.domain.User

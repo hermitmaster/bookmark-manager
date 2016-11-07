@@ -120,6 +120,7 @@ public class HomeController {
         bookmark.description = bookmarkBean.description
         bookmark.bookmarkCategory = bookmarkCategory
         bookmark.subcategory = subcategory
+        bookmark.status = Status.IN_REVIEW
 
         bookmarkRepository.save(bookmark)
         bookmarkValidatorService.validateUrl(bookmark)

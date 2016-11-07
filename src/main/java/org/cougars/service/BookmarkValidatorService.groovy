@@ -25,14 +25,15 @@ class BookmarkValidatorService {
 
     @Scheduled(cron = "0 0 */3 * * *")
     void validateBookmarks() {
+        Set<Bookmark> bookmarks = bookmarkRepository.findByLastValidatedBefore(new Date() - 1)
         log.info("Executing batch bookmark validation of ${bookmarks.size()} bookmarks on scheduled interval")
-        validateBookmarks(bookmarkRepository.findByLastValidatedBefore(new Date() - 1))
+        validateBookmarks(bookmarks)
     }
 
     void validateBookmarks(Set<Bookmark> bookmarks) {
         GParsPool.withPool {
-            bookmarks.eachParallel {
-                validateUrl(it)
+            bookmarks.eachParallel { Bookmark bookmark ->
+                validateUrl(bookmark)
             }
         }
     }
