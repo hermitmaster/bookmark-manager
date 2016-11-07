@@ -1,0 +1,46 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="layouts/layout">
+<body>
+<div th:fragment="bookmarkDetail">
+    <h2 th:text="${bookmark.name}"></h2>
+    <br/>
+    <div class="row">
+        <table class="table table-condensed">
+            <tfoot>
+                <tr>
+                    <td colspan="2">
+                        <div class="embed-responsive embed-responsive-4by3">
+                            <iframe th:src="${bookmark.url}" sandbox="" style="pointer-events: none; overflow: hidden;"></iframe>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
+            <tbody>
+                <tr>
+                    <th scope="row">URL</th>
+                    <td><a th:href="${bookmark.url}" th:text="${bookmark.url}" target="_blank"></a></td>
+                </tr>
+                <tr>
+                    <th scope="row">Category</th>
+                    <td><span th:text="${bookmark.bookmarkCategory.name}"></span></td>
+                </tr>
+                <tr>
+                    <th scope="row">Subcategory</th>
+                    <td><span th:text="${bookmark.subcategory.name}"></span></td>
+                </tr>
+                <tr>
+                    <th scope="row">Description</th>
+                    <td><p th:text="${bookmark.description}"></p></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

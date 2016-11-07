@@ -127,6 +127,13 @@ public class HomeController {
         return "addBookmarkSuccess"
     }
 
+    @GetMapping("/bookmark-details")
+    String getBookmarkDetails(@RequestParam(value = "id") Long id, Model model) {
+        model.addAttribute("bookmark", bookmarkRepository.findById(id))
+
+        return "fragments/bookmarkDetail :: bookmarkDetail"
+    }
+
     @PostMapping("/search")
     String search(Model model) {
 
