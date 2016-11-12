@@ -30,11 +30,16 @@ import org.cougars.domain.Status
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 
 /**
  * Created by Dennis Rausch on 10/3/16.
  */
 interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
+    @Query("select b from Bookmark b where lower(url) like lower(concat('%', ?1, '%')) or lower(name) like lower(concat('%', ?1, '%')) or lower(description) like lower(concat('%', ?1, '%'))")
+//    @Query("select b from Bookmark b where lower(url) like lower(concat('%', ?1, '%'))")
+    Page<Bookmark> search(String query, Pageable pageable)
+
     /** Find a bookmark by its id (primary key).
      *
      * @param id    Id of the bookmark being searched for.

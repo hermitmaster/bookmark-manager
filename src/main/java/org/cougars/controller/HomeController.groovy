@@ -135,8 +135,13 @@ public class HomeController {
         return "fragments/bookmarkDetail :: bookmarkDetail"
     }
 
-    @PostMapping("/search")
-    String search(Model model) {
+    @GetMapping("/search")
+    String search(@RequestParam(value ="query") String query,
+                  @CookieValue(value = "view", defaultValue = "table") String cookie,
+                  @SortDefault("dateCreated") Pageable pageable,
+                  Model model, HttpServletResponse response) {
+        model.addAttribute("page", bookmarkRepository.search(query.trim(), pageable))
 
+        return "table"
     }
 }
