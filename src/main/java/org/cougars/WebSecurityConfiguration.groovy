@@ -22,7 +22,7 @@
  SOFTWARE.
  */
 
-package org.cougars.configuration
+package org.cougars
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
@@ -48,14 +48,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-            .authorizeRequests()
+        http.authorizeRequests()
             .antMatchers("/*", "/css/**", "/js/**", "/img/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .formLogin()
-            .loginPage("/login").failureUrl("/login?error")
-            .permitAll()
+            .loginPage("/login").failureUrl("/login?error").permitAll()
             .and()
             .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login")
             .permitAll()
@@ -63,9 +61,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .jdbcAuthentication()
-                .dataSource(dataSource)
-                .passwordEncoder(new BCryptPasswordEncoder())
+        auth.jdbcAuthentication()
+            .dataSource(dataSource)
+            .passwordEncoder(new BCryptPasswordEncoder())
     }
 }

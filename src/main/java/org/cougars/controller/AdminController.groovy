@@ -37,6 +37,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.web.SortDefault
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
@@ -45,6 +46,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.multipart.MultipartFile
 
 import javax.servlet.http.HttpServletResponse
+import javax.validation.Valid
 
 /**
  * Created by Dennis Rausch on 10/3/16.
@@ -64,22 +66,22 @@ class AdminController {
     BookmarkIOService bookmarkIOService
 
     @GetMapping("/review-bookmarks")
-    String reviewBookmark(Model model) {
-        model.addAttribute("bookmarks", bookmarkRepository.findAll())
+    String reviewBookmark(Model model, Pageable pageable) {
+        model.addAttribute("page", bookmarkRepository.findAll(pageable))
 
-        return "admin/reviewBookmarks"
+        return "table"
     }
 
     @PostMapping("/review-bookmarks")
     String reviewBookmarkSubmission(@ModelAttribute Set<Bookmark> bookmarks) {
-        return "admin/reviewBookmarks"
+        return "table"
     }
 
     @GetMapping("/dead-link-report")
     String deadLinkReport(@SortDefault("id") Pageable pageable, Model model) {
         model.addAttribute("page", bookmarkRepository.findByStatus(Status.DEAD, pageable))
 
-        return "admin/deadLinkReport"
+        return "table"
     }
 
     @GetMapping("/users")
@@ -87,19 +89,27 @@ class AdminController {
         model.addAttribute("userBean", new UserBean())
         model.addAttribute("users", userRepository.findAll())
 
-        return "admin/users"
+        return "users"
     }
 
     @PostMapping("/add-user")
-    String addUser(@ModelAttribute UserBean userBean) {
-        userRepository.save(new User(userBean.username, userBean.password))
+    String addUser(@Valid UserBean userBean, BindingResult bindingResult) {
+        String view
 
-        return "redirect:/admin/users"
+        if(bindingResult.hasErrors()){
+            view = "/users"
+        } else {
+            userRepository.save(new User(userBean.username, userBean.password))
+            view = "redirect:/users"
+        }
+
+
+        return view
     }
 
     @PostMapping("/update-user")
     String updateUser(@ModelAttribute Set<User> users) {
-        return "admin/manageUser"
+        return "manageUser"
     }
 
     @PostMapping("/edit-bookmark")
@@ -109,14 +119,8 @@ class AdminController {
         return "table"
     }
 
-    @GetMapping("/data-management")
-    String dataManagement() {
-        return "admin/dataManagement"
-    }
-
     @GetMapping("/bookmark-export")
     void bookmarkExport(HttpServletResponse response) {
-        //TODO: Finish implementation
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         response.setHeader("content-disposition", "filename=bookmark_export_${new Date().format("MM_dd_yyyy")}.xlsx")
         bookmarkIOService.exportBookmarks(response.outputStream)
@@ -125,9 +129,32 @@ class AdminController {
 
     @PostMapping("/bookmark-import")
     String bookmarkImport(@RequestParam("file") MultipartFile file) {
-        //TODO: Finish implementation
         bookmarkIOService.importBookmarks(file)
 
-        return "admin/dataManagement"
+        return "redirect:/"
+    }
+
+    /** Delete a single bookmark given the id
+     *
+     * @param id    id of the bookmark to delete
+     * @return      view to return
+     */
+    @PostMapping("/delete-bookmark")
+    String deleteBookmark(@RequestParam("id") long id) {
+        bookmarkRepository.delete(id)
+
+        return "redirect:/"
+    }
+
+    /** Delete all dead bookmarks
+     *
+     * @return  view to return
+     */
+    @PostMapping("/delete-dead-bookmarks")
+    String deleteDeadBookmarks() {
+        Set<Bookmark> deadBookmarks = bookmarkRepository.findByStatus(Status.DEAD)
+        bookmarkRepository.delete(deadBookmarks)
+
+        return "redirect:/"
     }
 }

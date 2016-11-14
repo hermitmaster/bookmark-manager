@@ -36,8 +36,13 @@ import org.springframework.data.jpa.repository.Query
  * Created by Dennis Rausch on 10/3/16.
  */
 interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
+    /** Searches relevant fields for the passed query
+     *
+     * @param query     String query
+     * @param pageable  Pageable object for pagination
+     * @return          Page of bookmarks that matched the query
+     */
     @Query("select b from Bookmark b where lower(url) like lower(concat('%', ?1, '%')) or lower(name) like lower(concat('%', ?1, '%')) or lower(description) like lower(concat('%', ?1, '%'))")
-//    @Query("select b from Bookmark b where lower(url) like lower(concat('%', ?1, '%'))")
     Page<Bookmark> search(String query, Pageable pageable)
 
     /** Find a bookmark by its id (primary key).
@@ -53,12 +58,27 @@ interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
      * @return                  Collection of all books with the referenced category.
      */
     Set<Bookmark> findByBookmarkCategory(BookmarkCategory bookmarkCategory)
+
+    /** Find a bookmark based on its primary category.
+     *
+     * @param bookmarkCategory  The category of bookmarks being searched for.
+     * @param pageable          Pageable object for pagination
+     * @return                  Page of all books with the referenced category.
+     */
     Page<Bookmark> findByBookmarkCategory(BookmarkCategory bookmarkCategory, Pageable pageable)
 
     /** Find a bookmark based on its current status.
      *
      * @param status    Status of bookmarks being searched for.
      * @return          Collection of all books with the referenced status.
+     */
+    Set<Bookmark> findByStatus(Status status)
+
+    /** Find a bookmark based on its current status.
+     *
+     * @param status    Status of bookmarks being searched for.
+     * @param pageable  Pageable object for pagination
+     * @return          Page of all books with the referenced status.
      */
     Page<Bookmark> findByStatus(Status status, Pageable pageable)
 

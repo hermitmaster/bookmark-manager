@@ -1,0 +1,70 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="layouts/layout">
+<head>
+    <title th:text="#{msg.page.users}"></title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <form method="post" th:action="@{/admin/add-user}" th:object="${userBean}" class="form-inline">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title" th:text="#{msg.form.title.addUser}"></h3></div>
+                    <div class="panel-body">
+                        <div th:if="${#fields.hasErrors('*')}" class="row">
+                            <div class="col-md-12 form-group has-error">
+                                <p id="passwordHelp" th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="help-block"></p>
+                                <p id="usernameHelp" th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group" th:classappend="${#fields.hasErrors('username') ? 'has-error' : ''}">
+                                    <label th:text="#{msg.username}" for="usernameInput" class="sr-only"></label>
+                                    <input id="usernameInput" type="text" class="form-control" th:placeholder="#{msg.username}" th:field="*{username}" aria-describedby="usernameHelp" />
+                                </div>&nbsp;
+                                <div class="form-group" th:classappend="${#fields.hasErrors('password') ? 'has-error' : ''}">
+                                    <label th:text="#{msg.password}" for="passwordInput" class="sr-only"></label>
+                                    <input id="passwordInput" type="password" class="form-control" th:placeholder="#{msg.password}" th:field="*{password}" aria-describedby="passwordHelp" />
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <input type="submit" class="btn btn-default" th:value="#{msg.form.button.submit}" />
+                                    <input type="reset" class="btn btn-default" th:value="#{msg.form.button.reset}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table id="bookmark-table" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Registration Date</th>
+                    <th>Enabled</th>
+                    <th>Roles</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}" role="row">
+                    <td th:text="${user.username}"></td>
+                    <td th:text="${user.registrationDate}"></td>
+                    <td th:text="${user.enabled}"></td>
+                    <td th:text="${user.getAuthoritiesList()}"></td>
+                    <td>
+                        <div></div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

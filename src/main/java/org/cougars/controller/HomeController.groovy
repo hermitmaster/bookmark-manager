@@ -37,6 +37,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.web.SortDefault
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
@@ -45,6 +46,7 @@ import org.springframework.web.bind.annotation.RequestParam
 
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletResponse
+import javax.validation.Valid
 
 /**
  * Created by Dennis Rausch on 8/26/16.
@@ -63,22 +65,22 @@ public class HomeController {
     private BookmarkValidatorService bookmarkValidatorService
 
     @GetMapping("")
-    String index(@RequestParam(value ="view", required = false) String view,
+    String index(@RequestParam(value ="view", required = false) String viewParam,
                  @CookieValue(value = "view", defaultValue = "table") String cookie,
                  @SortDefault("dateCreated") Pageable pageable,
                  Model model, HttpServletResponse response) {
-        String returnPath = view ?: cookie
+        String view = viewParam ?: cookie
 
-        if(returnPath == "category") {
+        if(view == "category") {
             model.addAttribute("page", bookmarkCategoryRepository.findAll())
         } else {
             model.addAttribute("statusList", Status.values() as List<String>)
             model.addAttribute("page", bookmarkRepository.findByStatus(Status.ACTIVE, pageable))
         }
 
-        response.addCookie(new Cookie("view", returnPath))
+        response.addCookie(new Cookie("view", view))
 
-        return returnPath
+        return view
     }
 
     @GetMapping("/login")
@@ -94,38 +96,47 @@ public class HomeController {
     }
 
     @PostMapping("/add-bookmark")
-    String addBookmarkSubmission(@ModelAttribute BookmarkBean bookmarkBean) {
-        BookmarkCategory bookmarkCategory = bookmarkCategoryRepository.findByName(bookmarkBean.bookmarkCategory)
-        if(!bookmarkCategory) {
-            bookmarkCategory = new BookmarkCategory()
-            bookmarkCategory.name = bookmarkBean.bookmarkCategory
-            bookmarkCategory.parent = bookmarkCategoryRepository.findById(1)
-            bookmarkCategoryRepository.save(bookmarkCategory)
-        }
-        BookmarkCategory subcategory
-        if(bookmarkBean.subcategory && !bookmarkBean.subcategory.equalsIgnoreCase("none")) {
-            subcategory = bookmarkCategoryRepository.findByName(bookmarkBean.subcategory)
-            if(!subcategory) {
-                subcategory = new BookmarkCategory()
-                subcategory.name = bookmarkBean.subcategory
-                subcategory.parent = bookmarkCategory
-                bookmarkCategoryRepository.save(subcategory)
-            }
+    String addBookmarkSubmission(@Valid BookmarkBean bookmarkBean, BindingResult bindingResult) {
+        String view = "addBookmarkSuccess"
+        if (bindingResult.hasErrors()) {
+            view = "addBookmark"
         } else {
-            subcategory = bookmarkCategoryRepository.findById(1)
+            try {
+                BookmarkCategory bookmarkCategory = bookmarkCategoryRepository.findByName(bookmarkBean.bookmarkCategory)
+                if(!bookmarkCategory) {
+                    bookmarkCategory = new BookmarkCategory()
+                    bookmarkCategory.name = bookmarkBean.bookmarkCategory
+                    bookmarkCategory.parent = bookmarkCategoryRepository.findById(1)
+                    bookmarkCategoryRepository.save(bookmarkCategory)
+                }
+                BookmarkCategory subcategory
+                if(bookmarkBean.subcategory && !bookmarkBean.subcategory.equalsIgnoreCase("none")) {
+                    subcategory = bookmarkCategoryRepository.findByName(bookmarkBean.subcategory)
+                    if(!subcategory) {
+                        subcategory = new BookmarkCategory()
+                        subcategory.name = bookmarkBean.subcategory
+                        subcategory.parent = bookmarkCategory
+                        bookmarkCategoryRepository.save(subcategory)
+                    }
+                } else {
+                    subcategory = bookmarkCategoryRepository.findById(1)
+                }
+                Bookmark bookmark = new Bookmark()
+                bookmark.url = bookmarkBean.url
+                bookmark.name = bookmarkBean.name
+                bookmark.description = bookmarkBean.description
+                bookmark.bookmarkCategory = bookmarkCategory
+                bookmark.subcategory = subcategory
+                bookmark.status = Status.IN_REVIEW
+
+                bookmarkRepository.save(bookmark)
+                bookmarkValidatorService.validateUrl(bookmark)
+            } catch (Exception e) {
+                log.error("Error adding bookmark!", e)
+            }
         }
-        Bookmark bookmark = new Bookmark()
-        bookmark.url = bookmarkBean.url
-        bookmark.name = bookmarkBean.name
-        bookmark.description = bookmarkBean.description
-        bookmark.bookmarkCategory = bookmarkCategory
-        bookmark.subcategory = subcategory
-        bookmark.status = Status.IN_REVIEW
 
-        bookmarkRepository.save(bookmark)
-        bookmarkValidatorService.validateUrl(bookmark)
-
-        return "addBookmarkSuccess"
+        return view
     }
 
     @GetMapping("/bookmark-details")

@@ -1,12 +1,15 @@
 package org.cougars.bean
 
-import javax.validation.constraints.NotNull
+import org.hibernate.validator.constraints.URL
+
+import javax.validation.constraints.Size
 
 /**
  * Created by Dennis Rausch on 10/16/16.
  */
 class BookmarkBean {
-    @NotNull
+    @URL(message = "Provided URL is not a valid format!")
+    @Size(min = 8, max = 1000, message = "Provided URL is not a valid format!")
     String url
 
     String bookmarkCategory

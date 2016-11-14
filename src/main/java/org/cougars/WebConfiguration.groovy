@@ -1,4 +1,4 @@
-package org.cougars.configuration
+package org.cougars
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.domain.PageRequest
