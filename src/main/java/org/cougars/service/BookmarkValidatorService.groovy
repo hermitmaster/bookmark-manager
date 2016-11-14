@@ -20,21 +20,18 @@ import org.springframework.stereotype.Service
 @Slf4j
 @Service
 class BookmarkValidatorService {
-    @Autowired
-    BookmarkRepository bookmarkRepository
+    @Autowired private BookmarkRepository br
 
     @Scheduled(cron = "0 0 */3 * * *")
     void validateBookmarks() {
-        Set<Bookmark> bookmarks = bookmarkRepository.findByLastValidatedBefore(new Date() - 1)
+        Set<Bookmark> bookmarks = br.findByLastValidatedBefore(new Date() - 1)
         log.info("Executing batch bookmark validation of ${bookmarks.size()} bookmarks on scheduled interval")
         validateBookmarks(bookmarks)
     }
 
     void validateBookmarks(Set<Bookmark> bookmarks) {
         GParsPool.withPool {
-            bookmarks.eachParallel { Bookmark bookmark ->
-                validateUrl(bookmark)
-            }
+            bookmarks.eachParallel { Bookmark bookmark -> validateUrl(bookmark) }
         }
     }
 
@@ -47,7 +44,7 @@ class BookmarkValidatorService {
             bookmark.status = Status.DEAD
         }
 
-        bookmarkRepository.save(bookmark)
+        br.save(bookmark)
     }
 
     /** Verifies that a url returns a valid status code (less than 400).

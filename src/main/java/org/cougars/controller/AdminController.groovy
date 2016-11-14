@@ -56,18 +56,13 @@ import javax.validation.Valid
 @Controller
 @RequestMapping("/admin")
 class AdminController {
-    @Autowired
-    private BookmarkRepository bookmarkRepository
-
-    @Autowired
-    private UserRepository userRepository
-
-    @Autowired
-    BookmarkIOService bookmarkIOService
+    @Autowired private UserRepository ur
+    @Autowired private BookmarkRepository br
+    @Autowired private BookmarkIOService bios
 
     @GetMapping("/review-bookmarks")
     String reviewBookmark(Model model, Pageable pageable) {
-        model.addAttribute("page", bookmarkRepository.findAll(pageable))
+        model.addAttribute("page", br.findAll(pageable))
 
         return "table"
     }
@@ -79,7 +74,7 @@ class AdminController {
 
     @GetMapping("/dead-link-report")
     String deadLinkReport(@SortDefault("id") Pageable pageable, Model model) {
-        model.addAttribute("page", bookmarkRepository.findByStatus(Status.DEAD, pageable))
+        model.addAttribute("page", br.findByStatus(Status.DEAD, pageable))
 
         return "table"
     }
@@ -87,20 +82,20 @@ class AdminController {
     @GetMapping("/users")
     String users(Model model) {
         model.addAttribute("userBean", new UserBean())
-        model.addAttribute("users", userRepository.findAll())
+        model.addAttribute("users", ur.findAll())
 
         return "users"
     }
 
     @PostMapping("/add-user")
-    String addUser(@Valid UserBean userBean, BindingResult bindingResult) {
+    String addUser(@Valid UserBean bean, BindingResult bindingResult) {
         String view
 
         if(bindingResult.hasErrors()){
             view = "/users"
         } else {
-            userRepository.save(new User(userBean.username, userBean.password))
-            view = "redirect:/users"
+            ur.save(new User(bean.username, bean.password))
+            view = "redirect:/admin/users"
         }
 
 
@@ -114,7 +109,7 @@ class AdminController {
 
     @PostMapping("/edit-bookmark")
     String editBookmarks(@ModelAttribute Set<Bookmark> bookmarks) {
-        bookmarkRepository.save(bookmarks)
+        br.save(bookmarks)
 
         return "table"
     }
@@ -123,13 +118,13 @@ class AdminController {
     void bookmarkExport(HttpServletResponse response) {
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         response.setHeader("content-disposition", "filename=bookmark_export_${new Date().format("MM_dd_yyyy")}.xlsx")
-        bookmarkIOService.exportBookmarks(response.outputStream)
+        bios.exportBookmarks(response.outputStream)
         response.flushBuffer()
     }
 
     @PostMapping("/bookmark-import")
     String bookmarkImport(@RequestParam("file") MultipartFile file) {
-        bookmarkIOService.importBookmarks(file)
+        bios.importBookmarks(file)
 
         return "redirect:/"
     }
@@ -141,7 +136,7 @@ class AdminController {
      */
     @PostMapping("/delete-bookmark")
     String deleteBookmark(@RequestParam("id") long id) {
-        bookmarkRepository.delete(id)
+        br.delete(id)
 
         return "redirect:/"
     }
@@ -152,8 +147,8 @@ class AdminController {
      */
     @PostMapping("/delete-dead-bookmarks")
     String deleteDeadBookmarks() {
-        Set<Bookmark> deadBookmarks = bookmarkRepository.findByStatus(Status.DEAD)
-        bookmarkRepository.delete(deadBookmarks)
+        Set<Bookmark> deadBookmarks = br.findByStatus(Status.DEAD)
+        br.delete(deadBookmarks)
 
         return "redirect:/"
     }

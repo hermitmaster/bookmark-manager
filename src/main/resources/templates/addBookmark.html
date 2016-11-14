@@ -14,7 +14,7 @@
                     <div class="panel-body">
                         <div class="form-group" th:classappend="${#fields.hasErrors('url') ? 'has-error' : ''}">
                             <label th:text="#{msg.url}" for="urlInput"></label>
-                            <input id="urlInput" type="url" class="form-control" th:placeholder="#{msg.url}" th:field="*{url}" aria-describedby="urlHelp" />
+                            <input id="urlInput" type="text" class="form-control" th:placeholder="#{msg.url}" th:field="*{url}" aria-describedby="urlHelp" />
                             <span id="urlHelp" th:if="${#fields.hasErrors('url')}" th:errors="*{url}" class="help-block"></span>
                         </div>
                         <div class="form-group" th:classappend="${#fields.hasErrors('bookmarkCategory') ? 'has-error' : ''}">

@@ -29,18 +29,21 @@ import org.cougars.bean.BookmarkBean
 import org.cougars.domain.Bookmark
 import org.cougars.domain.BookmarkCategory
 import org.cougars.domain.Status
+import org.cougars.domain.User
 import org.cougars.repository.BookmarkCategoryRepository
 import org.cougars.repository.BookmarkRepository
+import org.cougars.repository.UserRepository
 import org.cougars.service.BookmarkValidatorService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.SortDefault
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 
@@ -55,14 +58,10 @@ import javax.validation.Valid
 @Slf4j
 @Controller
 public class HomeController {
-    @Autowired
-    private BookmarkRepository bookmarkRepository
-
-    @Autowired
-    private BookmarkCategoryRepository bookmarkCategoryRepository
-
-    @Autowired
-    private BookmarkValidatorService bookmarkValidatorService
+    @Autowired private UserRepository ur
+    @Autowired private BookmarkRepository br
+    @Autowired private BookmarkCategoryRepository bcr
+    @Autowired private BookmarkValidatorService bvs
 
     @GetMapping("")
     String index(@RequestParam(value ="view", required = false) String viewParam,
@@ -72,10 +71,10 @@ public class HomeController {
         String view = viewParam ?: cookie
 
         if(view == "category") {
-            model.addAttribute("page", bookmarkCategoryRepository.findAll())
+            model.addAttribute("page", bcr.findAll())
         } else {
             model.addAttribute("statusList", Status.values() as List<String>)
-            model.addAttribute("page", bookmarkRepository.findByStatus(Status.ACTIVE, pageable))
+            model.addAttribute("page", br.findByStatus(Status.ACTIVE, pageable))
         }
 
         response.addCookie(new Cookie("view", view))
@@ -96,42 +95,30 @@ public class HomeController {
     }
 
     @PostMapping("/add-bookmark")
-    String addBookmarkSubmission(@Valid BookmarkBean bookmarkBean, BindingResult bindingResult) {
+    String addBookmarkSubmission(@Valid BookmarkBean bean, BindingResult bindingResult) {
         String view = "addBookmarkSuccess"
         if (bindingResult.hasErrors()) {
             view = "addBookmark"
         } else {
             try {
-                BookmarkCategory bookmarkCategory = bookmarkCategoryRepository.findByName(bookmarkBean.bookmarkCategory)
-                if(!bookmarkCategory) {
-                    bookmarkCategory = new BookmarkCategory()
-                    bookmarkCategory.name = bookmarkBean.bookmarkCategory
-                    bookmarkCategory.parent = bookmarkCategoryRepository.findById(1)
-                    bookmarkCategoryRepository.save(bookmarkCategory)
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication()
+                User user = ur.findByUsername(authentication.getName())
+                BookmarkCategory category = bcr.findByName(bean.bookmarkCategory)
+                if(!category) {
+                    category = new BookmarkCategory(bean.bookmarkCategory, bcr.findByName("None"), user)
                 }
-                BookmarkCategory subcategory
-                if(bookmarkBean.subcategory && !bookmarkBean.subcategory.equalsIgnoreCase("none")) {
-                    subcategory = bookmarkCategoryRepository.findByName(bookmarkBean.subcategory)
-                    if(!subcategory) {
-                        subcategory = new BookmarkCategory()
-                        subcategory.name = bookmarkBean.subcategory
-                        subcategory.parent = bookmarkCategory
-                        bookmarkCategoryRepository.save(subcategory)
-                    }
-                } else {
-                    subcategory = bookmarkCategoryRepository.findById(1)
-                }
-                Bookmark bookmark = new Bookmark()
-                bookmark.url = bookmarkBean.url
-                bookmark.name = bookmarkBean.name
-                bookmark.description = bookmarkBean.description
-                bookmark.bookmarkCategory = bookmarkCategory
-                bookmark.subcategory = subcategory
-                bookmark.status = Status.IN_REVIEW
 
-                bookmarkRepository.save(bookmark)
-                bookmarkValidatorService.validateUrl(bookmark)
+                BookmarkCategory subcategory = bcr.findByName("None")
+                if(bean.subcategory && !bean.subcategory.equalsIgnoreCase("None")) {
+                    subcategory = bcr.findByName(bean.subcategory) ?: new BookmarkCategory(bean.subcategory, category, user)
+                }
+
+                Bookmark bookmark = new Bookmark(bean.url, bean.name, bean.description, category, subcategory, user)
+
+                br.save(bookmark)
+                bvs.validateUrl(bookmark)
             } catch (Exception e) {
+                view = "error"
                 log.error("Error adding bookmark!", e)
             }
         }
@@ -141,17 +128,16 @@ public class HomeController {
 
     @GetMapping("/bookmark-details")
     String getBookmarkDetails(@RequestParam(value = "id") Long id, Model model) {
-        model.addAttribute("bookmark", bookmarkRepository.findById(id))
+        model.addAttribute("bookmark", br.findById(id))
 
         return "fragments/bookmarkDetail :: bookmarkDetail"
     }
 
     @GetMapping("/search")
     String search(@RequestParam(value ="query") String query,
-                  @CookieValue(value = "view", defaultValue = "table") String cookie,
                   @SortDefault("dateCreated") Pageable pageable,
-                  Model model, HttpServletResponse response) {
-        model.addAttribute("page", bookmarkRepository.search(query.trim(), pageable))
+                  Model model) {
+        model.addAttribute("page", br.search(query.trim(), pageable))
 
         return "table"
     }

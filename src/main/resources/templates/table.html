@@ -63,24 +63,24 @@
                 <table class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                        <th><a class="sorted" th:text="#{msg.name}" sd:pagination-sort="name"></a></th>
-                        <th><a class="sorted" th:text="#{msg.url}" sd:pagination-sort="url"></a></th>
-                        <th><a class="sorted" th:text="#{msg.category}" sd:pagination-sort="bookmarkCategory"></a></th>
-                        <th><a class="sorted" th:text="#{msg.subcategory}" sd:pagination-sort="subcategory"></a></th>
+                        <th><a th:text="#{msg.name}" sd:pagination-sort="name"></a></th>
+                        <th><a th:text="#{msg.url}" sd:pagination-sort="url"></a></th>
+                        <th><a th:text="#{msg.category}" sd:pagination-sort="bookmarkCategory"></a></th>
+                        <th><a th:text="#{msg.subcategory}" sd:pagination-sort="subcategory"></a></th>
                         <th><a th:text="#{msg.description}" sd:pagination-sort="description"></a></th>
-                        <th sec:authorize="isAuthenticated()"><a class="sorted" th:text="#{msg.status}"></a></th>
-                        <th sec:authorize="isAuthenticated()"><a class="sorted" th:text="#{msg.action}"></a></th>
+                        <th sec:authorize="hasAuthority('admin')"><a th:text="#{msg.status}"></a></th>
+                        <th sec:authorize="hasAuthority('admin')"><a th:text="#{msg.action}"></a></th>
                     </tr>
                     </thead>
                     <tfoot>
                     <tr>
-                        <th><a class="sorted" th:text="#{msg.name}" sd:pagination-sort="name"></a></th>
-                        <th><a class="sorted" th:text="#{msg.url}" sd:pagination-sort="url"></a></th>
-                        <th><a class="sorted" th:text="#{msg.category}" sd:pagination-sort="bookmarkCategory"></a></th>
-                        <th><a class="sorted" th:text="#{msg.subcategory}" sd:pagination-sort="subcategory"></a></th>
+                        <th><a th:text="#{msg.name}" sd:pagination-sort="name"></a></th>
+                        <th><a th:text="#{msg.url}" sd:pagination-sort="url"></a></th>
+                        <th><a th:text="#{msg.category}" sd:pagination-sort="bookmarkCategory"></a></th>
+                        <th><a th:text="#{msg.subcategory}" sd:pagination-sort="subcategory"></a></th>
                         <th><a th:text="#{msg.description}" sd:pagination-sort="description"></a></th>
-                        <th sec:authorize="isAuthenticated()"><a class="sorted" th:text="#{msg.status}"></a></th>
-                        <th sec:authorize="isAuthenticated()"><a class="sorted" th:text="#{msg.action}"></a></th>
+                        <th sec:authorize="hasAuthority('admin')"><a th:text="#{msg.status}"></a></th>
+                        <th sec:authorize="hasAuthority('admin')"><a th:text="#{msg.action}"></a></th>
                     </tr>
                     </tfoot>
                     <tbody>

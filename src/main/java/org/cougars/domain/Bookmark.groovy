@@ -24,9 +24,9 @@
 
 package org.cougars.domain
 
+
 import javax.persistence.CascadeType
 import javax.persistence.Column
-import javax.persistence.Embedded
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
@@ -66,7 +66,7 @@ class Bookmark {
     BookmarkCategory subcategory
 
     @Enumerated(EnumType.STRING)
-    Status status = Status.ACTIVE
+    Status status = Status.IN_REVIEW
 
     @ManyToOne
     User createdBy
@@ -76,4 +76,17 @@ class Bookmark {
 
     @Column(nullable = false)
     Date dateModified = new Date()
+
+    Bookmark() {
+        super()
+    }
+
+    Bookmark(String url, String name, String description, BookmarkCategory bookmarkCategory, BookmarkCategory subcategory, User createdBy) {
+        this.url = url
+        this.name = name
+        this.description = description
+        this.bookmarkCategory = bookmarkCategory
+        this.subcategory = subcategory
+        this.createdBy = createdBy
+    }
 }

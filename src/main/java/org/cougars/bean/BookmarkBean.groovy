@@ -12,11 +12,15 @@ class BookmarkBean {
     @Size(min = 8, max = 1000, message = "Provided URL is not a valid format!")
     String url
 
+    @Size(max = 255, message = "Max length is 255 characters!")
     String bookmarkCategory
 
+    @Size(max = 255, message = "Max length is 255 characters!")
     String subcategory
 
+    @Size(max = 255, message = "Max length is 255 characters!")
     String name
 
+    @Size(max = 2000, message = "Max length is 2000 characters!")
     String description
 }

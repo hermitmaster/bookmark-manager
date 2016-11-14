@@ -65,4 +65,14 @@ class BookmarkCategory {
 
     @Column(nullable = false)
     Date dateModified = new Date()
+
+    BookmarkCategory() {
+        super()
+    }
+
+    BookmarkCategory(String name, BookmarkCategory parent, User createdBy) {
+        this.name = name
+        this.parent = parent
+        this.createdBy = createdBy
+    }
 }
