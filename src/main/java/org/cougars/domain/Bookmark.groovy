@@ -35,7 +35,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.ManyToOne
 
-/**
+/** Represents a bookmark in the system.
  * Created by Dennis Rausch on 10/3/16.
  */
 

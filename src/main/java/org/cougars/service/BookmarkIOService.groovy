@@ -1,3 +1,27 @@
+/**
+ MIT License
+
+ Copyright (c) 2016 MetroState-Cougars
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+ */
+
 package org.cougars.service
 
 import groovy.util.logging.Slf4j
@@ -22,10 +46,9 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 
-/**
+/** A service class for importing and exporting bookmark and category data.
  * Created by Dennis Rausch on 11/2/16.
  */
-
 @Slf4j
 @Service
 class BookmarkIOService {
@@ -101,6 +124,10 @@ class BookmarkIOService {
         }
     }
 
+    /** Export bookmarks from the database and write to an OutputStream
+     *
+     * @param outputStream  The stream to write the output to
+     */
     void exportBookmarks(OutputStream outputStream) {
         log.info("Beginning bookmark export. This may take some time.")
         Set<Bookmark> bookmarks = br.findAll()
@@ -124,6 +151,13 @@ class BookmarkIOService {
         }
     }
 
+    /** Create a new Workbook from an InputStream base on the Excel file format
+     *
+     * @param inputStream       The InputStream to build the Workbook from
+     * @param fileName          The name of the file associated with the InputStream
+     * @return                  A Workbook of the appropriate format, given the file type
+     * @throws IOException      if file type is not an Excel format
+     */
     private static Workbook getWorkbook(InputStream inputStream, String fileName) throws IOException {
         Workbook workbook
 

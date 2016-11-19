@@ -34,7 +34,7 @@ import javax.persistence.Id
 import javax.persistence.OneToMany
 import javax.persistence.Table
 
-/**
+/** Represents a user of the system.
  * Created by Dennis Rausch on 10/4/16.
  */
 

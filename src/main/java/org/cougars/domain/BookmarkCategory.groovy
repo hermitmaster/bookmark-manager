@@ -35,7 +35,7 @@ import javax.persistence.Id
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 
-/**
+/** Represents a category and/or subcategory of bookmarks.
  * Created by Dennis Rausch on 10/3/16.
  */
 

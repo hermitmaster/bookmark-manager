@@ -51,7 +51,7 @@ import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 
-/**
+/** Controller class for mapping public functions.
  * Created by Dennis Rausch on 8/26/16.
  */
 

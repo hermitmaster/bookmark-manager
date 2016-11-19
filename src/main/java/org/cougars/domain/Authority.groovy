@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne
 import javax.persistence.Table
 import javax.persistence.UniqueConstraint
 
-/**
+/** Represents Spring Security Authority objects.
  * Created by Dennis Rausch on 10/23/16.
  */
 @Entity

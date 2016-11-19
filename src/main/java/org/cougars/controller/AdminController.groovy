@@ -48,7 +48,7 @@ import org.springframework.web.multipart.MultipartFile
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 
-/**
+/** Controller class for mapping administrative functions.
  * Created by Dennis Rausch on 10/3/16.
  */
 
