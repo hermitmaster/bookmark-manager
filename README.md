@@ -1,13 +1,14 @@
-# QuickAccessBookmark
-ICS 499 Group Project Repo
+# Quick Access Bookmark
 
-[![Build Status](http://jenkins.instacode.io/buildStatus/icon?job=QuickAccessBookmark)](http://jenkins.instacode.io/job/QuickAccessBookmark/)
+### Installation
 
-Notes
-You should be able to checkout, run, and build all within IntelliJ Idea. Once you clone with git inside IntelliJ and
-open the project, a run configuration should be added automatically; just push the play button to stat the app and
-navigate to http://localhost:8080/quickAccessBookmark
+Quick Access Bookmark requires Tomcat 8, Java 8, and MySQL 5+ to run.
 
-If you have any questions about anything, feel free to ask.
 
--Dennis Rausch
+Install the dependencies and devDependencies and start the server.
+* Check out the project
+* Open mysql on your host and run init_schema.sql
+* Edit application.yaml in the project to point to your database
+* Build the app with the Maven command mvn clean package
+* Add the resultant .war file to the webapps directory on your Tomcat server
+* Navigate to $TOMCAT_HOME/bin and run the command./startup.sh to start the server

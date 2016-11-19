@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/QUICK_ACCESS_BOOKMARK?verifyServerCertificate=false&useSSL=false&requireSSL=false
+    username: mscougars
+    password: TheProject24680!
+    driver-class-name: com.mysql.jdbc.Driver
+    platform: mysql
+  jpa.hibernate.ddl-auto: update

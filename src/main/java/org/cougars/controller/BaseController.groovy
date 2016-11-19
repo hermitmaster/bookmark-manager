@@ -57,7 +57,7 @@ import javax.validation.Valid
 
 @Slf4j
 @Controller
-public class HomeController {
+public class BaseController {
     @Autowired private UserRepository ur
     @Autowired private BookmarkRepository br
     @Autowired private BookmarkCategoryRepository bcr

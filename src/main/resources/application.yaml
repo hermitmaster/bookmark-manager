@@ -1,0 +1,14 @@
+server.context-path: /quickAccessBookmark
+spring:
+  main.banner-mode: off
+  jpa.hibernate.ddl-auto: validate
+  datasource.driver-class-name: com.mysql.jdbc.Driver
+  datasource.platform: mysql
+# Do not touch anything above here unless you know what you are doing!
+# Tampering may result in failure to run the app correctly.
+
+# Enter the jdbc connection string, username, and password for your database here
+# If running a default mysql installation on the same host as the app, no change is required to the url.
+  datasource.url: jdbc:mysql://localhost:3306/QUICK_ACCESS_BOOKMARK?verifyServerCertificate=false&useSSL=false&requireSSL=false
+  datasource.username: QUICK_ACCESS_BOOKMARK
+  datasource.password: TheProject24680!
