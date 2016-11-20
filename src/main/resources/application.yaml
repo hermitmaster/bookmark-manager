@@ -2,8 +2,10 @@ logging:
   level:
     ROOT: warn
     org.cougars: info
+    org.apache.http.client.protocol.ResponseProcessCookies: error
 server.context-path: /quickAccessBookmark
 spring:
+  http.multipart.max-file-size: 5MB
   jpa.hibernate.ddl-auto: update
   main.banner-mode: off
   datasource:

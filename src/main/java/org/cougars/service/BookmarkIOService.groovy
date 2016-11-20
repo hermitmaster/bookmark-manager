@@ -80,16 +80,16 @@ class BookmarkIOService {
 
                     switch (cell.columnIndex) {
                         case 0:
-                            bookmark.url = cell.stringCellValue
+                            bookmark.url = cell.stringCellValue.trim()
                             break
                         case 1:
-                            bookmark.name = cell.stringCellValue
+                            bookmark.name = cell.stringCellValue.trim()
                             break
                         case 2:
-                            bookmark.description = cell.stringCellValue
+                            bookmark.description = cell.stringCellValue.trim()
                             break
                         case 3:
-                            String categoryName = cell.stringCellValue
+                            String categoryName = cell.stringCellValue.trim()
                             bookmarkCategory = bcr.findByName(categoryName)
                             if(!bookmarkCategory) {
                                 bookmarkCategory = new BookmarkCategory(categoryName, bcr.findByName("None"), user)
@@ -98,7 +98,7 @@ class BookmarkIOService {
                             bookmark.bookmarkCategory = bookmarkCategory
                             break
                         case 4:
-                            String categoryName = cell.stringCellValue
+                            String categoryName = cell.stringCellValue.trim()
                             BookmarkCategory subcategory = bcr.findByName(categoryName)
                             if(!subcategory) {
                                 subcategory = new BookmarkCategory(categoryName, bookmarkCategory, user)
@@ -115,7 +115,7 @@ class BookmarkIOService {
             br.save(bookmarks)
 
             Thread.start {
-                bvs.validateBookmarks()
+                bvs.validateBookmarks(bookmarks)
             }
 
             log.info("Bookmark import completed.")

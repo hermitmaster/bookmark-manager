@@ -25,6 +25,7 @@
 package org.cougars.controller
 
 import groovy.util.logging.Slf4j
+import org.apache.http.HttpRequest
 import org.cougars.bean.BookmarkBean
 import org.cougars.domain.Bookmark
 import org.cougars.domain.BookmarkCategory
@@ -104,17 +105,20 @@ public class BaseController {
             try {
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication()
                 User user = ur.findByUsername(authentication.getName())
-                BookmarkCategory category = bcr.findByName(bean.bookmarkCategory)
+                BookmarkCategory category = bcr.findByName(bean.bookmarkCategory.trim())
                 if(!category) {
-                    category = new BookmarkCategory(bean.bookmarkCategory, bcr.findByName("None"), user)
+                    category = new BookmarkCategory(bean.bookmarkCategory.trim(), bcr.findByName("None"), user)
                 }
 
                 BookmarkCategory subcategory = bcr.findByName("None")
                 if(bean.subcategory && !bean.subcategory.equalsIgnoreCase("None")) {
-                    subcategory = bcr.findByName(bean.subcategory) ?: new BookmarkCategory(bean.subcategory, category, user)
+                    subcategory = bcr.findByName(bean.subcategory.trim()) ?: new BookmarkCategory(bean.subcategory.trim(), category, user)
                 }
 
-                Bookmark bookmark = new Bookmark(bean.url, bean.name, bean.description, category, subcategory, user)
+                Bookmark bookmark = new Bookmark(bean.url.trim(), bean.name.trim(), bean.description, category, subcategory, user)
+                if(authentication.authorities.find {it.role == "admin"}) {
+                    bookmark.status = Status.ACTIVE
+                }
 
                 br.save(bookmark)
                 bvs.validateUrl(bookmark)

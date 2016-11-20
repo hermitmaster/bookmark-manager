@@ -20,9 +20,10 @@ header {
     margin-bottom: 20px;
 }
 
-/* End Global defaults */
+a[disabled] {
+    pointer-events: none;
+}
 
-/* Bootstrap overrides */
 .panel-heading .accordion-toggle:after {
     font-family: 'Glyphicons Halflings';
     content: "\e114";
@@ -47,8 +48,8 @@ table thead tr th .desc:after {
     float: right;
     color: grey;
 }
+/* End Global defaults */
 
-.btn-group {
-    display: flex;
-}
+/* Bootstrap overrides */
+
 /* End Bootstrap overrides */

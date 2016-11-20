@@ -25,16 +25,22 @@
 package org.cougars.controller
 
 import groovy.util.logging.Slf4j
+import org.cougars.bean.BookmarkBean
 import org.cougars.bean.UserBean
 import org.cougars.domain.Bookmark
+import org.cougars.domain.BookmarkCategory
 import org.cougars.domain.Status
 import org.cougars.domain.User
+import org.cougars.repository.BookmarkCategoryRepository
 import org.cougars.repository.BookmarkRepository
 import org.cougars.repository.UserRepository
 import org.cougars.service.BookmarkIOService
+import org.cougars.service.BookmarkValidatorService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.SortDefault
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
@@ -58,11 +64,61 @@ import javax.validation.Valid
 class AdminController {
     @Autowired private UserRepository ur
     @Autowired private BookmarkRepository br
+    @Autowired private BookmarkCategoryRepository bcr
     @Autowired private BookmarkIOService bios
+    @Autowired private BookmarkValidatorService bvs
+
+    @GetMapping("/edit-bookmark")
+    String editBookmark(@RequestParam("id") Long bookmarkId, Model model) {
+        Bookmark bookmark = br.findById(bookmarkId)
+        BookmarkBean bean = new BookmarkBean(bookmark)
+        model.addAttribute("bookmarkBean", bean)
+
+        return "editBookmark"
+    }
+
+    @PostMapping("/edit-bookmark")
+    String addBookmarkSubmission(@Valid BookmarkBean bean, BindingResult bindingResult) {
+        String view = "editBookmarkSuccess"
+        if (bindingResult.hasErrors()) {
+            view = "editBookmark"
+        } else {
+            try {
+                Bookmark bookmark = br.findById(bean.id)
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication()
+                User user = ur.findByUsername(authentication.getName())
+                BookmarkCategory category = bcr.findByName(bean.bookmarkCategory.trim())
+                if(!category) {
+                    category = new BookmarkCategory(bean.bookmarkCategory.trim(), bcr.findByName("None"), user)
+                }
+
+                BookmarkCategory subcategory = bcr.findByName("None")
+                if(bean.subcategory && !bean.subcategory.equalsIgnoreCase("None")) {
+                    subcategory = bcr.findByName(bean.subcategory.trim()) ?: new BookmarkCategory(bean.subcategory.trim(), category, user)
+                }
+
+                bookmark.url = bean.url.trim()
+                bookmark.name = bean.name.trim()
+                bookmark.description = bean.description
+                bookmark.bookmarkCategory = category
+                bookmark.subcategory = subcategory
+                bookmark.dateModified = new Date()
+                bookmark.status = Status.ACTIVE
+
+                br.save(bookmark)
+                bvs.validateUrl(bookmark)
+            } catch (Exception e) {
+                view = "error"
+                log.error("Error adding bookmark!", e)
+            }
+        }
+
+        return view
+    }
 
     @GetMapping("/review-bookmarks")
     String reviewBookmark(Model model, Pageable pageable) {
-        model.addAttribute("page", br.findAll(pageable))
+        model.addAttribute("page", br.findByStatus(Status.IN_REVIEW, pageable))
 
         return "table"
     }
@@ -107,13 +163,6 @@ class AdminController {
         return "manageUser"
     }
 
-    @PostMapping("/edit-bookmark")
-    String editBookmarks(@ModelAttribute Set<Bookmark> bookmarks) {
-        br.save(bookmarks)
-
-        return "table"
-    }
-
     @GetMapping("/bookmark-export")
     void bookmarkExport(HttpServletResponse response) {
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
@@ -134,9 +183,18 @@ class AdminController {
      * @param id    id of the bookmark to delete
      * @return      view to return
      */
-    @PostMapping("/delete-bookmark")
-    String deleteBookmark(@RequestParam("id") long id) {
+    @GetMapping("/delete-bookmark")
+    String deleteBookmark(@RequestParam("id") Long id) {
         br.delete(id)
+
+        return "redirect:/"
+    }
+
+    @GetMapping("/approve-bookmark")
+    String approveBookmark(@RequestParam("id") Long id) {
+        Bookmark bookmark = br.findById(id)
+        bookmark.status = Status.ACTIVE
+        br.save(bookmark)
 
         return "redirect:/"
     }
@@ -145,7 +203,7 @@ class AdminController {
      *
      * @return  view to return
      */
-    @PostMapping("/delete-dead-bookmarks")
+    @GetMapping("/delete-dead-bookmarks")
     String deleteDeadBookmarks() {
         Set<Bookmark> deadBookmarks = br.findByStatus(Status.DEAD)
         br.delete(deadBookmarks)

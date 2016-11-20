@@ -24,6 +24,7 @@
 
 package org.cougars.bean
 
+import org.cougars.domain.Bookmark
 import org.hibernate.validator.constraints.URL
 
 import javax.validation.constraints.Size
@@ -32,6 +33,7 @@ import javax.validation.constraints.Size
  * Created by Dennis Rausch on 10/16/16.
  */
 class BookmarkBean {
+    Long id
     @URL(message = "Provided URL is not a valid format!")
     @Size(min = 8, max = 1000, message = "Provided URL is not a valid format!")
     String url
@@ -47,4 +49,17 @@ class BookmarkBean {
 
     @Size(max = 2000, message = "Max length is 2000 characters!")
     String description
+
+    BookmarkBean() {
+
+    }
+
+    BookmarkBean(Bookmark bookmark) {
+        this.id = bookmark.id
+        this.url = bookmark.url
+        this.bookmarkCategory = bookmark.bookmarkCategory.name
+        this.subcategory = bookmark.subcategory.name
+        this.name = bookmark.name
+        this.description = bookmark.description
+    }
 }

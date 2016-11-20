@@ -101,14 +101,14 @@
     <div layout:fragment="content" class="container-fluid"></div>
     <div sec:authorize="hasAuthority('admin')" class="modal fade" id="dataManagementModal" tabindex="-1" role="dialog" aria-labelledby="dataManagementModalLabel">
         <div class="modal-dialog" role="document">
-            <form method="post" enctype="multipart/form-data" th:action="@{/admin/bookmark-import}">
+            <form method="post" enctype="multipart/form-data" th:action="@{/admin/bookmark-import}" id="import-form">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="dataManagementModalLabel" th:text="#{msg.page.data}"></h4>
                     </div>
                     <div class="modal-body">
-                        File to upload: <input type="file" name="file" /><br/>
+                        File to upload (must be either .xls or .xlsx format): <input type="file" name="file" /><br/>
                     </div>
                     <div class="modal-footer">
                         <a th:href="@{/admin/bookmark-export}" class="btn btn-default" th:text="#{msg.form.button.export}"></a>
@@ -133,6 +133,10 @@
             $('ul.nav a').filter(function() {
                 return this.href == url;
             }).parent().addClass('active');
+        });
+
+        $('#import-form').submit(function () {
+            return confirm("Are you sure?\nThis will destroy all current bookmark data in the database.");
         });
         /*]]>*/
     </script>

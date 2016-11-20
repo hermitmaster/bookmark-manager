@@ -39,7 +39,7 @@
                         <th style="min-width: 125px;"><a th:text="#{msg.subcategory}" sd:pagination-sort="subcategory" id="subcategory"></a></th>
                         <th><a th:text="#{msg.description}" sd:pagination-sort="description" id="description"></a></th>
                         <th sec:authorize="hasAuthority('admin')"><a th:text="#{msg.status}"></a></th>
-                        <th sec:authorize="hasAuthority('admin')"><a th:text="#{msg.action}"></a></th>
+                        <th sec:authorize="hasAuthority('admin')" style="min-width: 135px;"><a th:text="#{msg.action}"></a></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -52,10 +52,15 @@
                         <td sec:authorize="isAuthenticated()" th:text="${bookmark.status}"></td>
                         <td sec:authorize="isAuthenticated()" class="text-center">
                             <div class="btn-group" role="group">
-                                <button title="Edit" class="btn btn-default"><i class="glyphicon glyphicon-edit"></i></button>
-                                <button title="Delete" class="btn btn-default"><i class="glyphicon glyphicon-remove-circle"></i></button>
-                                <!--<button title="Approve" class="btn btn-default"><i class="glyphicon glyphicon-ok-circle"></i></button>-->
-                                <!--<button title="Reject" class="btn btn-default"><i class="glyphicon glyphicon-remove-circle"></i></button>-->
+                                <a th:href="@{/admin/edit-bookmark(id=${bookmark.id})}" title="Edit" class="btn btn-default">
+                                    <i class="glyphicon glyphicon-edit"></i>
+                                </a>
+                                <a th:href="@{/admin/delete-bookmark(id=${bookmark.id})}" title="Delete/Reject" class="btn btn-default" onclick="confirmDelete();">
+                                    <i class="glyphicon glyphicon-remove-circle"></i>
+                                </a>
+                                <a th:href="@{/admin/approve-bookmark(id=${bookmark.id})}" title="Approve" class="btn btn-default" th:disabled="${bookmark.status.name() != 'IN_REVIEW'}">
+                                    <i class="glyphicon glyphicon-ok-circle"></i>
+                                </a>
                             </div>
                         </td>
                     </tr>
@@ -113,6 +118,10 @@
                 return false;
             });
         });
+
+        function confirmDelete() {
+            return confirm("Are you sure you wish to delete this bookmark?\nThis action cannot be undone.");
+        }
         /*]]>*/
     </script>
 </div>

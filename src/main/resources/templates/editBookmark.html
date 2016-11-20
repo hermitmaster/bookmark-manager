@@ -1,0 +1,52 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="layouts/layout">
+<head>
+    <title th:text="#{msg.page.editBookmark}"></title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <form method="post" th:action="@{/admin/edit-bookmark}" th:object="${bookmarkBean}">
+                <input type="hidden" th:field="*{id}" />
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title" th:text="#{msg.submitABookmark}"></h3></div>
+                    <div class="panel-body">
+                        <div class="form-group" th:classappend="${#fields.hasErrors('url') ? 'has-error' : ''}">
+                            <label th:text="#{msg.url}" for="urlInput"></label>
+                            <input id="urlInput" type="text" class="form-control" th:placeholder="#{msg.url}" th:field="*{url}" aria-describedby="urlHelp" />
+                            <span id="urlHelp" th:if="${#fields.hasErrors('url')}" th:errors="*{url}" class="help-block"></span>
+                        </div>
+                        <div class="form-group" th:classappend="${#fields.hasErrors('bookmarkCategory') ? 'has-error' : ''}">
+                            <label th:text="#{msg.category}" for="categoryInput"></label>
+                            <input id="categoryInput" type="text" class="form-control" th:placeholder="#{msg.category}" th:field="*{bookmarkCategory}" aria-describedby="categoryHelp" />
+                            <span id="categoryHelp" th:if="${#fields.hasErrors('bookmarkCategory')}" th:errors="*{bookmarkCategory}" class="help-block"></span>
+                        </div>
+                        <div class="form-group" th:classappend="${#fields.hasErrors('subcategory') ? 'has-error' : ''}">
+                            <label th:text="#{msg.subcategory}" for="subcategoryInput"></label>
+                            <input id="subcategoryInput" type="text" class="form-control" th:placeholder="#{msg.subcategory}" th:field="*{subcategory}" aria-describedby="subcategoryHelp" />
+                            <span id="subcategoryHelp" th:if="${#fields.hasErrors('subcategory')}" th:errors="*{subcategory}" class="help-block"></span>
+                        </div>
+                        <div class="form-group" th:classappend="${#fields.hasErrors('name') ? 'has-error' : ''}">
+                            <label th:text="#{msg.name}" for="nameInput"></label>
+                            <input id="nameInput" type="text" class="form-control" th:placeholder="#{msg.name}" th:field="*{name}" aria-describedby="nameHelp" />
+                            <span id="nameHelp" th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="help-block"></span>
+                        </div>
+                        <div class="form-group" th:classappend="${#fields.hasErrors('description') ? 'has-error' : ''}">
+                            <label th:text="#{msg.description}" for="descriptionInput"></label>
+                            <textarea id="descriptionInput" class="form-control" th:placeholder="#{msg.description}" th:field="*{description}" aria-describedby="descriptionHelp"></textarea>
+                            <span id="descriptionHelp" th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <input type="submit" class="btn btn-default" th:value="#{msg.form.button.submit}" />
+                        <input type="reset" class="btn btn-default" th:value="#{msg.form.button.reset}" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
