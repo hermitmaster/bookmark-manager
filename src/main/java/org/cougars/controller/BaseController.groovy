@@ -65,19 +65,21 @@ public class BaseController {
 
     @GetMapping("")
     String index(@RequestParam(value ="view", required = false) String viewParam,
-                 @CookieValue(value = "view", defaultValue = "table") String cookie,
+                 @CookieValue(value = "view", defaultValue = "table") String viewCookie,
                  @SortDefault("dateCreated") Pageable pageable,
                  Model model, HttpServletResponse response) {
-        String view = viewParam ?: cookie
+        String view = viewParam ?: viewCookie
 
         if(view == "category") {
             model.addAttribute("page", bcr.findAll())
         } else {
+
             model.addAttribute("statusList", Status.values() as List<String>)
             model.addAttribute("page", br.findByStatus(Status.ACTIVE, pageable))
         }
 
         response.addCookie(new Cookie("view", view))
+        response.addCookie(new Cookie("pageSize", pageable.pageSize as String))
 
         return view
     }

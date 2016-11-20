@@ -33,23 +33,19 @@
                 <table class="table table-bordered table-striped" id="bookmark-table">
                     <thead>
                     <tr>
-                        <th><a th:text="#{msg.name}" sd:pagination-sort="name"></a></th>
-                        <th><a th:text="#{msg.url}" sd:pagination-sort="url"></a></th>
-                        <th><a th:text="#{msg.category}" sd:pagination-sort="bookmarkCategory"></a></th>
-                        <th><a th:text="#{msg.subcategory}" sd:pagination-sort="subcategory"></a></th>
-                        <th><a th:text="#{msg.description}" sd:pagination-sort="description"></a></th>
+                        <th><a th:text="#{msg.name}" sd:pagination-sort="name" id="name"></a></th>
+                        <th><a th:text="#{msg.url}" sd:pagination-sort="url" id="url"></a></th>
+                        <th style="min-width: 100px;"><a th:text="#{msg.category}" sd:pagination-sort="bookmarkCategory" id="bookmarkCategory"></a></th>
+                        <th style="min-width: 125px;"><a th:text="#{msg.subcategory}" sd:pagination-sort="subcategory" id="subcategory"></a></th>
+                        <th><a th:text="#{msg.description}" sd:pagination-sort="description" id="description"></a></th>
                         <th sec:authorize="hasAuthority('admin')"><a th:text="#{msg.status}"></a></th>
                         <th sec:authorize="hasAuthority('admin')"><a th:text="#{msg.action}"></a></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="bookmark : ${page}" role="row" th:id="${'bookmark-id-' + bookmark.id}">
-                        <td>
-                            <a th:href="${bookmark.url}" th:text="${bookmark.name}" target="_blank"></a>
-                        </td>
-                        <td>
-                            <a th:href="${bookmark.url}" th:text="${bookmark.url}" target="_blank"></a>
-                        </td>
+                        <td><a th:href="${bookmark.url}" th:text="${bookmark.name}" target="_blank"></a></td>
+                        <td><a th:href="${bookmark.url}" th:text="${bookmark.url}" target="_blank"></a></td>
                         <td th:text="${bookmark.bookmarkCategory.name}"></td>
                         <td th:text="${bookmark.subcategory.name}"></td>
                         <td th:text="${bookmark.description}"></td>
@@ -96,6 +92,16 @@
             var pageSize = urlParams['size'] != null ? urlParams['size'] : 25;
 
             $("#page-size").val(pageSize);
+        });
+
+        $(function() {
+            var sort  = window.location.search.substring(1);
+            if(sort != undefined) {
+                var sortArgs = sort.split('=')[1].split(',');
+                var sortColumn = sortArgs[0];
+                var sortDirection = (sortArgs.length > 1) ? sortArgs[1] : 'asc';
+                $('#' + sortColumn).addClass(sortDirection);
+            }
         });
 
         $(function(){
