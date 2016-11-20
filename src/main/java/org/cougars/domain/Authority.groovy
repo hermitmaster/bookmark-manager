@@ -18,6 +18,7 @@ import javax.persistence.UniqueConstraint
 @Table(name = "authorities", uniqueConstraints = @UniqueConstraint(columnNames = ["authority", "username"]))
 public class Authority {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     Long id
 
@@ -25,7 +26,7 @@ public class Authority {
     @JoinColumn(name = "username", nullable = false)
     User user
 
-    @Column(nullable = false)
+    @Column(name = "authority", nullable = false)
     String authority = "user"
 
     Authority() {

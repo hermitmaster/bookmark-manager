@@ -42,20 +42,20 @@ import javax.persistence.Table
 @Table(name = "users")
 class User {
     @Id
-    @Column(unique = true)
+    @Column(name = "username", unique = true)
     String username
 
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     String password
 
-    @Column(nullable = false)
+    @Column(name = "enabled", nullable = false)
     Boolean enabled = true
+
+    @Column(name = "registrationDate", nullable = false, updatable = false)
+    Date registrationDate = new Date()
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Set<Authority> authorities = new HashSet<>()
-
-    @Column(nullable = false, updatable = false)
-    Date registrationDate = new Date()
 
     User() {
         super()

@@ -34,34 +34,41 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.ManyToOne
+import javax.persistence.Table
 
 /** Represents a bookmark in the system.
  * Created by Dennis Rausch on 10/3/16.
  */
 
 @Entity
+@Table(name = "bookmark")
 class Bookmark {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     Long id
 
-    @Column(nullable = false, length = 2000)
+    @Column(name = "url", nullable = false, length = 2000)
     String url
 
-    @Column
+    @Column(name = "name")
     String name
 
-    @Column(length = 4000)
+    @Column(name = "description", length = 4000)
     String description
 
-    @Column(nullable = false)
+    @Column(name = "dateCreated", nullable = false, updatable = false)
+    Date dateCreated = new Date()
+
+    @Column(name = "dateModified", nullable = false)
+    Date dateModified = new Date()
+
+    @Column(name = "lastValidated", nullable = false)
     Date lastValidated = new Date() - 7
 
-    // Default value: None
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     BookmarkCategory bookmarkCategory
 
-    // Default value: None
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     BookmarkCategory subcategory
 
@@ -70,12 +77,6 @@ class Bookmark {
 
     @ManyToOne
     User createdBy
-
-    @Column(nullable = false, updatable = false)
-    Date dateCreated = new Date()
-
-    @Column(nullable = false)
-    Date dateModified = new Date()
 
     Bookmark() {
         super()

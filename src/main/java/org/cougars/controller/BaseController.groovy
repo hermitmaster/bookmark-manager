@@ -73,7 +73,6 @@ public class BaseController {
         if(view == "category") {
             model.addAttribute("page", bcr.findAll())
         } else {
-
             model.addAttribute("statusList", Status.values() as List<String>)
             model.addAttribute("page", br.findByStatus(Status.ACTIVE, pageable))
         }

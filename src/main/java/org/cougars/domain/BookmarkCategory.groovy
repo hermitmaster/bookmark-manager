@@ -42,6 +42,7 @@ import javax.persistence.OneToMany
 @Entity
 class BookmarkCategory {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     Long id
 
