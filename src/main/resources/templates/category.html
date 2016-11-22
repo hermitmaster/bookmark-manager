@@ -6,6 +6,7 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <h1 th:text="#{msg.page.categoryView}" class="sr-only"></h1>
     <div class="row">
         <div class="col-md-4">
             <div class="panel-group" id="accordion">
@@ -32,7 +33,7 @@
                 <div class="panel-heading">
                     <h4 class="panel-title">Bookmark Details</h4>
                 </div>
-                <div id="bookmark-details-panel" class="panel-body">
+                <div id="bookmark-details-panel" class="panel-body" th:include="fragments/bookmarkDetail :: bookmarkDetail">
                     <!--Update this panel via ajax to display a detail view of the selected bookmark-->
                     <p>Select a bookmark from the menu to see details.</p>
                 </div>

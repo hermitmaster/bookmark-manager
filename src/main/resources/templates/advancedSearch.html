@@ -6,18 +6,26 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <h1 th:text="#{msg.page.advancedSearch}" class="sr-only"></h1>
     <div class="row search-form">
-        <form>
-            <div class="col-md-8 col-md-offset-2">
-                <input type="text" class="form-control" th:placeholder="#{msg.category}" /><br/>
-                <input type="text" class="form-control" th:placeholder="#{msg.subcategory}" /><br/>
-                <input type="text" class="form-control" th:placeholder="#{msg.name}" /><br/>
-                <input type="text" class="form-control" th:placeholder="#{msg.url}" /><br/>
-                <input type="text" class="form-control" th:placeholder="#{msg.description}" /><br/>
-                <input type="submit" class="btn btn-default" th:text="#{msg.form.button.submit}" />
-                <input type="reset" class="btn btn-default" th:text="#{msg.form.button.reset}" /><br/>
-            </div>
-        </form>
+        <div class="col-md-8 col-md-offset-2">
+            <form method="post">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h2 th:text="#{msg.page.advancedSearch}"></h2></div>
+                    <div class="panel-body">
+                        <input type="text" class="form-control" th:placeholder="#{msg.category}" /><br/>
+                        <input type="text" class="form-control" th:placeholder="#{msg.subcategory}" /><br/>
+                        <input type="text" class="form-control" th:placeholder="#{msg.name}" /><br/>
+                        <input type="text" class="form-control" th:placeholder="#{msg.url}" /><br/>
+                        <input type="text" class="form-control" th:placeholder="#{msg.description}" />
+                    </div>
+                    <div class="panel-footer">
+                        <input type="submit" class="btn btn-default" th:text="#{msg.form.button.submit}" />
+                        <input type="reset" class="btn btn-default" th:text="#{msg.form.button.reset}" />
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 </body>

@@ -32,6 +32,7 @@ import javax.validation.constraints.Size
 /** A bean for holding "Add Bookmark" form data.
  * Created by Dennis Rausch on 10/16/16.
  */
+
 class BookmarkBean {
     Long id
     @URL(message = "Provided URL is not a valid format!")

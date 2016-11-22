@@ -86,7 +86,7 @@ class AdminController {
             try {
                 Bookmark bookmark = br.findById(bean.id)
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication()
-                User user = ur.findByUsername(authentication.getName())
+                User user = ur.findByUsername(authentication.name)
                 BookmarkCategory category = bcr.findByName(bean.bookmarkCategory.trim())
                 if(!category) {
                     category = new BookmarkCategory(bean.bookmarkCategory.trim(), bcr.findByName("None"), user)
@@ -159,16 +159,19 @@ class AdminController {
         return view
     }
 
-    @PostMapping("/update-user")
-    String updateUser(@ModelAttribute Set<User> users) {
-        return "manageUser"
+    @PostMapping("/edit-user")
+    String editUser(@ModelAttribute Set<User> users) {
+        throw new RuntimeException("Not yet implemented!")
     }
 
     @GetMapping("/delete-user")
     String deleteUser(@RequestParam("username") String username) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication()
         User user = ur.findByUsername(username)
-        user.enabled = false
-        ur.save(user)
+        if(user.username != authentication.name) {
+            user.enabled = false
+            ur.save(user)
+        }
 
         return "redirect:/admin/users"
     }
@@ -183,9 +186,14 @@ class AdminController {
 
     @PostMapping("/bookmark-import")
     String bookmarkImport(@RequestParam("file") MultipartFile file) {
-        bios.importBookmarksOverwrite(file)
+        bios.importBookmarks(file, false)
 
-        return "redirect:/"
+        return "importSuccess"
+    }
+
+    @GetMapping("/data-management")
+    String dataManagement() {
+        return "dataManagement"
     }
 
     /** Delete a single bookmark given the id

@@ -36,8 +36,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 /** A configuration class for setting web configuration properties.
  * Created by Dennis Rausch on 10/29/16.
  */
+
 @Configuration
 class WebConfiguration extends WebMvcConfigurerAdapter {
+    static final int PAGE_SIZE = 25
     /** Sets the default start page and page size for paginated data
      *
      * @param argumentResolvers The default PageableArgumentResolver
@@ -45,7 +47,7 @@ class WebConfiguration extends WebMvcConfigurerAdapter {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         PageableHandlerMethodArgumentResolver resolver = new PageableHandlerMethodArgumentResolver()
-        resolver.setFallbackPageable(new PageRequest(0, 25))
+        resolver.setFallbackPageable(new PageRequest(0, PAGE_SIZE))
         argumentResolvers.add(resolver)
     }
 

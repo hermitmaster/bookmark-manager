@@ -25,7 +25,7 @@
 package org.cougars.controller
 
 import groovy.util.logging.Slf4j
-import org.apache.http.HttpRequest
+import org.cougars.WebConfiguration
 import org.cougars.bean.BookmarkBean
 import org.cougars.domain.Bookmark
 import org.cougars.domain.BookmarkCategory
@@ -67,14 +67,24 @@ public class BaseController {
     @GetMapping("")
     String index(@RequestParam(value ="view", required = false) String viewParam,
                  @CookieValue(value = "view", defaultValue = "table") String viewCookie,
+                 @CookieValue(value = "history", defaultValue = "") String history,
                  @SortDefault("dateCreated") Pageable pageable,
                  Model model, HttpServletResponse response) {
         String view = viewParam ?: viewCookie
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication()
         User user = ur.findByUsername(authentication.getName())
 
+        // Preload history
+        if(!history) {
+            history = br.findByStatus(Status.ACTIVE, pageable).getContent().id
+        }
+
         if(view == "category") {
+            List<String> idString = URLDecoder.decode(history, "UTF-8").split(",")
+            List<Long> ids = new ArrayList()
+            idString.each { ids.add(it as Long) }
             model.addAttribute("page", bcr.findAll())
+            model.addAttribute("bookmark", br.findById(ids.last()))
         } else if(user?.isAdmin()) {
             model.addAttribute("page", br.findAll(pageable))
         } else {
@@ -102,6 +112,7 @@ public class BaseController {
     @PostMapping("/add-bookmark")
     String addBookmarkSubmission(@Valid BookmarkBean bean, BindingResult bindingResult) {
         String view = "addBookmarkSuccess"
+
         if (bindingResult.hasErrors()) {
             view = "addBookmark"
         } else {
@@ -148,5 +159,21 @@ public class BaseController {
         model.addAttribute("page", br.search(query.trim(), pageable))
 
         return "table"
+    }
+
+    @GetMapping("/track-click")
+    String trackClick(@RequestParam(value = "id") Long id, HttpServletResponse response,
+                      @CookieValue(value = "history", defaultValue = "") String history) {
+        Bookmark bookmark = br.findById(id)
+        List<String> idString = URLDecoder.decode(history, "UTF-8").split(",")
+        List<Long> ids = new ArrayList()
+        idString.each { ids.add(it as Long) }
+
+        ids.remove(id)
+        ids.add(id)
+        history = URLEncoder.encode(ids.takeRight(WebConfiguration.PAGE_SIZE).join(","), "UTF-8")
+        response.addCookie(new Cookie("history", history))
+
+        return "redirect:${bookmark.url}"
     }
 }

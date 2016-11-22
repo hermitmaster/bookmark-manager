@@ -8,6 +8,7 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <h1 th:text="#{msg.page.tableView}" class="sr-only"></h1>
     <div class="row" th:fragment="pagination-head">
         <div class="col-md-12">
             <ul class="pagination" style="display: inline-block;">
@@ -44,8 +45,8 @@
                     </thead>
                     <tbody>
                     <tr th:each="bookmark : ${page}" role="row" th:id="${'bookmark-id-' + bookmark.id}">
-                        <td><a th:href="${bookmark.url}" th:text="${bookmark.name}" target="_blank"></a></td>
-                        <td><a th:href="${bookmark.url}" th:text="${bookmark.url}" target="_blank"></a></td>
+                        <td><a th:href="@{/track-click(id=${bookmark.id})}" th:text="${bookmark.name}" target="_blank"></a></td>
+                        <td><a th:href="@{/track-click(id=${bookmark.id})}" th:text="${bookmark.url}" target="_blank"></a></td>
                         <td th:text="${bookmark.bookmarkCategory.name}"></td>
                         <td th:text="${bookmark.subcategory.name}"></td>
                         <td th:text="${bookmark.description}"></td>

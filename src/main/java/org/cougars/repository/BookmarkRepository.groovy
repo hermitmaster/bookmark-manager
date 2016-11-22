@@ -32,9 +32,10 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
-/**
+/** A JPA repository for accessing Bookmark data
  * Created by Dennis Rausch on 10/3/16.
  */
+
 interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
     /** Searches relevant fields for the passed query
      *
@@ -51,6 +52,13 @@ interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
      * @return      Bookmark with the referenced id.
      */
     Bookmark findById(Long id)
+
+    /** Find a bookmark by its url.
+     *
+     * @param url   url of the bookmark being searched for.
+     * @return      Bookmark with the referenced id.
+     */
+    Bookmark findByUrl(String url)
 
     /** Find a bookmark based on its primary category.
      *

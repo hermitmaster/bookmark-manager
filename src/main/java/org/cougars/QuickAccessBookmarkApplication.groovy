@@ -35,6 +35,7 @@ import org.thymeleaf.dialect.springdata.SpringDataDialect
 /** Spring Boot default application class. This is the class that contains the
  * main method for the application.
  */
+
 @EnableScheduling
 @SpringBootApplication
 public class QuickAccessBookmarkApplication extends SpringBootServletInitializer {

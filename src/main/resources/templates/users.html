@@ -6,6 +6,7 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <h1 th:text="#{msg.page.users}" class="sr-only"></h1>
     <div class="row">
         <div class="col-md-12 text-center">
             <form method="post" th:action="@{/admin/add-user}" th:object="${userBean}" class="form-inline">
@@ -57,6 +58,10 @@
                     <td th:text="${user.getAuthoritiesList()}"></td>
                     <td>
                         <div class="btn-group" role="group">
+                            <!--Not yet implemented-->
+                            <a th:href="@{/admin/edit-user(id=${user.username})}" title="Edit" class="btn btn-default" th:disabled="true">
+                                <i class="glyphicon glyphicon-edit"></i>
+                            </a>
                             <a th:href="@{/admin/delete-user(username=${user.username})}" title="Delete" class="btn btn-default" onclick="confirmDelete();" th:disabled="${username == #authentication.getPrincipal().getUsername()}">
                                 <i class="glyphicon glyphicon-remove-circle"></i>
                             </a>

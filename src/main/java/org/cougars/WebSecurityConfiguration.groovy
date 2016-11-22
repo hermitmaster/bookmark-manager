@@ -40,6 +40,7 @@ import javax.sql.DataSource
 /** A configuration class for configuring Spring Security.
  * Created by Dennis Rausch on 8/26/16.
  */
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {

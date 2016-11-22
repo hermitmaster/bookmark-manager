@@ -47,7 +47,7 @@
                         </li>
                         <li>
                             <a th:href="@{/(view=top)}" th:title="#{msg.page.top}">
-                                <i class="glyphicon glyphicon-tree-conifer"></i>&nbsp;
+                                <i class="glyphicon glyphicon-repeat"></i>&nbsp;
                                 <span class="hidden-sm hidden-md hidden-lg hidden-xl" th:text="#{msg.page.top}"></span>
                             </a>
                         </li>
@@ -85,7 +85,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a data-toggle="modal" href="#dataManagementModal" th:title="#{msg.page.data}">
+                                <a data-toggle="modal" th:href="@{/admin/data-management}" th:title="#{msg.page.data}">
                                     <i class="glyphicon glyphicon-floppy-disk"></i>&nbsp;
                                     <span class="hidden-sm hidden-md hidden-lg hidden-xl" th:text="#{msg.page.data}"></span>
                                 </a>
@@ -99,25 +99,6 @@
         </nav>
     </header>
     <div layout:fragment="content" class="container-fluid"></div>
-    <div sec:authorize="hasAuthority('admin')" class="modal fade" id="dataManagementModal" tabindex="-1" role="dialog" aria-labelledby="dataManagementModalLabel">
-        <div class="modal-dialog" role="document">
-            <form method="post" enctype="multipart/form-data" th:action="@{/admin/bookmark-import}" id="import-form">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="dataManagementModalLabel" th:text="#{msg.page.data}"></h4>
-                    </div>
-                    <div class="modal-body">
-                        File to upload (must be either .xls or .xlsx format): <input type="file" name="file" /><br/>
-                    </div>
-                    <div class="modal-footer">
-                        <a th:href="@{/admin/bookmark-export}" class="btn btn-default" th:text="#{msg.form.button.export}"></a>
-                        <input type="submit" th:value="#{msg.form.button.import}" class="btn btn-default" />
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
     <footer class="container-fluid">
         <div class="row">
             <div class="col-md-12 text-center">

@@ -33,6 +33,7 @@ import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.xssf.usermodel.XSSFRow
 import org.apache.poi.xssf.usermodel.XSSFSheet
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import org.cougars.bean.BookmarkBean
 import org.cougars.domain.Bookmark
 import org.cougars.domain.BookmarkCategory
 import org.cougars.domain.Status
@@ -49,6 +50,7 @@ import org.springframework.web.multipart.MultipartFile
 /** A service class for importing and exporting bookmark and category data.
  * Created by Dennis Rausch on 11/2/16.
  */
+
 @Slf4j
 @Service
 class BookmarkIOService {
@@ -57,63 +59,48 @@ class BookmarkIOService {
     @Autowired private BookmarkCategoryRepository bcr
     @Autowired private BookmarkValidatorService bvs
 
-    void importBookmarks(MultipartFile file) {
+    /** Import bookmarks from an Excel file
+     *
+     * @param file      the Excel file to import bookmarks from
+     * @param replace   replace current bookmarks if true, else add to table
+     */
+    void importBookmarks(MultipartFile file, boolean replace) {
         log.info("Beginning bookmark import. This may take some time.")
 
         try {
+            Set<BookmarkBean> beans = extractBookmarksFromExcel(file)
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication()
             User user = ur.findByUsername(authentication.getName())
-            Workbook workbook = getWorkbook(file.inputStream, file.originalFilename)
-            Sheet sheet = workbook.getSheet("bookmarks")
-
-            br.deleteInBatch(br.findAll())
-            br.flush()
             Set<Bookmark> bookmarks = new HashSet<>()
 
-            sheet.each { Row row ->
-                Bookmark bookmark = new Bookmark()
-                bookmark.status = Status.ACTIVE
-                bookmark.createdBy = user
+            if(replace && beans) {
+                br.deleteInBatch(br.findAll())
+                br.flush()
+            }
 
-                row.each { Cell cell ->
-                    BookmarkCategory bookmarkCategory = null
-
-                    switch (cell.columnIndex) {
-                        case 0:
-                            bookmark.url = cell.stringCellValue.trim()
-                            break
-                        case 1:
-                            bookmark.name = cell.stringCellValue.trim()
-                            break
-                        case 2:
-                            bookmark.description = cell.stringCellValue.trim()
-                            break
-                        case 3:
-                            String categoryName = cell.stringCellValue.trim()
-                            bookmarkCategory = bcr.findByName(categoryName)
-                            if(!bookmarkCategory) {
-                                bookmarkCategory = new BookmarkCategory(categoryName, bcr.findByName("None"), user)
-                                bcr.save(bookmarkCategory)
-                            }
-                            bookmark.bookmarkCategory = bookmarkCategory
-                            break
-                        case 4:
-                            String categoryName = cell.stringCellValue.trim()
-                            BookmarkCategory subcategory = bcr.findByName(categoryName)
-                            if(!subcategory) {
-                                subcategory = new BookmarkCategory(categoryName, bookmarkCategory, user)
-                                bcr.save(subcategory)
-                            }
-                            bookmark.subcategory = bcr.findByName(subcategory.name)
-                            break
-                    }
+            beans.each {
+                BookmarkCategory category = bcr.findByName(it.bookmarkCategory.trim())
+                if(!category) {
+                    category = new BookmarkCategory(it.bookmarkCategory.trim(), bcr.findByName("None"), user)
                 }
 
+                BookmarkCategory subcategory = bcr.findByName("None")
+                if(it.subcategory && !it.subcategory.equalsIgnoreCase("None")) {
+                    subcategory = bcr.findByName(it.subcategory.trim()) ?: new BookmarkCategory(it.subcategory.trim(), category, user)
+                }
+
+                Bookmark bookmark = new Bookmark(it.url.trim(), it.name.trim(), it.description, category, subcategory, user)
+                if(user?.isAdmin()) {
+                    bookmark.status = Status.ACTIVE
+                }
+
+                br.save(bookmark)
                 bookmarks.add(bookmark)
             }
 
             br.save(bookmarks)
 
+            // Validate asynchronously. It can take a long time.
             Thread.start {
                 bvs.validateBookmarks(bookmarks)
             }
@@ -124,7 +111,56 @@ class BookmarkIOService {
         }
     }
 
-    /** Export bookmarks from the database and write to an OutputStream
+    /** Extract bookmark data from the import file
+     *
+     * @param file  the Excel file to extract bookmarks from
+     * @return      A set of bookmark beans to ensure uniqueness
+     */
+    Set<BookmarkBean> extractBookmarksFromExcel(MultipartFile file) {
+        Set<BookmarkBean> beans = new HashSet<>()
+
+        try {
+            Workbook workbook = getWorkbook(file.inputStream, file.originalFilename)
+            Sheet sheet = workbook.getSheet("bookmarks")
+
+            br.deleteInBatch(br.findAll())
+            br.flush()
+
+            sheet.each { Row row ->
+                BookmarkBean bean = new BookmarkBean()
+
+                row.each { Cell cell ->
+                    switch (cell.columnIndex) {
+                        case 0:
+                            bean.url = cell.stringCellValue.trim()
+                            break
+                        case 1:
+                            bean.name = cell.stringCellValue.trim()
+                            break
+                        case 2:
+                            bean.description = cell.stringCellValue.trim()
+                            break
+                        case 3:
+                            bean.bookmarkCategory = cell.stringCellValue.trim()
+                            break
+                        case 4:
+                            bean.subcategory = cell.stringCellValue.trim()
+                            break
+                    }
+                }
+
+                beans.add(bean)
+            }
+
+            log.info("Bookmark extraction completed.")
+        } catch (IOException e) {
+            log.error("Unable to extract bookmarks!", e)
+        }
+
+        return beans
+    }
+
+    /** Export bookmarks from the database and write a .xlsx file to an OutputStream
      *
      * @param outputStream  The stream to write the output to
      */
@@ -166,7 +202,7 @@ class BookmarkIOService {
         } else if (fileName.endsWith("xls")) {
             workbook = new HSSFWorkbook(inputStream)
         } else {
-            throw new IllegalArgumentException("The specified file is not Excel file")
+            throw new IllegalArgumentException("The specified file is not an Excel file!")
         }
 
         return workbook

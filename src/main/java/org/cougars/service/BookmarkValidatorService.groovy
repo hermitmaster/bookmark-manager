@@ -40,6 +40,7 @@ import org.springframework.stereotype.Service
 /** A service class for validating bookmarks based on http response.
  * Created by Dennis Rausch on 10/25/16.
  */
+
 @Slf4j
 @Service
 class BookmarkValidatorService {
@@ -51,7 +52,7 @@ class BookmarkValidatorService {
     @Scheduled(cron = "0 0 */3 * * *")
     void validateBookmarks() {
         Set<Bookmark> bookmarks = br.findByLastValidatedBefore(new Date() - 1)
-        log.info("Executing batch bookmark validation of ${bookmarks.size()} bookmarks on scheduled interval")
+        log.info("Starting batch bookmark validation on scheduled interval")
         validateBookmarks(bookmarks)
     }
 
@@ -60,6 +61,7 @@ class BookmarkValidatorService {
      * @param bookmarks     Collection of bookmarks to validate
      */
     void validateBookmarks(Set<Bookmark> bookmarks) {
+        log.info("Validating ${bookmarks.size()} bookmarks")
         GParsPool.withPool {
             bookmarks.eachParallel { Bookmark bookmark -> validateUrl(bookmark) }
         }
