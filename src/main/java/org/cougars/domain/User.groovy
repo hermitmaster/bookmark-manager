@@ -71,4 +71,8 @@ class User {
     String getAuthoritiesList() {
         return authorities*.authority.join(", ")
     }
+
+    boolean isAdmin() {
+        getAuthoritiesList().contains("admin")
+    }
 }

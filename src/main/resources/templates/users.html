@@ -46,7 +46,6 @@
                 <tr>
                     <th>Username</th>
                     <th>Registration Date</th>
-                    <th>Enabled</th>
                     <th>Roles</th>
                     <th>Action</th>
                 </tr>
@@ -55,10 +54,13 @@
                 <tr th:each="user : ${users}" role="row">
                     <td th:text="${user.username}"></td>
                     <td th:text="${user.registrationDate}"></td>
-                    <td th:text="${user.enabled}"></td>
                     <td th:text="${user.getAuthoritiesList()}"></td>
                     <td>
-                        <div></div>
+                        <div class="btn-group" role="group">
+                            <a th:href="@{/admin/delete-user(username=${user.username})}" title="Delete" class="btn btn-default" onclick="confirmDelete();" th:disabled="${username == #authentication.getPrincipal().getUsername()}">
+                                <i class="glyphicon glyphicon-remove-circle"></i>
+                            </a>
+                        </div>
                     </td>
                 </tr>
                 </tbody>

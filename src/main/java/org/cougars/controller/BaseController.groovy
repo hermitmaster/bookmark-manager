@@ -70,11 +70,14 @@ public class BaseController {
                  @SortDefault("dateCreated") Pageable pageable,
                  Model model, HttpServletResponse response) {
         String view = viewParam ?: viewCookie
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication()
+        User user = ur.findByUsername(authentication.getName())
 
         if(view == "category") {
             model.addAttribute("page", bcr.findAll())
+        } else if(user?.isAdmin()) {
+            model.addAttribute("page", br.findAll(pageable))
         } else {
-            model.addAttribute("statusList", Status.values() as List<String>)
             model.addAttribute("page", br.findByStatus(Status.ACTIVE, pageable))
         }
 
@@ -116,7 +119,7 @@ public class BaseController {
                 }
 
                 Bookmark bookmark = new Bookmark(bean.url.trim(), bean.name.trim(), bean.description, category, subcategory, user)
-                if(authentication.authorities.find {it.role == "admin"}) {
+                if(user?.isAdmin()) {
                     bookmark.status = Status.ACTIVE
                 }
 

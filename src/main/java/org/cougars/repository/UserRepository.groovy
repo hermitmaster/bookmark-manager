@@ -37,4 +37,6 @@ interface UserRepository extends JpaRepository<User, String> {
      * @return      User with the referenced id.
      */
     User findByUsername(String username)
+
+    Set<User> findByEnabledTrue()
 }

@@ -1,7 +1,4 @@
-logging:
-  level:
-    ROOT: info
-    org.cougars: debug
+logging.level.org.cougars: debug
 spring:
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE

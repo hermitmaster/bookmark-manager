@@ -138,16 +138,17 @@ class AdminController {
     @GetMapping("/users")
     String users(Model model) {
         model.addAttribute("userBean", new UserBean())
-        model.addAttribute("users", ur.findAll())
+        model.addAttribute("users", ur.findByEnabledTrue())
 
         return "users"
     }
 
     @PostMapping("/add-user")
-    String addUser(@Valid UserBean bean, BindingResult bindingResult) {
+    String addUser(@Valid UserBean bean, BindingResult bindingResult, Model model) {
         String view
 
         if(bindingResult.hasErrors()){
+            model.addAttribute("users", ur.findByEnabledTrue())
             view = "/users"
         } else {
             ur.save(new User(bean.username, bean.password))
@@ -163,6 +164,15 @@ class AdminController {
         return "manageUser"
     }
 
+    @GetMapping("/delete-user")
+    String deleteUser(@RequestParam("username") String username) {
+        User user = ur.findByUsername(username)
+        user.enabled = false
+        ur.save(user)
+
+        return "redirect:/admin/users"
+    }
+
     @GetMapping("/bookmark-export")
     void bookmarkExport(HttpServletResponse response) {
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
@@ -173,7 +183,7 @@ class AdminController {
 
     @PostMapping("/bookmark-import")
     String bookmarkImport(@RequestParam("file") MultipartFile file) {
-        bios.importBookmarks(file)
+        bios.importBookmarksOverwrite(file)
 
         return "redirect:/"
     }

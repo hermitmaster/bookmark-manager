@@ -1,8 +1,4 @@
-logging:
-  level:
-    ROOT: warn
-    org.cougars: info
-    org.apache.http.client.protocol.ResponseProcessCookies: error
+logging.level.org.apache.http.client.protocol.ResponseProcessCookies: error
 server.context-path: /quickAccessBookmark
 spring:
   http.multipart.max-file-size: 5MB

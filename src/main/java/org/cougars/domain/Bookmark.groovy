@@ -66,10 +66,10 @@ class Bookmark {
     @Column(name = "lastValidated", nullable = false)
     Date lastValidated = new Date() - 7
 
-    @ManyToOne(optional = false)
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
     BookmarkCategory bookmarkCategory
 
-    @ManyToOne(optional = false)
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
     BookmarkCategory subcategory
 
     @Enumerated(EnumType.STRING)
