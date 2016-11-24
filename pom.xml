@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<groupId>org.cougars</groupId>
 	<artifactId>quick-access-bookmark</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>Quick Access Bookmark</name>
 	<description>MSU Cougars capstone project</description>
 	<modelVersion>4.0.0</modelVersion>

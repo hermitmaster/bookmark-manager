@@ -161,6 +161,20 @@ public class BaseController {
         return "table"
     }
 
+    @GetMapping("/advanced-search")
+    String advancedSearchPage(Model model)  {
+        //TODO: Add model attributes for category and subcategory to populate dynamic dropdowns on the view
+        model.addAttribute("bookmarkBean", new BookmarkBean())
+
+        return "advancedSearch"
+    }
+
+    @PostMapping("/advanced-search")
+    String advancedSearch(Model model)  {
+        //TODO: Create a bookmark repository for searching with multiple parameters
+        throw new RuntimeException("Method not implemented!")
+    }
+
     @GetMapping("/track-click")
     String trackClick(@RequestParam(value = "id") Long id, HttpServletResponse response,
                       @CookieValue(value = "history", defaultValue = "") String history) {

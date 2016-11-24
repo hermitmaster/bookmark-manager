@@ -217,6 +217,15 @@ class AdminController {
         return "redirect:/"
     }
 
+    @GetMapping("/approve-all-bookmarks")
+    String approveAllBookmarks() {
+        Set<Bookmark> bookmarks = br.findByStatus(Status.IN_REVIEW)
+        bookmarks.each { it.status = Status.ACTIVE}
+        br.save(bookmarks)
+
+        return "redirect:/"
+    }
+
     /** Delete all dead bookmarks
      *
      * @return  view to return

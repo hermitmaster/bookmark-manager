@@ -9,14 +9,14 @@
     <h1 th:text="#{msg.page.advancedSearch}" class="sr-only"></h1>
     <div class="row search-form">
         <div class="col-md-8 col-md-offset-2">
-            <form method="post">
+            <form method="get" th:action="@{/advanced-search}">
                 <div class="panel panel-default">
                     <div class="panel-heading"><h2 th:text="#{msg.page.advancedSearch}"></h2></div>
                     <div class="panel-body">
+                        <input type="text" class="form-control" th:placeholder="#{msg.url}" /><br/>
                         <input type="text" class="form-control" th:placeholder="#{msg.category}" /><br/>
                         <input type="text" class="form-control" th:placeholder="#{msg.subcategory}" /><br/>
                         <input type="text" class="form-control" th:placeholder="#{msg.name}" /><br/>
-                        <input type="text" class="form-control" th:placeholder="#{msg.url}" /><br/>
                         <input type="text" class="form-control" th:placeholder="#{msg.description}" />
                     </div>
                     <div class="panel-footer">
