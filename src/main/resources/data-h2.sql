@@ -17,7 +17,7 @@ INSERT INTO bookmark_category (created_by_username, date_created, date_modified,
 
 -- Bookmarks
 INSERT INTO bookmark (created_by_username, bookmark_category_id, subcategory_id, status, date_created, date_modified, last_validated, description, name, url) VALUES
-  ('admin', 2, 1, 'ACTIVE', NOW(), NOW(), NOW(), 'A popular search engine.', 'Google', 'http://www.google.com'),
+  ('admin', 2, 1, 'ACTIVE', NOW(), NOW(), NOW(), 'A popular search engine.', 'Google', 'https://www.google.com'),
   ('admin', 3, 1, 'ACTIVE', NOW(), NOW(), NOW(), 'MySpace 2.0.', 'Facebook', 'http://www.facebook.com'),
   ('admin', 3, 1, 'ACTIVE', NOW(), NOW(), NOW(), 'A social networking site for professionals.', 'LinkedIn', 'http://www.linkedin.com'),
   ('admin', 2, 1, 'ACTIVE', NOW(), NOW(), NOW(), 'A somewhat popular search engine.', 'DuckDuckGo', 'http://www.duckduckgo.com'),

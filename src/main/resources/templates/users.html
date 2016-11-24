@@ -22,12 +22,12 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group" th:classappend="${#fields.hasErrors('username') ? 'has-error' : ''}">
-                                    <label th:text="#{msg.username}" for="usernameInput" class="sr-only"></label>
-                                    <input id="usernameInput" type="text" class="form-control" th:placeholder="#{msg.username}" th:field="*{username}" aria-describedby="usernameHelp" />
+                                    <label th:text="#{msg.username}" for="usernameInput"></label>
+                                    <input id="usernameInput" type="text" class="form-control" th:placeholder="#{msg.form.placeholder.username}" th:field="*{username}" aria-describedby="usernameHelp" />
                                 </div>&nbsp;
                                 <div class="form-group" th:classappend="${#fields.hasErrors('password') ? 'has-error' : ''}">
-                                    <label th:text="#{msg.password}" for="passwordInput" class="sr-only"></label>
-                                    <input id="passwordInput" type="password" class="form-control" th:placeholder="#{msg.password}" th:field="*{password}" aria-describedby="passwordHelp" />
+                                    <label th:text="#{msg.password}" for="passwordInput"></label>
+                                    <input id="passwordInput" type="password" class="form-control" th:placeholder="#{msg.form.placeholder.password}" th:field="*{password}" aria-describedby="passwordHelp" />
                                 </div>
                                 <div class="btn-group" role="group">
                                     <input type="submit" class="btn btn-default" th:value="#{msg.form.button.submit}" />

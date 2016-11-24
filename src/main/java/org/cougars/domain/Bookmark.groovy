@@ -84,7 +84,7 @@ class Bookmark {
 
     Bookmark(String url, String name, String description, BookmarkCategory bookmarkCategory, BookmarkCategory subcategory, User createdBy) {
         this.url = url
-        this.name = name
+        this.name = name ?: url
         this.description = description
         this.bookmarkCategory = bookmarkCategory
         this.subcategory = subcategory

@@ -15,27 +15,27 @@
                     <div class="panel-body">
                         <div class="form-group" th:classappend="${#fields.hasErrors('url') ? 'has-error' : ''}">
                             <label th:text="#{msg.url}" for="urlInput"></label>
-                            <input id="urlInput" type="text" class="form-control" th:placeholder="#{msg.url}" th:field="*{url}" aria-describedby="urlHelp" />
+                            <input id="urlInput" type="text" class="form-control" th:placeholder="#{msg.form.placeholder.url}" th:field="*{url}" aria-describedby="urlHelp" />
                             <span id="urlHelp" th:if="${#fields.hasErrors('url')}" th:errors="*{url}" class="help-block"></span>
                         </div>
                         <div class="form-group" th:classappend="${#fields.hasErrors('bookmarkCategory') ? 'has-error' : ''}">
                             <label th:text="#{msg.category}" for="categoryInput"></label>
-                            <input id="categoryInput" type="text" class="form-control" th:placeholder="#{msg.category}" th:field="*{bookmarkCategory}" aria-describedby="categoryHelp" />
+                            <input id="categoryInput" type="text" class="form-control" th:placeholder="#{msg.form.placeholder.category}" th:field="*{bookmarkCategory}" aria-describedby="categoryHelp" />
                             <span id="categoryHelp" th:if="${#fields.hasErrors('bookmarkCategory')}" th:errors="*{bookmarkCategory}" class="help-block"></span>
                         </div>
                         <div class="form-group" th:classappend="${#fields.hasErrors('subcategory') ? 'has-error' : ''}">
                             <label th:text="#{msg.subcategory}" for="subcategoryInput"></label>
-                            <input id="subcategoryInput" type="text" class="form-control" th:placeholder="#{msg.subcategory}" th:field="*{subcategory}" aria-describedby="subcategoryHelp" />
+                            <input id="subcategoryInput" type="text" class="form-control" th:placeholder="#{msg.form.placeholder.subcategory}" th:field="*{subcategory}" aria-describedby="subcategoryHelp" />
                             <span id="subcategoryHelp" th:if="${#fields.hasErrors('subcategory')}" th:errors="*{subcategory}" class="help-block"></span>
                         </div>
                         <div class="form-group" th:classappend="${#fields.hasErrors('name') ? 'has-error' : ''}">
                             <label th:text="#{msg.name}" for="nameInput"></label>
-                            <input id="nameInput" type="text" class="form-control" th:placeholder="#{msg.name}" th:field="*{name}" aria-describedby="nameHelp" />
+                            <input id="nameInput" type="text" class="form-control" th:placeholder="#{msg.form.placeholder.name}" th:field="*{name}" aria-describedby="nameHelp" />
                             <span id="nameHelp" th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="help-block"></span>
                         </div>
                         <div class="form-group" th:classappend="${#fields.hasErrors('description') ? 'has-error' : ''}">
                             <label th:text="#{msg.description}" for="descriptionInput"></label>
-                            <textarea id="descriptionInput" class="form-control" th:placeholder="#{msg.description}" th:field="*{description}" aria-describedby="descriptionHelp"></textarea>
+                            <textarea id="descriptionInput" class="form-control" th:placeholder="#{msg.form.placeholder.description}" th:field="*{description}" aria-describedby="descriptionHelp"></textarea>
                             <span id="descriptionHelp" th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="help-block"></span>
                         </div>
                     </div>

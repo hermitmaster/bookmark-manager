@@ -25,9 +25,10 @@
 package org.cougars.bean
 
 import org.cougars.domain.Bookmark
+import org.cougars.validator.constraints.UniqueURL
+import org.hibernate.validator.constraints.Length
 import org.hibernate.validator.constraints.URL
 
-import javax.validation.constraints.Size
 
 /** A bean for holding "Add Bookmark" form data.
  * Created by Dennis Rausch on 10/16/16.
@@ -35,20 +36,22 @@ import javax.validation.constraints.Size
 
 class BookmarkBean {
     Long id
+
     @URL(message = "Provided URL is not a valid format!")
-    @Size(min = 8, max = 1000, message = "Provided URL is not a valid format!")
+    @Length(min = 8, max = 1000, message = "Provided URL is not a valid format!")
+    @UniqueURL(message = "URL already exists. Please contact an administrator to edit the existing entry.")
     String url
 
-    @Size(max = 255, message = "Max length is 255 characters!")
+    @Length(max = 255, message = "Max length is 255 characters!")
     String bookmarkCategory
 
-    @Size(max = 255, message = "Max length is 255 characters!")
+    @Length(max = 255, message = "Max length is 255 characters!")
     String subcategory
 
-    @Size(max = 255, message = "Max length is 255 characters!")
+    @Length(max = 255, message = "Max length is 255 characters!")
     String name
 
-    @Size(max = 2000, message = "Max length is 2000 characters!")
+    @Length(max = 2000, message = "Max length is 2000 characters!")
     String description
 
     BookmarkBean() {
