@@ -43,7 +43,9 @@
     <script type="text/javascript">
         /*<![CDATA[*/
         function loadBookmarkDetails(id) {
-            var url = '/quickAccessBookmark/bookmark-details?id=' + id;
+            var getUrl = window.location;
+            var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+            var url = baseUrl + '/bookmark-details?id=' + id;
 
             $("#bookmark-details-panel").load(url);
         }

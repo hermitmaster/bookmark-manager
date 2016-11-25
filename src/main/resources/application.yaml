@@ -1,5 +1,5 @@
 logging.level.org.apache.http.client.protocol.ResponseProcessCookies: error
-server.context-path: /quickAccessBookmark
+server.context-path: /
 spring:
   http.multipart.max-file-size: 5MB
   jpa.hibernate.ddl-auto: update
