@@ -19,7 +19,7 @@
             <tbody>
                 <tr>
                     <th scope="row">URL</th>
-                    <td><a th:href="@{/track-click(id=${bookmark.id})}" th:text="${bookmark.url}" target="_blank"></a></td>
+                    <td><a th:href="${bookmark.url}" th:text="${bookmark.url}" target="_blank" th:onclick="'$(this).trackClick(' + ${bookmark.id} + ');'"></a></td>
                 </tr>
                 <tr>
                     <th scope="row">Category</th>

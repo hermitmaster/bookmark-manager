@@ -193,20 +193,21 @@ public class BaseController {
     }
 
     @GetMapping("/track-click")
-    String trackClick(@RequestParam(value = "id") Long id, HttpServletResponse response,
+    void trackClick(@RequestParam(value = "id") Long id, HttpServletResponse response,
                       @CookieValue(value = "history", defaultValue = "") String history) {
         Bookmark bookmark = br.findById(id)
-        List<String> idString = URLDecoder.decode(history, "UTF-8").split(",")
-        List<Long> ids = new ArrayList()
-        if(history) {
-            idString.each { ids.add(it as Long) }
-            ids.remove(id)
+
+        if(bookmark) {
+            List<String> idString = URLDecoder.decode(history, "UTF-8").split(",")
+            List<Long> ids = new ArrayList()
+            if(history) {
+                idString.each { ids.add(it as Long) }
+                ids.remove(id)
+            }
+
+            ids.add(id)
+            history = URLEncoder.encode(ids.takeRight(WebConfiguration.PAGE_SIZE).join(","), "UTF-8")
+            response.addCookie(new Cookie("history", history))
         }
-
-        ids.add(id)
-        history = URLEncoder.encode(ids.takeRight(WebConfiguration.PAGE_SIZE).join(","), "UTF-8")
-        response.addCookie(new Cookie("history", history))
-
-        return "redirect:${bookmark.url}"
     }
 }

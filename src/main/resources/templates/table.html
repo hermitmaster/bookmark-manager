@@ -50,8 +50,8 @@
                     </thead>
                     <tbody>
                     <tr th:each="bookmark : ${page}" role="row" th:id="${'bookmark-id-' + bookmark.id}">
-                        <td><a th:href="@{/track-click(id=${bookmark.id})}" th:text="${bookmark.name}" target="_blank"></a></td>
-                        <td><a th:href="@{/track-click(id=${bookmark.id})}" th:text="${bookmark.url}" target="_blank"></a></td>
+                        <td><a th:href="${bookmark.url}" th:text="${bookmark.name}" target="_blank" th:onclick="'$(this).trackClick(' + ${bookmark.id} + ');'"></a></td>
+                        <td><a th:href="${bookmark.url}" th:text="${bookmark.url}" target="_blank" th:onclick="'$(this).trackClick(' + ${bookmark.id} + ');'"></a></td>
                         <td th:text="${bookmark.bookmarkCategory.name}"></td>
                         <td th:text="${bookmark.subcategory.name}"></td>
                         <td th:text="${bookmark.description}"></td>
@@ -91,9 +91,8 @@
         $(function() {
             var urlParams = {};
             var match;
-            var pl = /\+/g;
             var search = /([^&=]+)=?([^&]*)/g;
-            var decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); };
+            var decode = function (s) { return decodeURIComponent(s.replace(/\+/g, " ")); };
             var query  = window.location.search.substring(1);
 
             while (match = search.exec(query)) {
@@ -105,16 +104,6 @@
             $("#page-size").val(pageSize);
         });
 
-        $(function() {
-            var sort  = window.location.search.substring(1);
-            if(sort != undefined) {
-                var sortArgs = sort.split('=')[1].split(',');
-                var sortColumn = sortArgs[0];
-                var sortDirection = (sortArgs.length > 1) ? sortArgs[1] : 'asc';
-                $('#' + sortColumn).addClass(sortDirection);
-            }
-        });
-
         $(function(){
             $('#page-size').bind('change', function () {
                 var url = $(this).val();
@@ -124,18 +113,6 @@
                 return false;
             });
         });
-
-        function confirmDelete() {
-            return confirm("Are you sure you wish to delete this bookmark?\nThis action cannot be undone.");
-        }
-
-        function confirmDeleteAll() {
-            return confirm("Are you sure you wish to delete all dead bookmarks?\nThis action cannot be undone.");
-        }
-
-        function confirmApproval() {
-            return confirm("Are you sure you wish to approve all In-Review bookmarks?\nThis action cannot be undone.");
-        }
         /*]]>*/
     </script>
 </div>

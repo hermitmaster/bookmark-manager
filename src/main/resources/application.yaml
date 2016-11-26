@@ -15,5 +15,3 @@ spring:
     url: jdbc:mysql://address=(protocol=tcp)(host=localhost)(port=3306)/QUICK_ACCESS_BOOKMARK?verifyServerCertificate=false&useSSL=false&requireSSL=false&createDatabaseIfNotExist=true&characterEncoding=UTF-8
     username: mscougars
     password: TheProject24680!
-  jpa:
-    show-sql: true

@@ -24,8 +24,8 @@
                     </thead>
                     <tbody>
                     <tr th:each="bookmark : ${page}" role="row" th:id="${'bookmark-id-' + bookmark.id}">
-                        <td><a th:href="@{/track-click(id=${bookmark.id})}" th:text="${bookmark.name}" target="_blank"></a></td>
-                        <td><a th:href="@{/track-click(id=${bookmark.id})}" th:text="${bookmark.url}" target="_blank"></a></td>
+                        <td><a th:href="${bookmark.url}" th:text="${bookmark.name}" target="_blank" th:onclick="'$(this).trackClick(' + ${bookmark.id} + ');'"></a></td>
+                        <td><a th:href="${bookmark.url}" th:text="${bookmark.url}" target="_blank" th:onclick="'$(this).trackClick(' + ${bookmark.id} + ');'"></a></td>
                         <td th:text="${bookmark.bookmarkCategory.name}"></td>
                         <td th:text="${bookmark.subcategory.name}"></td>
                         <td th:text="${bookmark.description}"></td>
@@ -35,20 +35,6 @@
             </form>
         </div>
     </div>
-
-    <script type="text/javascript">
-        /*<![CDATA[*/
-        $(function() {
-            var sort  = window.location.search.substring(1);
-            if(sort != undefined) {
-                var sortArgs = sort.split('=')[1].split(',');
-                var sortColumn = sortArgs[0];
-                var sortDirection = (sortArgs.length > 1) ? sortArgs[1] : 'asc';
-                $('#' + sortColumn).addClass(sortDirection);
-            }
-        });
-        /*]]>*/
-    </script>
 </div>
 </body>
 </html>
