@@ -53,6 +53,9 @@ interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
      */
     Bookmark findById(Long id)
 
+    @Query("select b from Bookmark b where id in ?1")
+    Page<Bookmark> findByIds(List<Long> ids, Pageable pageable)
+
     /** Find a bookmark by its url.
      *
      * @param url   url of the bookmark being searched for.

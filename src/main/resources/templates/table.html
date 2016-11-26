@@ -26,9 +26,9 @@
         <div class="col-md-6 text-right">
             <div sec:authorize="isAuthenticated()"  class="btn-group" role="group">
                 <a th:if="${#strings.contains(#httpServletRequest.requestURI, 'dead-link-report')}" th:href="@{/admin/delete-dead-bookmarks}"
-                   class="btn btn-default" onclick="confirmDelete();">Delete All Dead Bookmarks</a>
+                   class="btn btn-default" onclick="return confirmDeleteAll();">Delete All Dead Bookmarks</a>
                 <a th:if="${#strings.contains(#httpServletRequest.requestURI, 'review-bookmarks')}" th:href="@{/admin/approve-all-bookmarks}"
-                   class="btn btn-default" onclick="confirmApproval();">Approve All In-Review</a>
+                   class="btn btn-default" onclick="return confirmApproval();">Approve All In-Review</a>
             </div>
         </div>
     </div>
@@ -61,7 +61,7 @@
                                 <a th:href="@{/admin/edit-bookmark(id=${bookmark.id})}" title="Edit" class="btn btn-default">
                                     <i class="glyphicon glyphicon-edit"></i>
                                 </a>
-                                <a th:href="@{/admin/delete-bookmark(id=${bookmark.id})}" title="Delete/Reject" class="btn btn-default" onclick="confirmDelete();">
+                                <a th:href="@{/admin/delete-bookmark(id=${bookmark.id})}" title="Delete/Reject" class="btn btn-default" onclick="return confirmDelete();">
                                     <i class="glyphicon glyphicon-remove-circle"></i>
                                 </a>
                                 <a th:href="@{/admin/approve-bookmark(id=${bookmark.id})}" title="Approve" class="btn btn-default" th:disabled="${bookmark.status.name() != 'IN_REVIEW'}">
@@ -126,6 +126,10 @@
         });
 
         function confirmDelete() {
+            return confirm("Are you sure you wish to delete this bookmark?\nThis action cannot be undone.");
+        }
+
+        function confirmDeleteAll() {
             return confirm("Are you sure you wish to delete all dead bookmarks?\nThis action cannot be undone.");
         }
 

@@ -205,7 +205,7 @@ class AdminController {
     String deleteBookmark(@RequestParam("id") Long id) {
         br.delete(id)
 
-        return "redirect:/"
+        return "redirect:/?view=table"
     }
 
     @GetMapping("/approve-bookmark")
@@ -214,7 +214,7 @@ class AdminController {
         bookmark.status = Status.ACTIVE
         br.save(bookmark)
 
-        return "redirect:/"
+        return "redirect:/admin/review-bookmarks"
     }
 
     @GetMapping("/approve-all-bookmarks")
@@ -223,7 +223,7 @@ class AdminController {
         bookmarks.each { it.status = Status.ACTIVE}
         br.save(bookmarks)
 
-        return "redirect:/"
+        return "redirect:/admin/review-bookmarks"
     }
 
     /** Delete all dead bookmarks
@@ -233,8 +233,8 @@ class AdminController {
     @GetMapping("/delete-dead-bookmarks")
     String deleteDeadBookmarks() {
         Set<Bookmark> deadBookmarks = br.findByStatus(Status.DEAD)
-        br.delete(deadBookmarks)
+        deadBookmarks.each { br.delete(it.id) }
 
-        return "redirect:/"
+        return "redirect:/admin/dead-link-report"
     }
 }

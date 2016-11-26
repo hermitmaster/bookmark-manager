@@ -18,7 +18,7 @@
                     </div>
                     <div class="panel-footer">
                         <a th:href="@{/admin/bookmark-export}" class="btn btn-default" th:text="#{msg.form.button.export}"></a>
-                        <input type="submit" th:value="#{msg.form.button.import}" class="btn btn-default" th:disabled="true" />
+                        <input type="submit" th:value="#{msg.form.button.import}" class="btn btn-default" th:disabled="true" onclick="return confirmImport();" />
                     </div>
                 </div>
             </form>
@@ -38,9 +38,9 @@
             });
         });
 
-        $('#import-form').submit(function () {
+        function confirmImport() {
             return confirm("Are you sure?\nThis will destroy all current bookmark data in the database.");
-        });
+        }
         /*]]>*/
     </script>
 </div>
