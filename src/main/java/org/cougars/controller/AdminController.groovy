@@ -172,18 +172,6 @@ class AdminController {
         return "dataManagement"
     }
 
-    /** Delete a single bookmark given the id
-     *
-     * @param id    id of the bookmark to delete
-     * @return      view to return
-     */
-    @GetMapping("/delete-bookmark")
-    String deleteBookmark(@RequestParam("id") Long id) {
-        br.delete(id)
-
-        return "redirect:/?view=table"
-    }
-
     @GetMapping("/approve-bookmark")
     String approveBookmark(@RequestParam("id") Long id) {
         Bookmark bookmark = br.findById(id)
@@ -200,6 +188,18 @@ class AdminController {
         br.save(bookmarks)
 
         return "redirect:/admin/review-bookmarks"
+    }
+
+    /** Delete a single bookmark given the id
+     *
+     * @param id    id of the bookmark to delete
+     * @return      view to return
+     */
+    @GetMapping("/delete-bookmark")
+    String deleteBookmark(@RequestParam("id") Long id) {
+        br.delete(id)
+
+        return "redirect:/?view=table"
     }
 
     /** Delete all dead bookmarks

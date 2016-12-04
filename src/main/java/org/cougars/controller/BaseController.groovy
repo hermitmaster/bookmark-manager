@@ -35,7 +35,7 @@ import javax.validation.Valid
 
 @Slf4j
 @Controller
-public class BaseController {
+class BaseController {
     @Autowired private UserRepository ur
     @Autowired private BookmarkRepository br
     @Autowired private BookmarkCategoryRepository bcr
@@ -143,29 +143,6 @@ public class BaseController {
         model.addAttribute("bookmark", br.findById(id))
 
         return "fragments/bookmarkDetail :: bookmarkDetail"
-    }
-
-    @GetMapping("/search")
-    String search(@RequestParam(value ="query") String query,
-                  @SortDefault("dateCreated") Pageable pageable,
-                  Model model) {
-        model.addAttribute("page", br.search(query.trim(), pageable))
-
-        return "table"
-    }
-
-    @GetMapping("/advanced-search")
-    String advancedSearchPage(Model model)  {
-        //TODO: Add model attributes for category and subcategory to populate dynamic dropdowns on the view
-        model.addAttribute("bookmarkBean", new BookmarkBean())
-
-        return "advancedSearch"
-    }
-
-    @PostMapping("/advanced-search")
-    String advancedSearch(Model model)  {
-        //TODO: Create a bookmark repository for searching with multiple parameters
-        throw new RuntimeException("Method not implemented!")
     }
 
     @GetMapping("/track-click")
