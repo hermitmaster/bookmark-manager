@@ -13,7 +13,7 @@
         <div class="col-md-6">
             <label for="page-size">
                 Show
-                <select id="page-size" class="form-control input-sm" style="width: 75px; display: inline-block;">
+                <select id="page-size" class="form-control input-sm" style="width: 75px; display: inline-block;" onchange="return $(this).changePageSize();">
                     <option value="10">10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
@@ -88,30 +88,8 @@
 
     <script type="text/javascript">
         /*<![CDATA[*/
-        $(function() {
-            var urlParams = {};
-            var match;
-            var search = /([^&=]+)=?([^&]*)/g;
-            var decode = function (s) { return decodeURIComponent(s.replace(/\+/g, " ")); };
-            var query  = window.location.search.substring(1);
-
-            while (match = search.exec(query)) {
-                urlParams[decode(match[1])] = decode(match[2]);
-            }
-
-            var pageSize = urlParams['size'] != null ? urlParams['size'] : 25;
-
-            $("#page-size").val(pageSize);
-        });
-
-        $(function(){
-            $('#page-size').bind('change', function () {
-                var url = $(this).val();
-                if (url) {
-                    window.location = window.location.href.split('?')[0] + '?page=0&size=' + $('#page-size').val();
-                }
-                return false;
-            });
+        $(document).ready(function () {
+            $(this).updatePageSize();
         });
         /*]]>*/
     </script>
