@@ -21,6 +21,12 @@ class UniqueURLValidator implements ConstraintValidator<UniqueURL, String> {
 
     @Override
     boolean isValid(String value, ConstraintValidatorContext context) {
-        return !br.findByUrl(value)
+        String url = value.trim()
+        if(url.endsWith("/")) {
+            // trim trailing slash
+            url = url.substring(0, url.length() - 1)
+        }
+
+        return !br.findByUrl(url)
     }
 }

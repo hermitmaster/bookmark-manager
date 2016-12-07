@@ -54,42 +54,37 @@ class AdminController {
     }
 
     @PostMapping("/edit-bookmark")
-    String addBookmarkSubmission(@Valid BookmarkBean bean, BindingResult bindingResult) {
-        String view = "editBookmarkSuccess"
-        if (bindingResult.hasErrors()) {
-            view = "editBookmark"
-        } else {
-            try {
-                Bookmark bookmark = br.findById(bean.id)
-                Authentication authentication = SecurityContextHolder.getContext().getAuthentication()
-                User user = ur.findByUsername(authentication.name)
-                BookmarkCategory category = bcr.findByName(bean.bookmarkCategory.trim())
-                if(!category) {
-                    category = new BookmarkCategory(bean.bookmarkCategory.trim(), bcr.findByName("None"), user)
-                }
-
-                BookmarkCategory subcategory = bcr.findByName("None")
-                if(bean.subcategory && !bean.subcategory.equalsIgnoreCase("None")) {
-                    subcategory = bcr.findByName(bean.subcategory.trim()) ?: new BookmarkCategory(bean.subcategory.trim(), category, user)
-                }
-
-                bookmark.url = bean.url.trim()
-                bookmark.name = bean.name.trim()
-                bookmark.description = bean.description
-                bookmark.bookmarkCategory = category
-                bookmark.subcategory = subcategory
-                bookmark.dateModified = new Date()
-                bookmark.status = Status.ACTIVE
-
-                br.save(bookmark)
-                bvs.validateUrl(bookmark)
-            } catch (Exception e) {
-                view = "error"
-                log.error("Error adding bookmark!", e)
+    String addBookmarkSubmission(BookmarkBean bean) {
+        try {
+            Bookmark bookmark = br.findById(bean.id)
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication()
+            User user = ur.findByUsername(authentication.name)
+            BookmarkCategory category = bcr.findByName(bean.bookmarkCategory.trim())
+            if(!category) {
+                category = new BookmarkCategory(bean.bookmarkCategory.trim(), bcr.findByName("None"), user)
             }
+
+            BookmarkCategory subcategory = bcr.findByName("None")
+            if(bean.subcategory && !bean.subcategory.equalsIgnoreCase("None")) {
+                subcategory = bcr.findByName(bean.subcategory.trim()) ?: new BookmarkCategory(bean.subcategory.trim(), category, user)
+            }
+
+            bookmark.url = bean.url.trim()
+            bookmark.name = bean.name.trim()
+            bookmark.description = bean.description
+            bookmark.bookmarkCategory = category
+            bookmark.subcategory = subcategory
+            bookmark.dateModified = new Date()
+            bookmark.status = Status.ACTIVE
+
+            br.save(bookmark)
+            bvs.validateUrl(bookmark)
+        } catch (Exception e) {
+            view = "error"
+            log.error("Error adding bookmark!", e)
         }
 
-        return view
+        return "editBookmarkSuccess"
     }
 
     @GetMapping("/review-bookmarks")
