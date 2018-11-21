@@ -1,40 +1,44 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sd="http://www.thymeleaf.org/spring-data"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layouts/layout">
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layouts/layout}" lang="en">
 <head>
-    <title th:text="#{msg.page.top}"></title>
+  <title th:text="#{msg.page.top}"></title>
 </head>
 <body>
 <div layout:fragment="content">
-    <h1 th:text="#{msg.page.top}"></h1>
-    <br/>
-    <div class="row">
-        <div class="col-md-12">
-            <form method="post" th:action="@{/admin/edit-bookmarks}">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                    <tr>
-                        <th><a th:text="#{msg.name}" sd:pagination-sort="name" id="name"></a></th>
-                        <th><a th:text="#{msg.url}" sd:pagination-sort="url" id="url"></a></th>
-                        <th style="min-width: 100px;"><a th:text="#{msg.category}" sd:pagination-sort="bookmarkCategory" id="bookmarkCategory"></a></th>
-                        <th style="min-width: 125px;"><a th:text="#{msg.subcategory}" sd:pagination-sort="subcategory" id="subcategory"></a></th>
-                        <th><a th:text="#{msg.description}" sd:pagination-sort="description" id="description"></a></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="bookmark : ${page}" role="row" th:id="${'bookmark-id-' + bookmark.id}">
-                        <td><a th:href="${bookmark.url}" th:text="${bookmark.name}" target="_blank" th:onclick="'$(this).trackClick(' + ${bookmark.id} + ');'"></a></td>
-                        <td><a th:href="${bookmark.url}" th:text="${bookmark.url}" target="_blank" th:onclick="'$(this).trackClick(' + ${bookmark.id} + ');'"></a></td>
-                        <td th:text="${bookmark.bookmarkCategory.name}"></td>
-                        <td th:text="${bookmark.subcategory.name}"></td>
-                        <td th:text="${bookmark.description}"></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </form>
-        </div>
+  <h1 th:text="#{msg.page.top}"></h1>
+  <br/>
+  <div class="row">
+    <div class="col-md">
+      <form method="post" th:action="@{/admin/edit-bookmarks}">
+        <table class="table table-bordered table-striped">
+          <thead>
+          <tr>
+            <th><a th:text="#{msg.name}" sd:pagination-sort="name" id="name"></a></th>
+            <th><a th:text="#{msg.url}" sd:pagination-sort="url" id="url"></a></th>
+            <th style="min-width: 100px;"><a th:text="#{msg.category}" sd:pagination-sort="bookmarkCategory"
+                                             id="bookmarkCategory"></a></th>
+            <th style="min-width: 125px;"><a th:text="#{msg.subcategory}" sd:pagination-sort="subcategory"
+                                             id="subcategory"></a></th>
+            <th><a th:text="#{msg.description}" sd:pagination-sort="description" id="description"></a></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="bookmark : ${page}" role="row" th:id="${'bookmark-id-' + bookmark.id}">
+            <td><a th:href="${bookmark.url}" th:text="${bookmark.name}" target="_blank"
+                   th:onclick="'$(this).trackClick(' + ${bookmark.id} + ');'"></a></td>
+            <td><a th:href="${bookmark.url}" th:text="${bookmark.url}" target="_blank"
+                   th:onclick="'$(this).trackClick(' + ${bookmark.id} + ');'"></a></td>
+            <td th:text="${bookmark.bookmarkCategory.name}"></td>
+            <td th:text="${bookmark.subcategory.name}"></td>
+            <td th:text="${bookmark.description}"></td>
+          </tr>
+          </tbody>
+        </table>
+      </form>
     </div>
+  </div>
 </div>
 </body>
 </html>

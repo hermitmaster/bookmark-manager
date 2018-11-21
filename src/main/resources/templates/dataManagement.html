@@ -1,44 +1,45 @@
 <!--Duplicate this page for creating additional pages-->
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      layout:decorator="layouts/layout">
+      layout:decorate="~{layouts/layout}" lang="en">
 <head>
-    <title th:text="#{msg.page.data}"></title>
+  <title th:text="#{msg.page.data}"></title>
 </head>
 <body>
 <div layout:fragment="content">
-    <h1 th:text="#{msg.page.data}" class="sr-only"></h1>
-    <div class="row">
-        <div class="col-md-4 col-md-offset-4">
-            <form method="post" enctype="multipart/form-data" th:action="@{/admin/bookmark-import}" id="import-form">
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title" th:text="#{msg.page.data}"></h3></div>
-                    <div class="panel-body">
-                        File to upload (must be either .xls or .xlsx format): <input type="file" name="file" id="importFile" />
-                    </div>
-                    <div class="panel-footer">
-                        <a th:href="@{/admin/bookmark-export}" class="btn btn-default" th:text="#{msg.form.button.export}"></a>
-                        <input type="submit" th:value="#{msg.form.button.import}" class="btn btn-default" th:disabled="true" onclick="return confirmImport();" />
-                    </div>
-                </div>
-            </form>
+  <h1 th:text="#{msg.page.data}" class="sr-only"></h1>
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <form method="post" enctype="multipart/form-data" th:action="@{/admin/bookmark-import}" id="import-form">
+        <div class="card">
+          <div class="card-header"><h3 class="card-title" th:text="#{msg.page.data}"></h3></div>
+          <div class="card-body">
+            File to upload (must be either .xls or .xlsx format): <input type="file" name="file" id="importFile"/>
+          </div>
+          <div class="card-footer">
+            <a th:href="@{/admin/bookmark-export}" class="btn" th:text="#{msg.form.button.export}"></a>
+            <input type="submit" th:value="#{msg.form.button.import}" class="btn" th:disabled="true"
+                   onclick="return confirmImport();"/>
+          </div>
         </div>
+      </form>
     </div>
-    <script type="text/javascript">
-        /*<![CDATA[*/
-        $(document).ready(function() {
-            $('input[type="file"]').change(function() {
-                var value = $('input[type="file"]').val().toLowerCase();
-                if (value != "" && value.indexOf(".xls") > 0) {
-                    $('input[type="submit"]').removeAttr('disabled');
-                } else {
-                    $('input[type="submit"]').attr('disabled', 'disabled');
-                    alert("Invalid file!\nOnly Excel files are allowed.")
-                }
-            });
-        });
-        /*]]>*/
-    </script>
+  </div>
+  <script type="text/javascript">
+    /*<![CDATA[*/
+    $(document).ready(function () {
+      $('input[type="file"]').change(function () {
+        var value = $('input[type="file"]').val().toLowerCase();
+        if (value != "" && value.indexOf(".xls") > 0) {
+          $('input[type="submit"]').removeAttr('disabled');
+        } else {
+          $('input[type="submit"]').attr('disabled', 'disabled');
+          alert("Invalid file!\nOnly Excel files are allowed.")
+        }
+      });
+    });
+    /*]]>*/
+  </script>
 </div>
 </body>
 </html>

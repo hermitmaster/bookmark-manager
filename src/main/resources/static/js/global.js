@@ -19,9 +19,5 @@ function confirmAddBookmark() {
 }
 
 function loadBookmarkDetails(id) {
-    var getUrl = window.location;
-    var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
-    var url = baseUrl + '/bookmark-details?id=' + id;
-
-    $("#bookmark-details-panel").load(url);
+  $("#bookmark-details-panel").load('/bookmark-details?id=' + id);
 }

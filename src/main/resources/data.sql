@@ -9,9 +9,9 @@ WHERE NOT EXISTS (
 
 -- Roles
 INSERT INTO authorities (username, authority)
-    SELECT * FROM (SELECT 'admin' as username, 'admin' as authority) as tmp1
+    SELECT * FROM (SELECT 'admin' as username, 'ROLE_ADMIN' as authority) as tmp1
 WHERE NOT EXISTS(
-  SELECT username FROM authorities WHERE username = 'admin' and authority = 'admin'
+  SELECT username FROM authorities WHERE username = 'admin' and authority = 'ROLE_ADMIN'
 ) LIMIT 1;
 
 -- Bookmark Categories

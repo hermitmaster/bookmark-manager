@@ -1,45 +1,53 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      layout:decorator="layouts/layout">
+      layout:decorate="~{layouts/layout}" lang="en">
 <head>
-    <title th:text="#{msg.page.categoryView}"></title>
+  <title th:text="#{msg.page.categoryView}"></title>
 </head>
 <body>
 <div layout:fragment="content">
-    <h1 th:text="#{msg.page.categoryView}" class="sr-only"></h1>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="panel-group" id="accordion">
-                <div th:each="category : ${page}" class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title" style="display: inline;">
-                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" th:href="${'#category-' + category.id}" th:text="${'Category: ' + category.name}"></a>
-                        </h4>
-                    </div>
-                    <div th:id="${'category-' + category.id}" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul style="list-style: none">
-                                <li th:each="bookmark : ${category.bookmarks}">
-                                    <a href="#" th:text="${bookmark.name}" th:onclick="'loadBookmarkDetails(' + ${bookmark.id} + ');'"></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <h1 th:text="#{msg.page.categoryView}" class="sr-only"></h1>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Categories</h4>
         </div>
-        <div class="col-md-8">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">Bookmark Details</h4>
-                </div>
-                <div id="bookmark-details-panel" class="panel-body" th:include="fragments/bookmarkDetail :: bookmarkDetail">
-                    <!--Update this panel via ajax to display a detail view of the selected bookmark-->
-                    <p>Select a bookmark from the menu to see details.</p>
-                </div>
+        <div class="card-body" id="accordion">
+          <div th:each="category : ${page}" class="card">
+            <div class="card-header" th:id="${category.name}">
+              <h5 class="mb-0">
+                <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion"
+                   th:href="${'#category-' + category.id}" th:text="${category.name}"></a>
+              </h5>
             </div>
+            <div th:id="${'category-' + category.id}" class="collapse" th:attr="aria-labelledby=${category.name}"
+                 data-parent="#accordion">
+              <div class="card-body">
+                <ul style="list-style: none">
+                  <li th:each="bookmark : ${category.bookmarks}">
+                    <a href="#" th:text="${bookmark.name}"
+                       th:onclick="'loadBookmarkDetails(' + ${bookmark.id} + ');'"></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Bookmark Details</h4>
+        </div>
+        <div id="bookmark-details-panel" class="card-body" th:include="fragments/bookmarkDetail :: bookmarkDetail">
+          <!--Update this panel via ajax to display a detail view of the selected bookmark-->
+          <p>Select a bookmark from the menu to see details.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 </body>
 </html>

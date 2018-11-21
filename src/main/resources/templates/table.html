@@ -1,98 +1,107 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sd="http://www.thymeleaf.org/spring-data"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
-      layout:decorator="layouts/layout">
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/layout}" lang="en">
 <head>
-    <title th:text="#{msg.page.tableView}"></title>
+  <title th:text="#{msg.page.tableView}"></title>
 </head>
 <body>
 <div layout:fragment="content">
-    <h1 th:text="#{msg.page.tableView}" class="sr-only"></h1>
-    <div class="row" th:fragment="pagination-head">
-        <div class="col-md-6">
-            <label for="page-size">
-                Show
-                <select id="page-size" class="form-control input-sm" style="width: 75px; display: inline-block;" onchange="return $(this).changePageSize();">
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                    <option value="250">250</option>
-                </select>
-                results per page
-            </label>
-        </div>
-        <div class="col-md-6 text-right">
-            <div sec:authorize="isAuthenticated()"  class="btn-group" role="group">
-                <a th:if="${#strings.contains(#httpServletRequest.requestURI, 'dead-link-report')}" th:href="@{/admin/delete-dead-bookmarks}"
-                   class="btn btn-default" onclick="return confirmDeleteAll();">Delete All Dead Bookmarks</a>
-                <a th:if="${#strings.contains(#httpServletRequest.requestURI, 'review-bookmarks')}" th:href="@{/admin/approve-all-bookmarks}"
-                   class="btn btn-default" onclick="return confirmApproval();">Approve All In-Review</a>
-            </div>
-        </div>
+  <h1 th:text="#{msg.page.tableView}" class="sr-only"></h1>
+  <div class="row" th:fragment="pagination-head">
+    <div class="col-md">
+      <label for="page-size">
+        Show
+        <select id="page-size" class="form-control input-sm" style="width: 75px; display: inline-block;"
+                onchange="return $(this).changePageSize();">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="250">250</option>
+        </select>
+        results per page
+      </label>
     </div>
-    <br/>
-    <div class="row">
-        <div class="col-md-12">
-            <form method="post" th:action="@{/admin/edit-bookmarks}">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                    <tr>
-                        <th><a th:text="#{msg.name}" sd:pagination-sort="name" id="name"></a></th>
-                        <th><a th:text="#{msg.url}" sd:pagination-sort="url" id="url"></a></th>
-                        <th style="min-width: 100px;"><a th:text="#{msg.category}" sd:pagination-sort="bookmarkCategory" id="bookmarkCategory"></a></th>
-                        <th style="min-width: 125px;"><a th:text="#{msg.subcategory}" sd:pagination-sort="subcategory" id="subcategory"></a></th>
-                        <th><a th:text="#{msg.description}" sd:pagination-sort="description" id="description"></a></th>
-                        <th sec:authorize="hasAuthority('admin')"><a th:text="#{msg.status}"></a></th>
-                        <th sec:authorize="hasAuthority('admin')" style="min-width: 135px;"><a th:text="#{msg.action}"></a></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="bookmark : ${page}" role="row" th:id="${'bookmark-id-' + bookmark.id}">
-                        <td><a th:href="${bookmark.url}" th:text="${bookmark.name}" target="_blank" th:onclick="'$(this).trackClick(' + ${bookmark.id} + ');'"></a></td>
-                        <td><a th:href="${bookmark.url}" th:text="${bookmark.url}" target="_blank" th:onclick="'$(this).trackClick(' + ${bookmark.id} + ');'"></a></td>
-                        <td th:text="${bookmark.bookmarkCategory.name}"></td>
-                        <td th:text="${bookmark.subcategory.name}"></td>
-                        <td th:text="${bookmark.description}"></td>
-                        <td sec:authorize="isAuthenticated()" th:text="${bookmark.status}"></td>
-                        <td sec:authorize="isAuthenticated()" class="text-center">
-                            <div class="btn-group" role="group">
-                                <a th:href="@{/admin/edit-bookmark(id=${bookmark.id})}" title="Edit" class="btn btn-default">
-                                    <i class="glyphicon glyphicon-edit"></i>
-                                </a>
-                                <a th:href="@{/admin/delete-bookmark(id=${bookmark.id})}" title="Delete/Reject" class="btn btn-default" onclick="return confirmDelete();">
-                                    <i class="glyphicon glyphicon-remove-circle"></i>
-                                </a>
-                                <a th:href="@{/admin/approve-bookmark(id=${bookmark.id})}" title="Approve" class="btn btn-default" th:disabled="${bookmark.status.name() != 'IN_REVIEW'}">
-                                    <i class="glyphicon glyphicon-ok-circle"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </form>
-        </div>
+    <div class="col-md text-right">
+      <div sec:authorize="isAuthenticated()" class="btn-group" role="group">
+        <a th:if="${#strings.contains(#httpServletRequest.requestURI, 'dead-link-report')}"
+           th:href="@{/admin/delete-dead-bookmarks}"
+           class="btn" onclick="return confirmDeleteAll();">Delete All Dead Bookmarks</a>
+        <a th:if="${#strings.contains(#httpServletRequest.requestURI, 'review-bookmarks')}"
+           th:href="@{/admin/approve-all-bookmarks}"
+           class="btn" onclick="return confirmApproval();">Approve All In-Review</a>
+      </div>
     </div>
-    <div class="row">
-        <div class="col-sm-6">
-            <div sd:pagination-summary="">info</div>
-        </div>
-        <div class="col-sm-6">
-            <nav class="pull-right">
-                <ul class="pagination" sd:pagination="full"></ul>
-            </nav>
-        </div>
+  </div>
+  <br/>
+  <div class="row">
+    <div class="col">
+      <form method="post" th:action="@{/admin/edit-bookmarks}">
+        <table class="table table-bordered table-striped">
+          <thead>
+          <tr>
+            <th><a th:text="#{msg.name}" sd:pagination-sort="name" id="name"></a></th>
+            <th><a th:text="#{msg.url}" sd:pagination-sort="url" id="url"></a></th>
+            <th style="min-width: 100px;"><a th:text="#{msg.category}" sd:pagination-sort="bookmarkCategory"
+                                             id="bookmarkCategory"></a></th>
+            <th style="min-width: 125px;"><a th:text="#{msg.subcategory}" sd:pagination-sort="subcategory"
+                                             id="subcategory"></a></th>
+            <th><a th:text="#{msg.description}" sd:pagination-sort="description" id="description"></a></th>
+            <th sec:authorize="hasAuthority('ROLE_ADMIN')"><a th:text="#{msg.status}"></a></th>
+            <th sec:authorize="hasAuthority('ROLE_ADMIN')" style="min-width: 135px;"><a th:text="#{msg.action}"></a></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="bookmark : ${page}" role="row" th:id="${'bookmark-id-' + bookmark.id}">
+            <td><a th:href="${bookmark.url}" th:text="${bookmark.name}" target="_blank"
+                   th:onclick="'$(this).trackClick(' + ${bookmark.id} + ');'"></a></td>
+            <td><a th:href="${bookmark.url}" th:text="${bookmark.url}" target="_blank"
+                   th:onclick="'$(this).trackClick(' + ${bookmark.id} + ');'"></a></td>
+            <td th:text="${bookmark.bookmarkCategory.name}"></td>
+            <td th:text="${bookmark.subcategory.name}"></td>
+            <td th:text="${bookmark.description}"></td>
+            <td sec:authorize="isAuthenticated()" th:text="${bookmark.status}"></td>
+            <td sec:authorize="isAuthenticated()" class="text-center">
+              <div class="btn-group" role="group">
+                <a th:href="@{/admin/edit-bookmark(id=${bookmark.id})}" title="Edit" class="btn">
+                  <i class="glyphicon glyphicon-edit"></i>
+                </a>
+                <a th:href="@{/admin/delete-bookmark(id=${bookmark.id})}" title="Delete/Reject" class="btn"
+                   onclick="return confirmDelete();">
+                  <i class="glyphicon glyphicon-remove-circle"></i>
+                </a>
+                <a th:href="@{/admin/approve-bookmark(id=${bookmark.id})}" title="Approve" class="btn"
+                   th:disabled="${bookmark.status.name() != 'IN_REVIEW'}">
+                  <i class="glyphicon glyphicon-ok-circle"></i>
+                </a>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </form>
     </div>
+  </div>
+  <div class="row">
+    <div class="col-sm">
+      <div sd:pagination-summary="">info</div>
+    </div>
+    <div class="col-sm">
+      <nav class="ml-auto">
+        <ul class="pagination" sd:pagination="full"></ul>
+      </nav>
+    </div>
+  </div>
 
-    <script type="text/javascript">
-        /*<![CDATA[*/
-        $(document).ready(function () {
-            $(this).updatePageSize();
-        });
-        /*]]>*/
-    </script>
+  <script type="text/javascript">
+    /*<![CDATA[*/
+    $(document).ready(function () {
+      $(this).updatePageSize();
+    });
+    /*]]>*/
+  </script>
 </div>
 </body>
 </html>

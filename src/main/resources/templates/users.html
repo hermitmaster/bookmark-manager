@@ -1,77 +1,85 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      layout:decorator="layouts/layout">
+      layout:decorate="~{layouts/layout}" lang="en">
 <head>
-    <title th:text="#{msg.page.users}"></title>
+  <title th:text="#{msg.page.users}"></title>
 </head>
 <body>
 <div layout:fragment="content">
-    <h1 th:text="#{msg.page.users}" class="sr-only"></h1>
-    <div class="row">
-        <div class="col-md-12 text-center">
-            <form method="post" th:action="@{/admin/add-user}" th:object="${userBean}" class="form-inline">
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title" th:text="#{msg.form.title.addUser}"></h3></div>
-                    <div class="panel-body">
-                        <div th:if="${#fields.hasErrors('*')}" class="row">
-                            <div class="col-md-12 form-group has-error">
-                                <p id="passwordHelp" th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="help-block"></p>
-                                <p id="usernameHelp" th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="help-block"></p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group" th:classappend="${#fields.hasErrors('username') ? 'has-error' : ''}">
-                                    <label th:text="#{msg.username}" for="usernameInput"></label>
-                                    <input id="usernameInput" type="text" class="form-control" th:placeholder="#{msg.form.placeholder.username}" th:field="*{username}" aria-describedby="usernameHelp" />
-                                </div>&nbsp;
-                                <div class="form-group" th:classappend="${#fields.hasErrors('password') ? 'has-error' : ''}">
-                                    <label th:text="#{msg.password}" for="passwordInput"></label>
-                                    <input id="passwordInput" type="password" class="form-control" th:placeholder="#{msg.form.placeholder.password}" th:field="*{password}" aria-describedby="passwordHelp" />
-                                </div>
-                                <div class="btn-group" role="group">
-                                    <input type="submit" class="btn btn-default" th:value="#{msg.form.button.submit}" />
-                                    <input type="reset" class="btn btn-default" th:value="#{msg.form.button.reset}" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  <h1 th:text="#{msg.page.users}" class="sr-only"></h1>
+  <div class="row justify-content-center">
+    <div class="col-md text-center">
+      <form method="post" th:action="@{/admin/add-user}" th:object="${userBean}" class="form-inline">
+        <div class="card">
+          <div class="card-header"><h3 class="card-title" th:text="#{msg.form.title.addUser}"></h3></div>
+          <div class="card-body">
+            <div th:if="${#fields.hasErrors('*')}" class="row">
+              <div class="col-md form-group has-error">
+                <p id="passwordHelp" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+                   class="help-block"></p>
+                <p id="usernameHelp" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
+                   class="help-block"></p>
+              </div>
+            </div>
+            <div class="row justify-content-center">
+              <div class="col-md">
+                <div class="form-group" th:classappend="${#fields.hasErrors('username') ? 'has-error' : ''}">
+                  <label th:text="#{msg.username}" for="usernameInput"></label>
+                  <input id="usernameInput" type="text" class="form-control"
+                         th:placeholder="#{msg.form.placeholder.username}" th:field="*{username}"
+                         aria-describedby="usernameHelp"/>
+                </div>&nbsp;
+                <div class="form-group" th:classappend="${#fields.hasErrors('password') ? 'has-error' : ''}">
+                  <label th:text="#{msg.password}" for="passwordInput"></label>
+                  <input id="passwordInput" type="password" class="form-control"
+                         th:placeholder="#{msg.form.placeholder.password}" th:field="*{password}"
+                         aria-describedby="passwordHelp"/>
                 </div>
-            </form>
+                <div class="btn-group" role="group">
+                  <input type="submit" class="btn" th:value="#{msg.form.button.submit}"/>
+                  <input type="reset" class="btn" th:value="#{msg.form.button.reset}"/>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </form>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <table id="bookmark-table" class="table table-bordered table-striped">
-                <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Registration Date</th>
-                    <th>Roles</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="user : ${users}" role="row">
-                    <td th:text="${user.username}"></td>
-                    <td th:text="${user.registrationDate}"></td>
-                    <td th:text="${user.getAuthoritiesList()}"></td>
-                    <td>
-                        <div class="btn-group" role="group">
-                            <!--Not yet implemented-->
-                            <a th:href="@{/admin/edit-user(id=${user.username})}" title="Edit" class="btn btn-default" th:disabled="true">
-                                <i class="glyphicon glyphicon-edit"></i>
-                            </a>
-                            <a th:href="@{/admin/delete-user(username=${user.username})}" title="Delete" class="btn btn-default" onclick="confirmDelete();" th:disabled="${username == #authentication.getPrincipal().getUsername()}">
-                                <i class="glyphicon glyphicon-remove-circle"></i>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+  </div>
+  <div class="row">
+    <div class="col-md">
+      <table id="bookmark-table" class="table table-bordered table-striped">
+        <thead>
+        <tr>
+          <th>Username</th>
+          <th>Registration Date</th>
+          <th>Roles</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}" role="row">
+          <td th:text="${user.username}"></td>
+          <td th:text="${user.registrationDate}"></td>
+          <td th:text="${user.getAuthoritiesList()}"></td>
+          <td>
+            <div class="btn-group" role="group">
+              <!--Not yet implemented-->
+              <a th:href="@{/admin/edit-user(id=${user.username})}" title="Edit" class="btn"
+                 th:disabled="true">
+                <i class="glyphicon glyphicon-edit"></i>
+              </a>
+              <a th:href="@{/admin/delete-user(username=${user.username})}" title="Delete" class="btn"
+                 onclick="confirmDelete();" th:disabled="${username == #authentication.getPrincipal().getUsername()}">
+                <i class="glyphicon glyphicon-remove-circle"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
     </div>
+  </div>
 </div>
 </body>
 </html>

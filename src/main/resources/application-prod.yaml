@@ -1,4 +1,4 @@
-server.context-path: /quickAccessBookmark
+server.servlet.context-path: /quickAccessBookmark
 spring:
   jpa.hibernate.ddl-auto: update
   datasource:

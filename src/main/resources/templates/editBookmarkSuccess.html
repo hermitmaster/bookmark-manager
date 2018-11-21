@@ -1,12 +1,12 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      layout:decorator="layouts/layout">
+      layout:decorate="~{layouts/layout}" lang="en">
 <head>
-    <title th:text="#{msg.page.editBookmarkSuccess}"></title>
+  <title th:text="#{msg.page.editBookmarkSuccess}"></title>
 </head>
 <body>
 <div layout:fragment="content">
-    <h1 th:text="#{msg.page.editBookmarkSuccess}"></h1>
+  <h1 th:text="#{msg.page.editBookmarkSuccess}"></h1>
 </div>
 </body>
 </html>

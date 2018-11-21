@@ -1,17 +1,6 @@
 logging.level.org.apache.http.client.protocol.ResponseProcessCookies: error
-server.context-path: /
+server.servlet.context-path: /
 spring:
-  http.multipart.max-file-size: 5MB
+  servlet.multipart.max-file-size: 5MB
   jpa.hibernate.ddl-auto: update
-  main.banner-mode: off
-  datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    platform: mysql
-# Do not touch anything above here unless you know what you are doing!
-# Tampering may result in failure to run the app correctly.
-
-# Enter the jdbc connection string, username, and password for your database here
-# If running a default mysql installation on the same host as the app, no change is required to the url.
-    url: jdbc:mysql://address=(protocol=tcp)(host=localhost)(port=3306)/QUICK_ACCESS_BOOKMARK?verifyServerCertificate=false&useSSL=false&requireSSL=false&createDatabaseIfNotExist=true&characterEncoding=UTF-8
-    username: mscougars
-    password: TheProject24680!
+  main.banner-mode: "off"

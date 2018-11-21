@@ -1,41 +1,42 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      layout:decorator="layouts/layout">
+      layout:decorate="~{layouts/layout}">
 <head>
-    <title th:text="#{msg.login}"></title>
+  <title th:text="#{msg.login}"></title>
 </head>
 <body>
 <div layout:fragment="content">
-    <h1 th:text="#{msg.login}" class="sr-only"></h1>
-    <div class="row">
-        <div class="col-md-4 col-md-offset-4">
-            <form method="post" th:action="@{/login}">
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title" th:text="#{msg.login}"></h3></div>
-                    <div class="panel-body">
-                        <div th:if="${param.error}" class="alert alert-danger">
-                            Invalid username and password.
-                        </div>
-                        <div th:if="${param.logout}" class="alert alert-success">
-                            You have been logged out.
-                        </div>
-                        <div class="form-group">
-                            <label th:text="#{msg.username}" for="username"></label>
-                            <input type="text" class="form-control" th:placeholder="#{msg.username}" name="username" id="username" />
-                        </div>
-                        <div class="form-group">
-                            <label th:text="#{msg.password}" for="password"></label>
-                            <input type="password" class="form-control" th:placeholder="#{msg.password}" name="password" id="password" />
-                        </div>
-                    </div>
-                    <div class="panel-footer">
-                        <input type="submit" class="btn btn-default" th:value="#{msg.form.button.submit}" />
-                        <input type="reset" class="btn btn-default" th:value="#{msg.form.button.reset}" />
-                    </div>
-                </div>
-            </form>
+  <h1 th:text="#{msg.login}" class="sr-only"></h1>
+  <div class="row justify-content-center">
+    <div class="col-md-4">
+      <form method="post" th:action="@{/login}">
+        <div class="card">
+          <div class="card-header"><h3 class="card-title" th:text="#{msg.login}"></h3></div>
+          <div class="card-body">
+            <div th:if="${param.error}" class="alert alert-danger">
+              Invalid username and password.
+            </div>
+            <div th:if="${param.logout}" class="alert alert-success">
+              You have been logged out.
+            </div>
+            <div class="form-group">
+              <label th:text="#{msg.username}" for="username"></label>
+              <input type="text" class="form-control" th:placeholder="#{msg.username}" name="username" id="username"/>
+            </div>
+            <div class="form-group">
+              <label th:text="#{msg.password}" for="password"></label>
+              <input type="password" class="form-control" th:placeholder="#{msg.password}" name="password"
+                     id="password"/>
+            </div>
+          </div>
+          <div class="card-footer">
+            <input type="submit" class="btn" th:value="#{msg.form.button.submit}"/>
+            <input type="reset" class="btn" th:value="#{msg.form.button.reset}"/>
+          </div>
         </div>
+      </form>
     </div>
+  </div>
 </div>
 </body>
 </html>
