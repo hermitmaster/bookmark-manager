@@ -66,7 +66,7 @@ class AdminController {
         String view = "editBookmarkSuccess"
 
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication()
+            Authentication authentication = SecurityContextHolder.context.authentication
             User user = ur.findByUsername(authentication.name)
             Bookmark bookmark = br.getOne(bean.id)
             BookmarkCategory category = bcr.findByName(bean.bookmarkCategory.trim()) ?:
@@ -151,7 +151,7 @@ class AdminController {
 
     @GetMapping("/delete-user")
     String deleteUser(@RequestParam("username") String username) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication()
+        Authentication authentication = SecurityContextHolder.context.authentication
         User user = ur.findByUsername(username)
         if (user.username != authentication.name) {
             user.enabled = false

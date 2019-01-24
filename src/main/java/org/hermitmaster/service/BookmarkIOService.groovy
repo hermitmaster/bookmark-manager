@@ -45,7 +45,7 @@ class BookmarkIOService {
 
         try {
             Set<BookmarkBean> beans = extractBookmarksFromExcel(file)
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication()
+            Authentication authentication = SecurityContextHolder.context.authentication
             User user = ur.findByUsername(authentication.getName())
             Set<Bookmark> bookmarks = new HashSet<>()
 

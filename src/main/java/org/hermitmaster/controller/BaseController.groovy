@@ -52,7 +52,7 @@ class BaseController {
                  @SortDefault("dateCreated") Pageable pageable,
                  Model model, HttpServletResponse response) {
         String view = viewParam ?: viewCookie
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication()
+        Authentication authentication = SecurityContextHolder.context.authentication
         User user = ur.findByUsername(authentication.getName())
 
         // Preload history
@@ -105,7 +105,7 @@ class BaseController {
             view = "addBookmark"
         } else {
             try {
-                Authentication authentication = SecurityContextHolder.getContext().getAuthentication()
+                Authentication authentication = SecurityContextHolder.context.authentication
                 User user = ur.findByUsername(authentication.getName())
                 BookmarkCategory category = bcr.findByName(bean.bookmarkCategory.trim()) ?:
                     new BookmarkCategory([
