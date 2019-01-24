@@ -56,24 +56,31 @@ class BookmarkIOService {
 
             beans.each {
                 BookmarkCategory category = bcr.findByName(it.bookmarkCategory.trim()) ?:
-                    new BookmarkCategory(it.bookmarkCategory.trim(), bcr.findByName("None"), user)
+                    new BookmarkCategory([
+                        name     : it.bookmarkCategory.trim(),
+                        parent   : bcr.findByName("None"),
+                        createdBy: user])
 
-                BookmarkCategory subcategory = bcr.findByName("None")
-                if (!it?.subcategory?.equalsIgnoreCase("None")) {
-                    subcategory = bcr.findByName(it.subcategory.trim()) ?:
-                        new BookmarkCategory(it.subcategory.trim(), category, user)
-                }
+                BookmarkCategory subcategory = bcr.findByName(it.subcategory.trim()) ?:
+                    new BookmarkCategory([
+                        name     : it.subcategory.trim(),
+                        parent   : category,
+                        createdBy: user])
 
-                Bookmark bookmark = new Bookmark(it.url.trim(), it.name.trim(), it.description, category, subcategory, user)
-                if (user?.isAdmin()) {
-                    bookmark.status = Status.ACTIVE
-                }
-
-                br.save(bookmark)
-                bookmarks.add(bookmark)
+                bookmarks.add(
+                    new Bookmark([
+                        url        : it.url.trim(),
+                        name       : it.name.trim(),
+                        description: it.description,
+                        category   : category,
+                        subcategory: subcategory,
+                        user       : user,
+                        status     : user?.isAdmin() ? Status.ACTIVE : Status.IN_REVIEW
+                    ])
+                )
             }
 
-            br.save(bookmarks)
+            br.saveAll(bookmarks)
 
             // Validate asynchronously. It can take a long time.
             Thread.start {

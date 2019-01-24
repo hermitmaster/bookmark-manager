@@ -1,6 +1,14 @@
-logging.level.org.apache.http.client.protocol.ResponseProcessCookies: error
+logging.level.org:
+  apache.http.client.protocol.ResponseProcessCookies: error
+  hermitmaster: debug
 server.servlet.context-path: /
 spring:
-  servlet.multipart.max-file-size: 5MB
-  jpa.hibernate.ddl-auto: update
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    platform: h2
+  jpa:
+    hibernate.ddl-auto: create-drop
+    open-in-view: true
   main.banner-mode: "off"
+  servlet.multipart.max-file-size: 5MB

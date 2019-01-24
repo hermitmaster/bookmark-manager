@@ -12,10 +12,4 @@ class QuickAccessBookmarkApplication {
     static void main(String[] args) {
         SpringApplication.run(QuickAccessBookmarkApplication.class, args)
     }
-
-    // Registers a SpringDataDialect bean for Thymeleaf pagination in views.
-    @Bean
-    SpringDataDialect springDataDialect() {
-        return new SpringDataDialect()
-    }
 }

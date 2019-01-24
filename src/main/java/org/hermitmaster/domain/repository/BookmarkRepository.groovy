@@ -68,4 +68,6 @@ interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
      * @return
      */
     Set<Bookmark> findByLastValidatedBefore(Date lastValidated)
+
+    void deleteByStatus(Status status)
 }

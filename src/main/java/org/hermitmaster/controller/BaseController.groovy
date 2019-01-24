@@ -108,15 +108,30 @@ class BaseController {
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication()
                 User user = ur.findByUsername(authentication.getName())
                 BookmarkCategory category = bcr.findByName(bean.bookmarkCategory.trim()) ?:
-                    new BookmarkCategory(bean.bookmarkCategory.trim(), bcr.findByName("None"), user)
+                    new BookmarkCategory([
+                        name     : bean.bookmarkCategory.trim(),
+                        parent   : bcr.findByName("None"),
+                        createdBy: user
+                    ])
 
                 BookmarkCategory subcategory = bcr.findByName("None")
                 if (!bean?.subcategory?.equalsIgnoreCase("None")) {
                     subcategory = bcr.findByName(bean.subcategory.trim()) ?:
-                        new BookmarkCategory(bean.subcategory.trim(), category, user)
+                        new BookmarkCategory([
+                            name     : bean.subcategory.trim(),
+                            parent   : category,
+                            createdBy: user
+                        ])
                 }
 
-                Bookmark bookmark = new Bookmark(bean.url.trim(), bean.name.trim(), bean.description, category, subcategory, user)
+                Bookmark bookmark = new Bookmark([
+                    url        : bean.url.trim(),
+                    name       : bean.name.trim(),
+                    description: bean.description,
+                    category   : category,
+                    subcategory: subcategory,
+                    createdBy  : user
+                ])
                 if (user?.isAdmin()) {
                     bookmark.status = Status.ACTIVE
                 }

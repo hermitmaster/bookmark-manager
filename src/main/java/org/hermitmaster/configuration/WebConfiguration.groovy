@@ -1,14 +1,12 @@
 package org.hermitmaster.configuration
 
-import org.h2.server.web.WebServlet
-import org.springframework.boot.web.servlet.ServletRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
+import org.thymeleaf.dialect.springdata.SpringDataDialect
 
 /** A configuration class for setting web configuration properties.
  * Created by hermitmaster on 10/29/16.
@@ -26,5 +24,11 @@ class WebConfiguration implements WebMvcConfigurer {
         PageableHandlerMethodArgumentResolver resolver = new PageableHandlerMethodArgumentResolver()
         resolver.setFallbackPageable(new PageRequest(0, PAGE_SIZE))
         argumentResolvers.add(resolver)
+    }
+
+    // Registers a SpringDataDialect bean for Thymeleaf pagination in views.
+    @Bean
+    SpringDataDialect springDataDialect() {
+        return new SpringDataDialect()
     }
 }

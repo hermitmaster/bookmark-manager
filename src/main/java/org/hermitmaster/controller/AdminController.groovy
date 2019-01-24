@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.web.SortDefault
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
@@ -48,6 +49,8 @@ class AdminController {
     private BookmarkIOService bios
     @Autowired
     private BookmarkValidatorService bvs
+    @Autowired
+    private PasswordEncoder encoder
 
     @GetMapping("/edit-bookmark")
     String editBookmark(@RequestParam("id") Long bookmarkId, Model model) {
@@ -60,18 +63,25 @@ class AdminController {
 
     @PostMapping("/edit-bookmark")
     String addBookmarkSubmission(BookmarkBean bean) {
+        String view = "editBookmarkSuccess"
+
         try {
-            Bookmark bookmark = br.getOne(bean.id)
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication()
             User user = ur.findByUsername(authentication.name)
+            Bookmark bookmark = br.getOne(bean.id)
             BookmarkCategory category = bcr.findByName(bean.bookmarkCategory.trim()) ?:
-                new BookmarkCategory(bean.bookmarkCategory.trim(), bcr.findByName("None"), user)
+                new BookmarkCategory([
+                    name     : bean.bookmarkCategory.trim(),
+                    parent   : bcr.findByName("None"),
+                    createdBy: user
+                ])
 
-            BookmarkCategory subcategory = bcr.findByName("None")
-            if (!bean?.subcategory?.equalsIgnoreCase("None")) {
-                subcategory = bcr.findByName(bean.subcategory.trim()) ?:
-                    new BookmarkCategory(bean.subcategory.trim(), category, user)
-            }
+            BookmarkCategory subcategory = bcr.findByName(bean.subcategory.trim()) ?:
+                new BookmarkCategory([
+                    name     : bean.subcategory.trim(),
+                    parent   : category,
+                    createdBy: user
+                ])
 
             bookmark.url = bean.url.trim()
             bookmark.name = bean.name.trim()
@@ -88,7 +98,7 @@ class AdminController {
             log.error("Error adding bookmark!", e)
         }
 
-        return "editBookmarkSuccess"
+        return view
     }
 
     @GetMapping("/review-bookmarks")
@@ -126,7 +136,7 @@ class AdminController {
             model.addAttribute("users", ur.findByEnabledTrue())
             view = "/users"
         } else {
-            ur.save(new User(bean.username, bean.password))
+            ur.save(new User([username: bean.username, password: encoder.encode(bean.password)]))
             view = "redirect:/admin/users"
         }
 
@@ -184,7 +194,7 @@ class AdminController {
     String approveAllBookmarks() {
         Set<Bookmark> bookmarks = br.findByStatus(Status.IN_REVIEW)
         bookmarks.each { it.status = Status.ACTIVE }
-        br.save(bookmarks)
+        br.saveAll(bookmarks)
 
         return "redirect:/admin/review-bookmarks"
     }
@@ -196,7 +206,7 @@ class AdminController {
      */
     @GetMapping("/delete-bookmark")
     String deleteBookmark(@RequestParam("id") Long id) {
-        br.delete(id)
+        br.deleteById(id)
 
         return "redirect:/?view=table"
     }
@@ -207,8 +217,7 @@ class AdminController {
      */
     @GetMapping("/delete-dead-bookmarks")
     String deleteDeadBookmarks() {
-        Set<Bookmark> deadBookmarks = br.findByStatus(Status.DEAD)
-        deadBookmarks.each { br.delete(it.id) }
+        br.deleteByStatus(Status.DEAD)
 
         return "redirect:/admin/dead-link-report"
     }

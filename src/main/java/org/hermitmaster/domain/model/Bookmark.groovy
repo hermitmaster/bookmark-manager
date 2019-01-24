@@ -54,17 +54,4 @@ class Bookmark {
 
     @ManyToOne
     User createdBy
-
-    Bookmark() {
-        super()
-    }
-
-    Bookmark(String url, String name, String description, BookmarkCategory bookmarkCategory, BookmarkCategory subcategory, User createdBy) {
-        this.url = url
-        this.name = name ?: url
-        this.description = description
-        this.bookmarkCategory = bookmarkCategory
-        this.subcategory = subcategory
-        this.createdBy = createdBy
-    }
 }

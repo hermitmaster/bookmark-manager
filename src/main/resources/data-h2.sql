@@ -1,14 +1,8 @@
--- Users
-INSERT INTO users (password, registration_date, username, enabled) VALUES
-  ('$2a$10$VUbNDU1YVuXPOlizhc8K6u0FZFDipJaIIGSSbpMNeGDyQ2IEcaily', NOW(), 'admin', true);
-
--- Roles
-INSERT INTO authorities (username, authority) VALUES
-  ('admin', 'ROLE_ADMIN');
+-- Disable foreign key checks, as we're inserting test data before initializtion performed at app startup
+SET foreign_key_checks = 0;
 
 -- Bookmark Categories
 INSERT INTO bookmark_category (created_by_username, date_created, date_modified, name, parent_id) VALUES
-  ('admin', NOW(), NOW(), 'None', null),
   ('admin', NOW(), NOW(), 'Search Engines', 1),
   ('admin', NOW(), NOW(), 'Social Networks', 1),
   ('admin', NOW(), NOW(), 'Technology', 1),
@@ -2128,3 +2122,5 @@ INSERT INTO bookmark (created_by_username, bookmark_category_id, subcategory_id,
   ('admin', 4, 1, 'ACTIVE', NOW(), NOW(), NOW() - 2, 'A site for learning about Capture of Saint Martin (1633)', 'Capture of Saint Martin (1633)', 'https://en.wikipedia.org/wiki/Capture_of_Saint_Martin_(1633)'),
   ('admin', 4, 1, 'ACTIVE', NOW(), NOW(), NOW() - 2, 'A site for learning about 32apyu8cqz', '32apyu8cqz', 'http://www.32apyu8cqz.com'),
   ('admin', 1, 1, 'ACTIVE', NOW(), NOW(), NOW() - 2, 'A free web encyclopedia.', 'Wikipedia', 'http://www.wikipedia.com');
+
+SET foreign_key_checks = 1;

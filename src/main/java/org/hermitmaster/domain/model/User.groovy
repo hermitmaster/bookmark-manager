@@ -21,6 +21,12 @@ class User {
     @Column(name = "username", unique = true)
     String username
 
+    @Column
+    String firstName
+
+    @Column
+    String lastName
+
     @Column(name = "password", nullable = false)
     String password
 
@@ -32,17 +38,6 @@ class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Set<Authority> authorities = new HashSet<>()
-
-    User() {
-        super()
-    }
-
-    User(String username, String password) {
-        this.username = username
-        this.password = new BCryptPasswordEncoder().encode(password)
-        this.registrationDate = new Date()
-        this.authorities.add(new Authority(this, "admin"))
-    }
 
     String getAuthoritiesList() {
         return authorities*.authority.join(", ")
