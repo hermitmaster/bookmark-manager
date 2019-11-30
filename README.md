@@ -6,7 +6,7 @@ The following instructions assume that:
 * You have Tomcat 8 installed on your host/server
 * You have Java 8 installed on your host/server
 * You have MySQL 5.x running on your host/server
-* You have a MySQL user with sufficient priveleges to create a new database or you creaeted an empty schema called QUICK_ACCESS_BOOKMARK
+* You have a MySQL user with sufficient privileges to create a new database or you created an empty schema called QUICK_ACCESS_BOOKMARK
 
 ### Build From Source Instructions
 * Clone the project from https://github.com/MetroState-Cougars/QuickAccessBookmark.git
@@ -36,6 +36,6 @@ spring.datasource:
 ```
 
 These instructions may not work for your particular environment. This is simply a basic installation guideline.
-It is possible to create the database yourself in advance and create a MySQL user with restricted priveleges for
+It is possible to create the database yourself in advance and create a MySQL user with restricted privileges for
 security purposes (recommended!). You'll need to be familiar with JDBC connection strings and MySQL to perform this
 type of (advanced) installation.

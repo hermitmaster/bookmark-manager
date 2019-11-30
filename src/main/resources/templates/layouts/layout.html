@@ -102,27 +102,27 @@
 <div layout:fragment="content" class="container-fluid"></div>
 <footer class="container-fluid">
   <div class="row">
-    <div class="col-md text-center">&copy; 2016 hermitmaster</div>
+    <div class="col-md text-center">&copy; 2019 hermitmaster</div>
   </div>
 </footer>
 <script type="text/javascript">
   /*<![CDATA[*/
   $(document).ready(function () {
-    var url = window.location;
+    let url = window.location;
     $('ul.nav a[href="' + url + '"]').parent().addClass('active');
     $('ul.nav a').filter(function () {
-      return this.href == url;
+      return this.href === url;
     }).parent().addClass('active');
   });
 
   // Column sorting function
   $(function () {
-    var search = window.location.search;
-    if (search != undefined && search.indexOf('sort') !== -1) {
-      var sort = search.substring(1);
-      var sortArgs = sort.split('sort=')[1].split(',');
-      var sortColumn = sortArgs[0];
-      var sortDirection = (sortArgs.length > 1) ? sortArgs[1] : 'asc';
+    let search = window.location.search;
+    if (search !== undefined && search.indexOf('sort') !== -1) {
+      let sort = search.substring(1);
+      let sortArgs = sort.split('sort=')[1].split(',');
+      let sortColumn = sortArgs[0];
+      let sortDirection = (sortArgs.length > 1) ? sortArgs[1] : 'asc';
       $('#' + sortColumn).addClass(sortDirection);
     }
   });
